@@ -13,6 +13,8 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final double actuationGearRatio = 8;
+  public static final double intakeGearRatio = 1.3333333333333333333;
 
   public static final double MaxSpeed = 6; // 6 meters per second desired top speed
   public static final double MaxAngularRate = Math.PI * 4; // Half a rotation per second max angular velocity
