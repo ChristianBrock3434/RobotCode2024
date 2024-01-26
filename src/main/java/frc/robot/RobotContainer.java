@@ -75,8 +75,8 @@ public class RobotContainer {
       new InstantCommand(this::setTuckPosition)
     ));
 
-    joystick.rightTrigger(0.1).and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(20, 40));
-    joystick.leftTrigger(0.1).whileTrue(intake.runIntakeCommand(-20, 40));
+    joystick.rightTrigger(0.1).and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
+    joystick.leftTrigger(0.1).whileTrue(intake.runIntakeCommand(-15, 40));
 
     new Trigger(this::isPieceIn).and(this::isIntakePosition).onTrue(new SequentialCommandGroup(
       new InstantCommand(intake::stopIntakeMotor, intake),

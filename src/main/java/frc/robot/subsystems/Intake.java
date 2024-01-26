@@ -48,7 +48,7 @@ public class Intake extends SubsystemBase {
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
@@ -94,6 +94,7 @@ public class Intake extends SubsystemBase {
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
     configs.MotionMagic.MotionMagicCruiseVelocity = 5;
     configs.MotionMagic.MotionMagicAcceleration = 10;
@@ -102,7 +103,7 @@ public class Intake extends SubsystemBase {
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     configs.Slot0.kP = 1; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kI = 0.1; // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 0.1; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
