@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Intake;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,5 +17,6 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Subsystems {
-  
+  public static final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  public static final Intake intake = new Intake(); // My intake
 }
