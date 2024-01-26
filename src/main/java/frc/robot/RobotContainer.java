@@ -67,11 +67,11 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     joystick.x().whileTrue(new ParallelCommandGroup(
-      intake.setPositionCommand(136 * actuationTicksPerDegree),
+      actuation.setPositionCommand(136 * actuationTicksPerDegree),
       new InstantCommand(this::setIntakePosition)
     ));
     joystick.b().whileTrue(new ParallelCommandGroup(
-      intake.setPositionCommand(2 * actuationTicksPerDegree),
+      actuation.setPositionCommand(2 * actuationTicksPerDegree),
       new InstantCommand(this::setTuckPosition)
     ));
 
@@ -80,7 +80,7 @@ public class RobotContainer {
 
     new Trigger(this::isPieceIn).and(this::isIntakePosition).onTrue(new SequentialCommandGroup(
       new InstantCommand(intake::stopIntakeMotor, intake),
-      intake.setPositionCommand(2 * actuationTicksPerDegree),
+      actuation.setPositionCommand(2 * actuationTicksPerDegree),
       new InstantCommand(this::setTuckPosition)
     ));
   }
