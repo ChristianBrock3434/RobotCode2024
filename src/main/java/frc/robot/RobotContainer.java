@@ -73,6 +73,12 @@ public class RobotContainer {
       actuation.setPositionCommand(-60 * actuationTicksPerDegree),
       new InstantCommand(this::setTuckPosition)
     ));
+    joystick.povDown().whileTrue(
+      slapper.runSlapperPercent(0.15)
+    );
+    joystick.povUp().whileTrue(
+      slapper.runSlapperPercent(-0.15)
+    );
 
     joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     joystick.leftBumper().whileTrue(intake.runIntakeCommand(-15, 40));
