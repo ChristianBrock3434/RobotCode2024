@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.*;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
@@ -15,12 +17,14 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Actuation extends SubsystemBase {
   private TalonFX actuationMotor = new TalonFX(14);
+
+  private DigitalInput actuationLimitSwitch = new DigitalInput(0);
 
   MotionMagicVoltage motionMagicControl;
   NeutralOut stopMode;
@@ -39,7 +43,7 @@ public class Actuation extends SubsystemBase {
   public void initActuationMotor() {
     // actuationMotor.setNeutralMode(NeutralModeValue.Brake);
 
-    actuationMotor.setPosition(0);
+    actuationMotor.setPosition(-65 * actuationTicksPerDegree);
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -47,15 +51,15 @@ public class Actuation extends SubsystemBase {
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
-    configs.MotionMagic.MotionMagicCruiseVelocity = 5;
-    configs.MotionMagic.MotionMagicAcceleration = 10;
+    configs.MotionMagic.MotionMagicCruiseVelocity = 15;
+    configs.MotionMagic.MotionMagicAcceleration = 20;
     configs.MotionMagic.MotionMagicJerk = 50;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    configs.Slot0.kP = 1; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 0.1; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.1; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kP = 40; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
     configs.Voltage.PeakForwardVoltage = 12;
@@ -72,9 +76,9 @@ public class Actuation extends SubsystemBase {
 
     motionMagicControl = new MotionMagicVoltage(0, 
                                                 true, 
+                                                1,
                                                 0, 
-                                                0, 
-                                                true, 
+                                                false, 
                                                 false, 
                                                 false
                                               );
@@ -129,11 +133,36 @@ public class Actuation extends SubsystemBase {
     };
   }
 
+  public Command resetEncoderCommand() {
+    return new Command() {
+      @Override
+      public void execute() {
+        resetEncoder();
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
+  public void resetEncoder() {
+    actuationMotor.setPosition(-65 * actuationTicksPerDegree);
+  }
+
+
+  public Boolean getLimitSwitch() {
+    return !actuationLimitSwitch.get();
+  }
+
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+    // System.out.println(getLimitSwitch());
+    // System.out.println(actuationMotor.getPosition());
+    // System.out.println(actuationMotor.getMotorVoltage());
   }
 
   @Override

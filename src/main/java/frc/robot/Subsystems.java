@@ -5,8 +5,10 @@
 package frc.robot;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Actuation;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,4 +21,6 @@ import frc.robot.subsystems.Intake;
 public final class Subsystems {
   public static final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
   public static final Intake intake = new Intake(); // My intake
+  public static final Actuation actuation = new Actuation(); // My actuation
+  public static final Shooter shooter = new Shooter(); // My shooter
 }
