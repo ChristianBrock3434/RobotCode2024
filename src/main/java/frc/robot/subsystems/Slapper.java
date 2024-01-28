@@ -11,7 +11,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -26,6 +26,7 @@ public class Slapper extends SubsystemBase {
   private TalonFX slapperMotor2 = new TalonFX(21);
 
   MotionMagicVoltage motionMagicControl;
+  VoltageOut voltageControl;
   NeutralOut stopMode;
   
   /**
@@ -86,6 +87,33 @@ public class Slapper extends SubsystemBase {
                                                 false, 
                                                 false
                                               );
+
+    stopMode = new NeutralOut();
+
+    voltageControl = new VoltageOut(0, 
+                                  true, 
+                                  false, 
+                                  false, 
+                                  false);
+  }
+
+  public Command runSlapper(double voltage) {
+    return new Command() {
+      @Override
+      public void execute() {
+        runSlapperVoltage(voltage);
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+        stopSlapper();
+      }
+    };
+  }
+
+  public void runSlapperVoltage(double voltage) {
+    slapperMotor1.setControl(voltageControl.withOutput(voltage));
+    slapperMotor2.setControl(voltageControl.withOutput(voltage));
   }
 
   public Command runSlapperPercent(double speed) {
@@ -102,6 +130,11 @@ public class Slapper extends SubsystemBase {
         slapperMotor2.set(0);
       }
     };
+  }
+
+  public void stopSlapper() {
+    slapperMotor1.setControl(stopMode);
+    slapperMotor2.setControl(stopMode);
   }
 
   @Override

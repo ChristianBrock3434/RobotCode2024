@@ -74,10 +74,10 @@ public class RobotContainer {
       new InstantCommand(this::setTuckPosition)
     ));
     joystick.povDown().whileTrue(
-      slapper.runSlapperPercent(0.15)
+      slapper.runSlapper(2)
     );
     joystick.povUp().whileTrue(
-      slapper.runSlapperPercent(-0.15)
+      slapper.runSlapper(-2)
     );
 
     joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));

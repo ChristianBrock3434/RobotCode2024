@@ -168,7 +168,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
-    System.out.println(rightShooterMotor.getVelocity().getValueAsDouble());
+    // System.out.println(rightShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
