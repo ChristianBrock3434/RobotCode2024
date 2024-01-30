@@ -15,9 +15,11 @@ package frc.robot;
 public final class Constants {
   public static final double actuationGearRatio = 8;
   public static final double intakeGearRatio = 1.3333333333333333333;
+  public static final double slapperGearRatio = 1.0;
 
   // 360 degrees per rotation, 8:1 gear ratio
   public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
+  public static final double slapperTicksPerDegree = 1.0 / 360.0 * slapperGearRatio;
 
   public static final double MaxSpeed = 6; // 6 meters per second desired top speed
   public static final double MaxAngularRate = Math.PI * 4; // Half a rotation per second max angular velocity

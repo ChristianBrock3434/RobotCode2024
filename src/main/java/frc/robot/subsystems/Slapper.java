@@ -17,7 +17,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -30,7 +29,7 @@ public class Slapper extends SubsystemBase {
   NeutralOut stopMode;
   
   /**
-   * Creates a new Intake.
+   * Creates a new Slapper.
    */
   public Slapper() {
     initSlapperMotors();
@@ -38,10 +37,13 @@ public class Slapper extends SubsystemBase {
   
 
   /**
-   * Initialize the actuation motor
+   * Initialize the Slapper motor
    */
   public void initSlapperMotors() {
     // actuationMotor.setNeutralMode(NeutralModeValue.Brake);
+
+    slapperMotor1.setPosition(0 * actuationTicksPerDegree); //TODO: find starting angle
+    slapperMotor2.setPosition(0 * actuationTicksPerDegree); //TODO: find starting angle
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -55,13 +57,13 @@ public class Slapper extends SubsystemBase {
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    configs.Slot0.kP = 40; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kP = 1; // An error of 1 rotation per second results in 2V output
     configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
-    configs.Voltage.PeakForwardVoltage = 12;
-    configs.Voltage.PeakReverseVoltage = -12;
+    configs.Voltage.PeakForwardVoltage = 8;
+    configs.Voltage.PeakReverseVoltage = -8;
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -97,6 +99,11 @@ public class Slapper extends SubsystemBase {
                                   false);
   }
 
+  /**
+   * Run the slapper at a given voltage with FOC
+   * @param voltage Voltage to run the slapper at
+   * @return Command to be scheduled
+   */
   public Command runSlapper(double voltage) {
     return new Command() {
       @Override
@@ -111,11 +118,43 @@ public class Slapper extends SubsystemBase {
     };
   }
 
+  /**
+   * Run the slapper at a given voltage with FOC
+   * @param voltage Voltage to run the slapper at
+   */
   public void runSlapperVoltage(double voltage) {
     slapperMotor1.setControl(voltageControl.withOutput(voltage));
     slapperMotor2.setControl(voltageControl.withOutput(voltage));
   }
 
+  /**
+   * Set the position of the slapper
+   * @param position Position in rotations to set the slapper to
+   * @return Command to be scheduled
+   */
+  public Command setPosition(double position) {
+    return new Command() {
+      @Override
+      public void execute() {
+        setSlapperPosition(position);
+      }
+    };
+  }
+
+  /**
+   * Set the position of the slapper
+   * @param position Position in rotations to set the slapper to
+   */
+  public void setSlapperPosition(double position) {
+    slapperMotor1.setControl(motionMagicControl.withPosition(position));
+    slapperMotor2.setControl(motionMagicControl.withPosition(position));
+  }
+
+  /**
+   * Run the slapper at a given percent output
+   * @param speed Percent output to run the slapper at (-1 to 1)
+   * @return Command to be scheduled
+   */
   public Command runSlapperPercent(double speed) {
     return new Command() {
       @Override
@@ -132,6 +171,9 @@ public class Slapper extends SubsystemBase {
     };
   }
 
+  /**
+   * Stop the slapper
+   */
   public void stopSlapper() {
     slapperMotor1.setControl(stopMode);
     slapperMotor2.setControl(stopMode);

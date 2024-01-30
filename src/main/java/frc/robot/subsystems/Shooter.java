@@ -82,7 +82,7 @@ public class Shooter extends SubsystemBase {
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.kP = 20; // An error of 1 rotation per second results in 2V output
@@ -168,7 +168,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
-    // System.out.println(rightShooterMotor.getVelocity().getValueAsDouble());
+    System.out.println(rightShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override

@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Actuation;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Slapper;
@@ -25,4 +26,5 @@ public final class Subsystems {
   public static final Actuation actuation = new Actuation(); // My actuation
   public static final Shooter shooter = new Shooter(); // My shooter
   public static final Slapper slapper = new Slapper(); // My slapper
+  public static final Indexer indexer = new Indexer(); // My indexer
 }

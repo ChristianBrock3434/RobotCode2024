@@ -73,16 +73,20 @@ public class RobotContainer {
       actuation.setPositionCommand(-60 * actuationTicksPerDegree),
       new InstantCommand(this::setTuckPosition)
     ));
+
     joystick.povDown().whileTrue(
-      slapper.runSlapper(2)
+      slapper.setPosition(5  * slapperTicksPerDegree)
     );
     joystick.povUp().whileTrue(
-      slapper.runSlapper(-2)
+      slapper.setPosition(90 * slapperTicksPerDegree)
     );
 
     joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     joystick.leftBumper().whileTrue(intake.runIntakeCommand(-15, 40));
     joystick.a().and(this::isTuckPosition).whileTrue(intake.feedCommand(60, 100));
+
+    joystick.povRight().whileTrue(indexer.runIndexerCommand(55, 100));
+    joystick.povLeft().whileTrue(indexer.runIndexerCommand(-55, 100));
 
     new Trigger(this::isPieceIn).and(this::isIntakePosition).onTrue(new SequentialCommandGroup(
       new InstantCommand(intake::stopIntakeMotor, intake),
@@ -92,8 +96,8 @@ public class RobotContainer {
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
-    joystick.rightTrigger(0.1).whileTrue(shooter.runShooterCommand(80, 100));
-    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(-80, 100));
+    joystick.rightTrigger(0.1).whileTrue(shooter.runShooterCommand(60, 100)); //60 for shooting, 20 for amp
+    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(-60, 100));
     // joystick.rightTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
     // joystick.leftTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
   }
