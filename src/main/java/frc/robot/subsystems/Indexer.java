@@ -25,29 +25,24 @@ public class Indexer extends SubsystemBase {
    * Creates a new Intake.
    */
   public Indexer() {
-    initIntakeMotor();
+    initIndexerMotor();
   }
    
   /**
    * Initialize the intake motor
    */
-  public void initIntakeMotor() {
+  public void initIndexerMotor() {
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
-    configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 0.5; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kP = 4; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
-
-    configs.Slot1.kP = 4; // An error of 1 rotation per second results in 2V output
-    configs.Slot1.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot1.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
-    configs.Slot1.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
     configs.Voltage.PeakForwardVoltage = 12;
     configs.Voltage.PeakReverseVoltage = -12;
@@ -65,7 +60,7 @@ public class Indexer extends SubsystemBase {
                                           0, 
                                           true, 
                                           0, 
-                                          1, 
+                                          0, 
                                           false, 
                                           false, 
                                           false
@@ -83,6 +78,11 @@ public class Indexer extends SubsystemBase {
   public Command runIndexerCommand(double velocity, double acceleration){
     return new Command() {
       @Override
+      public void initialize() {
+        addRequirements(Indexer.this);
+      }
+
+      @Override
       public void execute() {
         runIndexer(velocity, acceleration);
       }
@@ -93,6 +93,22 @@ public class Indexer extends SubsystemBase {
       }
     };
   }
+
+  public Command speedUpIndexer(double velocity, double acceleration){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Indexer.this);
+        runIndexer(velocity, acceleration);
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
 
   /**
    * Run the intake motor at a given velocity and acceleration
@@ -109,6 +125,11 @@ public class Indexer extends SubsystemBase {
 
   public Command runIndexerPercent(double speed) {
     return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Indexer.this);
+      }
+
       @Override
       public void execute() {
         indexerMotor.set(speed);

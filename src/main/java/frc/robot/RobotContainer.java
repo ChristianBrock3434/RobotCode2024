@@ -14,8 +14,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.automation.ShootSequence;
+import frc.robot.commands.automation.StopMotors;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -96,8 +99,9 @@ public class RobotContainer {
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
-    joystick.rightTrigger(0.1).whileTrue(shooter.runShooterCommand(60, 100)); //60 for shooting, 20 for amp
-    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(-60, 100));
+    // joystick.rightTrigger(0.1).whileTrue(indexer.runIndexerCommand(60, 100));
+    joystick.rightTrigger(0.1).whileTrue(new ShootSequence()).onFalse(new StopMotors()); //60 for shooting, 20 for amp
+    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(-70, 100));
     // joystick.rightTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
     // joystick.leftTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
   }

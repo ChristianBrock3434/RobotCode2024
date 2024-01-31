@@ -98,6 +98,11 @@ public class Intake extends SubsystemBase {
   public Command runIntakeCommand(double velocity, double acceleration){
     return new Command() {
       @Override
+      public void initialize() {
+        addRequirements(Intake.this);
+      }
+
+      @Override
       public void execute() {
         runIntakeMotor(velocity, acceleration);
       }
@@ -130,6 +135,11 @@ public class Intake extends SubsystemBase {
   public Command feedCommand(double velocity, double acceleration){
     return new Command() {
       @Override
+      public void initialize() {
+        addRequirements(Intake.this);
+      }
+
+      @Override
       public void execute() {
         feedMotor(velocity, acceleration);
       }
@@ -156,6 +166,11 @@ public class Intake extends SubsystemBase {
 
   public Command runIntakePercent(double speed) {
     return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Intake.this);
+      }
+
       @Override
       public void execute() {
         intakeMotor.set(speed);
