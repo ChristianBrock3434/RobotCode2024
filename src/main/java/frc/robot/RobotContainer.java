@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopMotors;
 
@@ -37,8 +37,8 @@ public class RobotContainer {
   // Lock wheels
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-  public boolean intakePosition = false;
-  public boolean tuckPosition = true;
+  // public boolean intakePosition = false;
+  // public boolean tuckPosition = true;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -57,24 +57,24 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getRightY() * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY(-joystick.getRightX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-joystick.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
     // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake)); // Lock wheels on A press
 
     // reset the field-centric heading on left bumper press
-    // joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     joystick.x().whileTrue(new ParallelCommandGroup(
-      actuation.setPositionCommand(95 * actuationTicksPerDegree),
-      new InstantCommand(this::setIntakePosition)
+      actuation.setPositionCommand(90 * actuationTicksPerDegree)
+      // new InstantCommand(this::setIntakePosition)
     ));
     joystick.b().whileTrue(new ParallelCommandGroup(
-      actuation.setPositionCommand(-60 * actuationTicksPerDegree),
-      new InstantCommand(this::setTuckPosition)
+      actuation.setPositionCommand(-60 * actuationTicksPerDegree)
+      // new InstantCommand(this::setTuckPosition)
     ));
 
     joystick.povDown().whileTrue(
@@ -84,18 +84,22 @@ public class RobotContainer {
       slapper.setPosition(90 * slapperTicksPerDegree)
     );
 
-    joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
+    // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
+    joystick.rightBumper().onTrue(new PickUpPiece());
     joystick.leftBumper().whileTrue(intake.runIntakeCommand(-15, 40));
-    joystick.a().and(this::isTuckPosition).whileTrue(intake.feedCommand(60, 100));
+    joystick.a().whileTrue(intake.feedCommand(60, 100));
 
     joystick.povRight().whileTrue(indexer.runIndexerCommand(55, 100));
     joystick.povLeft().whileTrue(indexer.runIndexerCommand(-55, 100));
 
-    new Trigger(this::isPieceIn).and(this::isIntakePosition).onTrue(new SequentialCommandGroup(
-      new InstantCommand(intake::stopIntakeMotor, intake),
-      actuation.setPositionCommand(-55 * actuationTicksPerDegree),
-      new InstantCommand(this::setTuckPosition)
-    ));
+    // new Trigger(intake::getDistanceSensorTripped)
+    //   .and(this::isIntakePosition)
+    //   .and(actuation::isAtPosition)
+    //     .onTrue(new SequentialCommandGroup(
+    //       new InstantCommand(intake::stopIntakeMotor, intake),
+    //       actuation.setPositionCommand(-60 * actuationTicksPerDegree),
+    //       new InstantCommand(this::setTuckPosition)
+    //     ));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
@@ -107,26 +111,26 @@ public class RobotContainer {
   }
 
   public boolean isPieceIn() {
-    return intake.pdp.getCurrent(16) >= 50;
+    return intake.pdp.getCurrent(16) >= 45;
   }
 
-  public void setIntakePosition() {
-    intakePosition = true;
-    tuckPosition = false;
-  }
+  // public void setIntakePosition() {
+  //   intakePosition = true;
+  //   tuckPosition = false;
+  // }
 
-  public void setTuckPosition() {
-    tuckPosition = true;
-    intakePosition = false;
-  }
+  // public void setTuckPosition() {
+  //   tuckPosition = true;
+  //   intakePosition = false;
+  // }
 
-  public boolean isIntakePosition() {
-    return intakePosition;
-  }
+  // public boolean isIntakePosition() {
+  //   return intakePosition;
+  // }
 
-  public boolean isTuckPosition() {
-    return tuckPosition;
-  }
+  // public boolean isTuckPosition() {
+  //   return tuckPosition;
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

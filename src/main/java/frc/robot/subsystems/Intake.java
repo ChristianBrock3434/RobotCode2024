@@ -8,10 +8,12 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,10 +22,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
   private TalonFX intakeMotor = new TalonFX(13);
 
+  private DigitalInput distanceSensor = new DigitalInput(1);
+
   public PowerDistribution pdp = new PowerDistribution(27, ModuleType.kRev);
 
   VelocityVoltage velocityControlIntake;
   VelocityVoltage velocityControlFeed;
+  VoltageOut voltageControl;
   NeutralOut stopMode;
   
   /**
@@ -37,6 +42,7 @@ public class Intake extends SubsystemBase {
    * Initialize the intake motor
    */
   public void initIntakeMotor() {
+    System.out.println("Intake Safety: " + intakeMotor.isSafetyEnabled());
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -85,6 +91,12 @@ public class Intake extends SubsystemBase {
                                           false, 
                                           false
                                           );
+
+    voltageControl = new VoltageOut(0, 
+                                    false, 
+                                    false, 
+                                    false, 
+                                    false);
 
     stopMode = new NeutralOut();
   }
@@ -163,6 +175,45 @@ public class Intake extends SubsystemBase {
                           );
   }
 
+  /**
+   * Run the intake motor at a given voltage
+   * @param voltage in volts
+   * @return a command that will run the intake motor
+   */
+  public Command runVoltageCommand(double voltage){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Intake.this);
+      }
+
+      @Override
+      public void execute() {
+        runVoltage(voltage);
+      }
+
+      // @Override
+      // public void end(boolean interrupted) {
+      //   stopIntakeMotor();
+      // }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
+  /**
+   * Run the intake motor at a given voltage
+   * @param voltage in volts
+   */
+  public void runVoltage(double voltage) {
+    intakeMotor.setControl(voltageControl
+                            .withOutput(voltage)
+                          );
+  }
+
 
   public Command runIntakePercent(double speed) {
     return new Command() {
@@ -188,11 +239,25 @@ public class Intake extends SubsystemBase {
     intakeMotor.setControl(stopMode);
   }
 
+  public Command waitUntilTripped() {
+    return new Command() {
+      @Override
+      public boolean isFinished() {
+        return getDistanceSensorTripped();
+      }
+    };
+  }
+
+  public boolean getDistanceSensorTripped() {
+    return distanceSensor.get();
+  }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
+    // System.out.println(getDistanceSensorTripped());
   }
 
   @Override

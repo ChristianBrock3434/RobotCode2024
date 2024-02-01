@@ -147,6 +147,16 @@ public class Actuation extends SubsystemBase {
     };
   }
 
+  public Command waitUntilAtPosition(double setPosition) {
+    return new Command() {
+      @Override
+      public boolean isFinished() {
+        double currentPosition = actuationMotor.getPosition().getValueAsDouble();
+        return Math.abs(currentPosition - setPosition) <= 0.3;
+      }
+    };
+  }
+
   public void resetEncoder() {
     actuationMotor.setPosition(-65 * actuationTicksPerDegree);
   }
@@ -161,7 +171,7 @@ public class Actuation extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(getLimitSwitch());
-    // System.out.println(actuationMotor.getPosition());
+    // System.out.println(actuationMotor.getPosition().getValueAsDouble());
     // System.out.println(actuationMotor.getMotorVoltage());
   }
 

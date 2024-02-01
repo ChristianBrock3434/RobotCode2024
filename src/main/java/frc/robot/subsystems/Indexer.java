@@ -32,6 +32,7 @@ public class Indexer extends SubsystemBase {
    * Initialize the intake motor
    */
   public void initIndexerMotor() {
+    System.out.println("Indexer Safety: " + indexerMotor.isSafetyEnabled());
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -152,6 +153,7 @@ public class Indexer extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
+    // System.out.println(indexerMotor.getDeviceTemp().getValueAsDouble());
   }
 
   @Override

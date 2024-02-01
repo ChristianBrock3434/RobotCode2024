@@ -20,7 +20,9 @@ public class Shooter extends SubsystemBase {
   private TalonFX rightShooterMotor = new TalonFX(16);
 
   VelocityVoltage velocityControl;
+  VelocityVoltage sitControl;
   NeutralOut stopMode;
+
 
   private static final double leftSideMultiplier = 1.00;
   private static final double rightSideMultiplier = 1.00;
@@ -41,6 +43,15 @@ public class Shooter extends SubsystemBase {
                                           false
                                           );
 
+    sitControl = new VelocityVoltage(10,
+                                    10, 
+                                    true, 
+                                    0, 
+                                    1, 
+                                    false, 
+                                    false, 
+                                    false);
+
     stopMode = new NeutralOut();
   }
 
@@ -48,6 +59,8 @@ public class Shooter extends SubsystemBase {
    * Initialize the both shooter motors
    */
   public void initMotors() {
+    System.out.println("Left Shooter Safety: " + leftShooterMotor.isSafetyEnabled());
+    System.out.println("Right Shooter Safety: " + rightShooterMotor.isSafetyEnabled());
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -59,6 +72,11 @@ public class Shooter extends SubsystemBase {
     configs.Slot0.kI = 30; // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 10.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
+
+    configs.Slot1.kP = 0.5; // An error of 1 rotation per second results in 2V output
+    configs.Slot1.kI = 0; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot1.kD = 0; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot1.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
     configs.Voltage.PeakForwardVoltage = 12;
     configs.Voltage.PeakReverseVoltage = -12;
@@ -174,6 +192,8 @@ public class Shooter extends SubsystemBase {
   public void stopShooter() {
     leftShooterMotor.setControl(stopMode);
     rightShooterMotor.setControl(stopMode);
+    // leftShooterMotor.setControl(sitControl);
+    // rightShooterMotor.setControl(sitControl);
   }
 
   public Command checkIfAtSpeed(double velocity) {
@@ -205,8 +225,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
-    System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
-    System.out.println("Left Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
+    // System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
+    // System.out.println("Left Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
