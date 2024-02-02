@@ -24,6 +24,12 @@ public final class Constants {
   public static final double MaxSpeed = 6; // 6 meters per second desired top speed
   public static final double MaxAngularRate = Math.PI * 4; // Half a rotation per second max angular velocity
 
+  public static final double blueSpeakerX = -8.3;
+  public static final double blueSpeakerY = 1.5;
+
+  public static final double redSpeakerX = 0;
+  public static final double redSpeakerY = 0;
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

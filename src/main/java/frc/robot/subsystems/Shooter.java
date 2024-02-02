@@ -8,6 +8,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -16,11 +17,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
+  private static final double[][] distanceMap = {
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0}
+  };
+
   private TalonFX leftShooterMotor = new TalonFX(15);
   private TalonFX rightShooterMotor = new TalonFX(16);
 
   VelocityVoltage velocityControl;
-  VelocityVoltage sitControl;
+  VoltageOut sitControl;
   NeutralOut stopMode;
 
 
@@ -36,21 +48,18 @@ public class Shooter extends SubsystemBase {
     velocityControl = new VelocityVoltage(0, 
                                           0, 
                                           true, 
-                                          0, 
+                                          0.2,
                                           0, 
                                           false, 
                                           false, 
                                           false
                                           );
 
-    sitControl = new VelocityVoltage(10,
-                                    10, 
-                                    true, 
-                                    0, 
-                                    1, 
-                                    false, 
-                                    false, 
-                                    false);
+    sitControl = new VoltageOut(0.5,
+                                false, 
+                                false, 
+                                false, 
+                                false);
 
     stopMode = new NeutralOut();
   }
@@ -68,15 +77,11 @@ public class Shooter extends SubsystemBase {
     configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
-    configs.Slot0.kP = 80; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 30; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 10.0; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kP = 0.5; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kI = 1; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
 
-    configs.Slot1.kP = 0.5; // An error of 1 rotation per second results in 2V output
-    configs.Slot1.kI = 0; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot1.kD = 0; // A change of 1 rotation per second squared results in 0.01 volts output
-    configs.Slot1.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
     configs.Voltage.PeakForwardVoltage = 12;
     configs.Voltage.PeakReverseVoltage = -12;
@@ -190,10 +195,10 @@ public class Shooter extends SubsystemBase {
 
   
   public void stopShooter() {
-    leftShooterMotor.setControl(stopMode);
-    rightShooterMotor.setControl(stopMode);
-    // leftShooterMotor.setControl(sitControl);
-    // rightShooterMotor.setControl(sitControl);
+    // leftShooterMotor.setControl(stopMode);
+    // rightShooterMotor.setControl(stopMode);
+    leftShooterMotor.setControl(sitControl);
+    rightShooterMotor.setControl(sitControl);
   }
 
   public Command checkIfAtSpeed(double velocity) {
@@ -215,7 +220,7 @@ public class Shooter extends SubsystemBase {
       public boolean isFinished() {
         boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity * leftSideMultiplier;
         boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity * rightSideMultiplier;
-        return leftShooterSpeed && rightShooterSpeed;
+        return rightShooterSpeed;
       }
     };
   }
@@ -226,7 +231,7 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
     // System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
-    // System.out.println("Left Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
+    // System.out.println("Left Velocity:" + leftShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
