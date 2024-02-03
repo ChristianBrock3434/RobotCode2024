@@ -13,8 +13,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class LimelightShooter extends SubsystemBase {
-  public final String LIMELIGHT = "limelight-shooter";
+public class LimelightIntake extends SubsystemBase {
+  public final String LIMELIGHT = "limelight-intake";
   public double tx = 0;
   public double ty = 0;
   public double ta = 0;
@@ -34,7 +34,8 @@ public class LimelightShooter extends SubsystemBase {
   };
 
   public static enum Pipeline {
-    AprilTag3D(0);
+    Note(0),
+    AprilTag3D(1);
 
     public int pipelineNum;
 
@@ -46,7 +47,7 @@ public class LimelightShooter extends SubsystemBase {
   /**
    * Limelight Subsystem
    */
-  public LimelightShooter() {
+  public LimelightIntake() {
     updateLimeLight();
 
     // turnOffLimelight();

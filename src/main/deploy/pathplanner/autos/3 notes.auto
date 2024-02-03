@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3374413054104268,
+      "y": 4.567226252854788
+    },
+    "rotation": 135.74405920288876
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pick up piece 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot piece 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pick up piece 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot piece 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pick up piece 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot piece 3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

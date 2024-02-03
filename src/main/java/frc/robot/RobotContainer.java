@@ -8,6 +8,7 @@ import static frc.robot.Constants.*;
 import static frc.robot.Subsystems.*;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopMotors;
+import frc.robot.commands.limelight.LineUpToNote;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,7 +45,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    linkAutoCommands();
     configureBindings();
+  }
+
+  public void linkAutoCommands() {
+    NamedCommands.registerCommand("shoot", new ShootSequence());
+    NamedCommands.registerCommand("intake", new PickUpPiece());
   }
 
   /**
@@ -108,6 +116,8 @@ public class RobotContainer {
     joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(-70, 100));
     // joystick.rightTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
     // joystick.leftTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
+
+    joystick.y().whileTrue(new LineUpToNote());
   }
 
   public boolean isPieceIn() {
@@ -139,6 +149,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new SequentialCommandGroup();
+    return drivetrain.getAutoPath("3 notes");
   }
 }

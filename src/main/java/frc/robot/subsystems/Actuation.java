@@ -171,7 +171,7 @@ public class Actuation extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(getLimitSwitch());
-    // System.out.println(actuationMotor.getPosition().getValueAsDouble());
+    System.out.println(actuationMotor.getPosition().getValueAsDouble());
     // System.out.println(actuationMotor.getMotorVoltage());
   }
 
