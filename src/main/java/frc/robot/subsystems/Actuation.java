@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.*;
+import static frc.robot.Constants.ActuationConstants.*;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -34,6 +34,15 @@ public class Actuation extends SubsystemBase {
    */
   public Actuation() {
     initActuationMotor();
+
+    motionMagicControl = new MotionMagicVoltage(0, 
+                                                true, 
+                                                1,
+                                                0,
+                                                false,
+                                                false,
+                                                false
+                                              );
   }
   
 
@@ -43,7 +52,7 @@ public class Actuation extends SubsystemBase {
   public void initActuationMotor() {
     // actuationMotor.setNeutralMode(NeutralModeValue.Brake);
 
-    actuationMotor.setPosition(-65 * actuationTicksPerDegree);
+    actuationMotor.setPosition(actuationStartPosition);
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -62,8 +71,8 @@ public class Actuation extends SubsystemBase {
     configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
-    configs.Voltage.PeakForwardVoltage = 12;
-    configs.Voltage.PeakReverseVoltage = -12;
+    configs.Voltage.PeakForwardVoltage = 8;
+    configs.Voltage.PeakReverseVoltage = -8;
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -73,15 +82,6 @@ public class Actuation extends SubsystemBase {
     if(!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
-
-    motionMagicControl = new MotionMagicVoltage(0, 
-                                                true, 
-                                                1,
-                                                0, 
-                                                false, 
-                                                false, 
-                                                false
-                                              );
   }
 
 
@@ -158,7 +158,7 @@ public class Actuation extends SubsystemBase {
   }
 
   public void resetEncoder() {
-    actuationMotor.setPosition(-65 * actuationTicksPerDegree);
+    actuationMotor.setPosition(actuationStartPosition);
   }
 
 
@@ -171,7 +171,7 @@ public class Actuation extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(getLimitSwitch());
-    System.out.println(actuationMotor.getPosition().getValueAsDouble());
+    // System.out.println(actuationMotor.getPosition().getValueAsDouble());
     // System.out.println(actuationMotor.getMotorVoltage());
   }
 

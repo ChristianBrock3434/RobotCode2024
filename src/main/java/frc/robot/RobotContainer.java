@@ -5,6 +5,10 @@
 package frc.robot;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.ActuationConstants.*;
+import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.ShooterConstants.*;
+
 import static frc.robot.Subsystems.*;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -12,9 +16,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
@@ -30,7 +31,7 @@ import frc.robot.commands.limelight.LineUpToNote;
  */
 public class RobotContainer {
   
-  private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController joystick = new CommandXboxController(kDriverControllerPort); // My joystick
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -49,6 +50,9 @@ public class RobotContainer {
     configureBindings();
   }
 
+  /**
+   * link commands to pathplanner for autos
+   */
   public void linkAutoCommands() {
     NamedCommands.registerCommand("shoot", new ShootSequence());
     NamedCommands.registerCommand("intake", new PickUpPiece());
@@ -73,74 +77,24 @@ public class RobotContainer {
 
     // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake)); // Lock wheels on A press
 
-    // reset the field-centric heading on left bumper press
+    // reset the field-centric heading on start button
     joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    joystick.x().whileTrue(new ParallelCommandGroup(
-      actuation.setPositionCommand(90 * actuationTicksPerDegree)
-      // new InstantCommand(this::setIntakePosition)
-    ));
-    joystick.b().whileTrue(new ParallelCommandGroup(
-      actuation.setPositionCommand(-60 * actuationTicksPerDegree)
-      // new InstantCommand(this::setTuckPosition)
-    ));
-
-    joystick.povDown().whileTrue(
-      slapper.setPosition(5  * slapperTicksPerDegree)
-    );
-    joystick.povUp().whileTrue(
-      slapper.setPosition(90 * slapperTicksPerDegree)
-    );
+    joystick.x().onTrue(actuation.setPositionCommand(actuationPickUpPosition));
+    joystick.b().onTrue(actuation.setPositionCommand(actuationTuckPosition));
 
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     joystick.rightBumper().onTrue(new PickUpPiece());
-    joystick.leftBumper().whileTrue(intake.runIntakeCommand(-15, 40));
+    joystick.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
     joystick.a().whileTrue(intake.feedCommand(60, 100));
-
-    joystick.povRight().whileTrue(indexer.runIndexerCommand(55, 100));
-    joystick.povLeft().whileTrue(indexer.runIndexerCommand(-55, 100));
-
-    // new Trigger(intake::getDistanceSensorTripped)
-    //   .and(this::isIntakePosition)
-    //   .and(actuation::isAtPosition)
-    //     .onTrue(new SequentialCommandGroup(
-    //       new InstantCommand(intake::stopIntakeMotor, intake),
-    //       actuation.setPositionCommand(-60 * actuationTicksPerDegree),
-    //       new InstantCommand(this::setTuckPosition)
-    //     ));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
-    // joystick.rightTrigger(0.1).whileTrue(indexer.runIndexerCommand(60, 100));
-    joystick.rightTrigger(0.1).whileTrue(new ShootSequence()).onFalse(new StopMotors()); //60 for shooting, 20 for amp
-    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(-70, 100));
-    // joystick.rightTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
-    // joystick.leftTrigger(0.1).whileTrue(shooter.runShooterPercent(0.4));
+    joystick.rightTrigger(0.1).whileTrue(new ShootSequence()).onFalse(new StopMotors());
+    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
 
     joystick.y().whileTrue(new LineUpToNote());
   }
-
-  public boolean isPieceIn() {
-    return intake.pdp.getCurrent(16) >= 45;
-  }
-
-  // public void setIntakePosition() {
-  //   intakePosition = true;
-  //   tuckPosition = false;
-  // }
-
-  // public void setTuckPosition() {
-  //   tuckPosition = true;
-  //   intakePosition = false;
-  // }
-
-  // public boolean isIntakePosition() {
-  //   return intakePosition;
-  // }
-
-  // public boolean isTuckPosition() {
-  //   return tuckPosition;
-  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

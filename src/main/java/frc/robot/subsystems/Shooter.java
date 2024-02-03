@@ -34,10 +34,6 @@ public class Shooter extends SubsystemBase {
   VelocityVoltage velocityControl;
   VoltageOut sitControl;
   NeutralOut stopMode;
-
-
-  private static final double leftSideMultiplier = 1.00;
-  private static final double rightSideMultiplier = 1.00;
   
   /**
    * Creates a new Intake.
@@ -59,7 +55,7 @@ public class Shooter extends SubsystemBase {
                                 false, 
                                 false, 
                                 false, 
-                                false);
+                                true);
 
     stopMode = new NeutralOut();
   }
@@ -161,12 +157,12 @@ public class Shooter extends SubsystemBase {
    */
   public void runShooter(double velocity, double acceleration) {
     leftShooterMotor.setControl(velocityControl
-                            .withVelocity(velocity * leftSideMultiplier)
+                            .withVelocity(velocity)
                             .withAcceleration(acceleration)
                           );
 
     rightShooterMotor.setControl(velocityControl
-                            .withVelocity(velocity * rightSideMultiplier)
+                            .withVelocity(velocity)
                             .withAcceleration(acceleration)
                           );
   }
@@ -181,8 +177,8 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public void execute() {
-        leftShooterMotor.set(speed * leftSideMultiplier);
-        rightShooterMotor.set(speed * rightSideMultiplier);
+        leftShooterMotor.set(speed);
+        rightShooterMotor.set(speed);
       }
 
       @Override
@@ -218,9 +214,9 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity * leftSideMultiplier;
-        boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity * rightSideMultiplier;
-        return rightShooterSpeed;
+        boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity;
+        boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity;
+        return leftShooterSpeed || rightShooterSpeed;
       }
     };
   }

@@ -12,7 +12,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimelightIntake;
 import frc.robot.subsystems.LimelightShooter;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Slapper;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -27,7 +26,6 @@ public final class Subsystems {
   public static final Intake intake = new Intake(); // My intake
   public static final Actuation actuation = new Actuation(); // My actuation
   public static final Shooter shooter = new Shooter(); // My shooter
-  public static final Slapper slapper = new Slapper(); // My slapper
   public static final Indexer indexer = new Indexer(); // My indexer
   public static final LimelightShooter limelightShooter = new LimelightShooter();
   public static final LimelightIntake limelightIntake = new LimelightIntake();

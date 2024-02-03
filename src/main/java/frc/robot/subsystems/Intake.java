@@ -14,19 +14,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   private TalonFX intakeMotor = new TalonFX(13);
 
-  private DigitalInput distanceSensor = new DigitalInput(1);
+  private DigitalInput noteSensor = new DigitalInput(1);
 
-  public PowerDistribution pdp = new PowerDistribution(27, ModuleType.kRev);
-
-  VelocityVoltage velocityControlIntake;
   VelocityVoltage velocityControlFeed;
   VoltageOut voltageControl;
   NeutralOut stopMode;
@@ -36,6 +31,24 @@ public class Intake extends SubsystemBase {
    */
   public Intake() {
     initIntakeMotor();
+
+    velocityControlFeed = new VelocityVoltage(0, 
+                                          0, 
+                                          true, 
+                                          0, 
+                                          1, 
+                                          false, 
+                                          false, 
+                                          false
+                                          );
+
+    voltageControl = new VoltageOut(0, 
+                                    false, 
+                                    false, 
+                                    false, 
+                                    false);
+
+    stopMode = new NeutralOut();
   }
    
   /**
@@ -71,71 +84,6 @@ public class Intake extends SubsystemBase {
     if(!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
-
-    velocityControlIntake = new VelocityVoltage(0, 
-                                          0, 
-                                          false, 
-                                          0, 
-                                          0, 
-                                          false, 
-                                          false, 
-                                          false
-                                          );
-
-    velocityControlFeed = new VelocityVoltage(0, 
-                                          0, 
-                                          true, 
-                                          0, 
-                                          1, 
-                                          false, 
-                                          false, 
-                                          false
-                                          );
-
-    voltageControl = new VoltageOut(0, 
-                                    false, 
-                                    false, 
-                                    false, 
-                                    false);
-
-    stopMode = new NeutralOut();
-  }
-
-  /**
-   * Run the intake motor at a given velocity and acceleration
-   * @param velocity in rotations per second
-   * @param acceleration in rotations per second squared
-   * @return a command that will run the intake motor
-   */
-  public Command runIntakeCommand(double velocity, double acceleration){
-    return new Command() {
-      @Override
-      public void initialize() {
-        addRequirements(Intake.this);
-      }
-
-      @Override
-      public void execute() {
-        runIntakeMotor(velocity, acceleration);
-      }
-
-      @Override
-      public void end(boolean interrupted) {
-        stopIntakeMotor();
-      }
-    };
-  }
-
-  /**
-   * Run the intake motor at a given velocity and acceleration
-   * @param velocity in rotations per second
-   * @param acceleration in rotations per second squared
-   */
-  public void runIntakeMotor(double velocity, double acceleration) {
-    intakeMotor.setControl(velocityControlIntake
-                            .withVelocity(velocity)
-                            .withAcceleration(acceleration)
-                          );
   }
 
   /**
@@ -243,13 +191,13 @@ public class Intake extends SubsystemBase {
     return new Command() {
       @Override
       public boolean isFinished() {
-        return getDistanceSensorTripped();
+        return getNoteSensor();
       }
     };
   }
 
-  public boolean getDistanceSensorTripped() {
-    return distanceSensor.get();
+  public boolean getNoteSensor() {
+    return noteSensor.get();
   }
 
 

@@ -26,6 +26,18 @@ public class Indexer extends SubsystemBase {
    */
   public Indexer() {
     initIndexerMotor();
+
+    velocityControl = new VelocityVoltage(0, 
+                                          0, 
+                                          true, 
+                                          0, 
+                                          0, 
+                                          false, 
+                                          false, 
+                                          false
+                                          );
+
+    stopMode = new NeutralOut();
   }
    
   /**
@@ -56,18 +68,6 @@ public class Indexer extends SubsystemBase {
     if(!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
-
-    velocityControl = new VelocityVoltage(0, 
-                                          0, 
-                                          true, 
-                                          0, 
-                                          0, 
-                                          false, 
-                                          false, 
-                                          false
-                                          );
-
-    stopMode = new NeutralOut();
   }
 
   /**

@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.*;
-
-import org.opencv.core.Mat;
+import static frc.robot.Constants.FieldConstants.*;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -15,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightShooter extends SubsystemBase {
   public final String LIMELIGHT = "limelight-shooter";
-  public double tx = 0;
-  public double ty = 0;
-  public double ta = 0;
-  public double ts = 0;
+  private double tx = 0;
+  private double ty = 0;
+  private double ta = 0;
+  private double ts = 0;
 
   public static enum LightMode {
     DEFAULT(0),
@@ -159,43 +157,6 @@ public class LimelightShooter extends SubsystemBase {
     // SmartDashboard.putNumber("Apriltag id", id);
     return id;
     // return 1;
-  }
-
-  /**
-   * Prints the name of piece that the Limelight detects
-   * @param pipeline Pipeline enum value of the piece to detect
-   * @return Command to be scheduled
-   */
-  public Command getPieceCommand(Pipeline pipeline) {
-    return new Command() {
-        @Override
-        public void initialize() {
-            turnOnLimelight();
-            setLimelightPipeline(pipeline);
-        }
-
-        @Override
-        public void execute() {
-            getPiece();
-        }
-
-        @Override
-        public void end(boolean interrupted) {
-            turnOffLimelight();
-        }
-
-        @Override
-        public boolean isFinished() {
-            return false;
-        }
-    };
-  }
-
-  /**
-   * Prints the name of piece that the Limelight detects
-   */
-  public void getPiece() {
-    System.out.println(NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("tclass").getString(null));
   }
 
   /**

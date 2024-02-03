@@ -1,23 +1,22 @@
 package frc.robot.commands.automation;
 
 import static frc.robot.Subsystems.*;
-import static frc.robot.Constants.*;
+import static frc.robot.Constants.ActuationConstants.*;
+import static frc.robot.Constants.IntakeConstants.*;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class PickUpPiece extends SequentialCommandGroup{
-    public final double actuationPosition = 95 * actuationTicksPerDegree;
 
     public PickUpPiece() {
         addCommands(
-            actuation.setPositionCommand(actuationPosition),
-            intake.runVoltageCommand(3),
-            actuation.waitUntilAtPosition(actuationPosition),
+            actuation.setPositionCommand(actuationPickUpPosition),
+            intake.runVoltageCommand(intakeVoltage),
+            actuation.waitUntilAtPosition(actuationPickUpPosition),
             intake.waitUntilTripped(),
             new InstantCommand(intake::stopIntakeMotor, intake),
-            actuation.setPositionCommand(-60 * actuationTicksPerDegree) //60
+            actuation.setPositionCommand(actuationTuckPosition)
         );
     }
 }

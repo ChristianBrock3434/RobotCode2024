@@ -48,11 +48,12 @@ public class LineUpToNote extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).schedule();
+        limelightIntake.turnOffLimelight();
+        drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
     }
 
     @Override
     public boolean isFinished() {
-      return false;
+      return lineUPController.atSetpoint();
     }
 }

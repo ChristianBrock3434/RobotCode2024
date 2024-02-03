@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.*;
-
-import org.opencv.core.Mat;
+import static frc.robot.Constants.FieldConstants.*;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -15,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightIntake extends SubsystemBase {
   public final String LIMELIGHT = "limelight-intake";
-  public double tx = 0;
-  public double ty = 0;
-  public double ta = 0;
-  public double ts = 0;
+  private double tx = 0;
+  private double ty = 0;
+  private double ta = 0;
+  private double ts = 0;
 
   public static enum LightMode {
     DEFAULT(0),
@@ -167,7 +165,7 @@ public class LimelightIntake extends SubsystemBase {
    * @param pipeline Pipeline enum value of the piece to detect
    * @return Command to be scheduled
    */
-  public Command getPieceCommand(Pipeline pipeline) {
+  public Command printPieceNameCommand(Pipeline pipeline) {
     return new Command() {
         @Override
         public void initialize() {
@@ -177,7 +175,7 @@ public class LimelightIntake extends SubsystemBase {
 
         @Override
         public void execute() {
-            getPiece();
+            printPieceName();
         }
 
         @Override
@@ -195,7 +193,7 @@ public class LimelightIntake extends SubsystemBase {
   /**
    * Prints the name of piece that the Limelight detects
    */
-  public void getPiece() {
+  public void printPieceName() {
     System.out.println(NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("tclass").getString(null));
   }
 
@@ -227,6 +225,7 @@ public class LimelightIntake extends SubsystemBase {
       return null;
     }
 
+    //TODO: add support for red alliance
     double xDistance = Math.abs(blueSpeakerX - pose[0]);
     double yDistance = Math.abs(blueSpeakerY - pose[1]);
 
