@@ -22,6 +22,7 @@ import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopMotors;
 import frc.robot.commands.limelight.LineUpToNote;
+import frc.robot.commands.limelight.LineUpWithNotePath;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,6 +57,12 @@ public class RobotContainer {
   public void linkAutoCommands() {
     NamedCommands.registerCommand("shoot", new ShootSequence());
     NamedCommands.registerCommand("intake", new PickUpPiece());
+
+    NamedCommands.registerCommand("lineUpToNote1", new LineUpWithNotePath("3 ring close blue", 0));
+    NamedCommands.registerCommand("lineUpToNote2", new LineUpWithNotePath("3 ring close blue", 1));
+    NamedCommands.registerCommand("lineUpToNote3", new LineUpWithNotePath("3 ring close blue", 2));
+
+    NamedCommands.registerCommand("flashNote", limelightIntake.flashNote());
   }
 
   /**
@@ -86,14 +93,16 @@ public class RobotContainer {
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     joystick.rightBumper().onTrue(new PickUpPiece());
     joystick.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
-    joystick.a().whileTrue(intake.feedCommand(60, 100));
+    // joystick.a().whileTrue(intake.feedCommand(60, 100));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
     joystick.rightTrigger(0.1).whileTrue(new ShootSequence()).onFalse(new StopMotors());
     joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
 
-    joystick.y().whileTrue(new LineUpToNote());
+    // joystick.y().whileTrue(new LineUpToNote());
+    joystick.y().whileTrue(angleController.anglePercentControl(0.1));
+    joystick.a().whileTrue(angleController.anglePercentControl(-0.1));
   }
 
   /**
@@ -103,6 +112,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.getAutoPath("3 notes");
+    return drivetrain.getAutoPath("3 ring close blue");
   }
 }

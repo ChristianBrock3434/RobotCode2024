@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Actuation;
+import frc.robot.subsystems.AngleController;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -27,6 +29,8 @@ public final class Subsystems {
   public static final Actuation actuation = new Actuation(); // My actuation
   public static final Shooter shooter = new Shooter(); // My shooter
   public static final Indexer indexer = new Indexer(); // My indexer
-  public static final LimelightShooter limelightShooter = new LimelightShooter();
-  public static final LimelightIntake limelightIntake = new LimelightIntake();
+  public static final Climber climber = new Climber(); // My climber
+  public static final AngleController angleController = new AngleController(); // My angle controller
+  public static final LimelightShooter limelightShooter = new LimelightShooter(); // My limelight for the shooter
+  public static final LimelightIntake limelightIntake = new LimelightIntake(); // My limelight for the intake
 }

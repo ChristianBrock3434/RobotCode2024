@@ -149,6 +149,22 @@ public class LimelightIntake extends SubsystemBase {
 
     turnOffLimelight();
   }
+
+  public Command flashNote() {
+    return new Command() {
+      @Override
+      public void initialize() {
+        turnOnLimelight();
+        setLimelightPipeline(LimelightIntake.Pipeline.Note);
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
   /**
    * Scan Apriltag if you're in the right pipeline
    * @return Id of Apriltag

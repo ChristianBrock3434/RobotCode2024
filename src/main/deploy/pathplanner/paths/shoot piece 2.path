@@ -3,47 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.616498309919698,
-        "y": 5.555088802485298
+        "x": 2.8730388230007247,
+        "y": 5.3972177175123575
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.211953654676541,
-        "y": 5.555088802485298
+        "x": 2.5960605393389287,
+        "y": 5.3972177175123575
       },
       "isLocked": false,
-      "linkedName": "note2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.5903362575955933,
-        "y": 5.525487974052871
+        "x": 1.6988726285144893,
+        "y": 5.338016060647505
       },
       "prevControl": {
-        "x": 1.8962114847306628,
-        "y": 5.505754088431254
+        "x": 2.0258244649584567,
+        "y": 5.338016060647505
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shoot2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.73,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Practice",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0
