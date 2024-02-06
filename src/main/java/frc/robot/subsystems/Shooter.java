@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -17,15 +19,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
+  // Distance, Angle, Speed
   private static final double[][] distanceMap = {
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0}
+    {1.3, 18, 40},
+    {1.6, 15, 40},
+    {2, 10, 40},
+    {3, 2, 45}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);
@@ -73,8 +72,8 @@ public class Shooter extends SubsystemBase {
     configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
-    configs.Slot0.kP = 0.5; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 1; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kP = 0.5; //0.5 // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kI = 1.0; //1.0 // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
 
@@ -141,6 +140,21 @@ public class Shooter extends SubsystemBase {
       public void initialize() {
         addRequirements(Shooter.this);
         runShooter(velocity, acceleration);
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
+  public Command speedUpShooterSupplier(DoubleSupplier velocity, double acceleration){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Shooter.this);
+        runShooter(velocity.getAsDouble(), acceleration);
       }
 
       @Override
@@ -219,6 +233,65 @@ public class Shooter extends SubsystemBase {
         return leftShooterSpeed || rightShooterSpeed;
       }
     };
+  }
+
+  public Command checkIfAtSpeedSupplier(DoubleSupplier velocity, double multiplier) {
+    return new Command() {
+      @Override
+      public void initialize() {
+      }
+
+      @Override
+      public void execute() {
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+
+      }
+
+      @Override
+      public boolean isFinished() {
+        boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble() * multiplier;
+        boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble() * multiplier;
+        return leftShooterSpeed || rightShooterSpeed;
+      }
+    };
+  }
+  
+  public double[] getAngleAndSpeed(Double distance) {
+    double[] emptyVal = {-1, -1, -1};
+    if (distance < 0) return emptyVal;
+
+    for (int i = 0; i < distanceMap.length; i++) {
+      double curDis = distanceMap[i][0];
+
+      if (distance > curDis) {
+        continue;
+      }
+
+      try {
+        double prevDis = distanceMap[i-1][0];
+        prevDis = distance - prevDis;
+        curDis = curDis - distance;
+        // double[] arr = (curDis > prevDis) ? distanceMap[i] : distanceMap[i-1];
+        // for (double j : arr) {
+        //   System.out.println(j);
+        // }
+        // return arr;
+        return (curDis > prevDis) ? distanceMap[i] : distanceMap[i-1];
+      } 
+      catch (ArrayIndexOutOfBoundsException e) {
+        // for (double j : distanceMap[i]) {
+        //   System.out.println(j);
+        // }
+        return distanceMap[i];
+      }
+    }
+    if (distance < distanceMap[distanceMap.length-1][0] + 0.5) {
+      return distanceMap[distanceMap.length-1];
+    }
+    return emptyVal;
   }
 
 

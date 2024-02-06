@@ -180,11 +180,11 @@ public class LimelightShooter extends SubsystemBase {
     // return null;
   }
 
-  public Double getDistanceFromGoal() {
+  public double getDistanceFromGoal() {
     double[] pose = getRobotPose();
 
     if (pose[0] == 0 && pose[1] == 0) {
-      return null;
+      return -1;
     }
 
     double xDistance = Math.abs(blueSpeakerX - pose[0]);

@@ -8,6 +8,7 @@ import static frc.robot.Constants.*;
 import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.Constants.AngleControllerConstants.*;
 
 import static frc.robot.Subsystems.*;
 
@@ -15,6 +16,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,8 +33,6 @@ import frc.robot.commands.limelight.LineUpWithNotePath;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  
-  private final CommandXboxController joystick = new CommandXboxController(kDriverControllerPort); // My joystick
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -55,7 +55,7 @@ public class RobotContainer {
    * link commands to pathplanner for autos
    */
   public void linkAutoCommands() {
-    NamedCommands.registerCommand("shoot", new ShootSequence());
+    NamedCommands.registerCommand("shoot", new ShootSequence(this::getAngle, this::getSpeed));
     NamedCommands.registerCommand("intake", new PickUpPiece());
 
     NamedCommands.registerCommand("lineUpToNote1", new LineUpWithNotePath("3 ring close blue", 0));
@@ -76,33 +76,50 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getRightY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(-controller.getRightY() * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-joystick.getRightX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joystick.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY(-controller.getRightX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-controller.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
     // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake)); // Lock wheels on A press
 
     // reset the field-centric heading on start button
-    joystick.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    controller.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    joystick.x().onTrue(actuation.setPositionCommand(actuationPickUpPosition));
-    joystick.b().onTrue(actuation.setPositionCommand(actuationTuckPosition));
+    controller.x().onTrue(actuation.setPositionCommand(actuationPickUpPosition));
+    controller.b().onTrue(actuation.setPositionCommand(actuationTuckPosition));
 
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
-    joystick.rightBumper().onTrue(new PickUpPiece());
-    joystick.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
+    controller.rightBumper().onTrue(new PickUpPiece());
+    controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
     // joystick.a().whileTrue(intake.feedCommand(60, 100));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
-    joystick.rightTrigger(0.1).whileTrue(new ShootSequence()).onFalse(new StopMotors());
-    joystick.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
+    controller.rightTrigger(0.1).whileTrue(new ShootSequence(this::getAngle, this::getSpeed)).onFalse(new StopMotors());
+    controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
 
     // joystick.y().whileTrue(new LineUpToNote());
-    joystick.y().whileTrue(angleController.anglePercentControl(0.1));
-    joystick.a().whileTrue(angleController.anglePercentControl(-0.1));
+    controller.y().onTrue(angleController.setPositionCommand(tempAnglePosition));
+    controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
+
+    // joystick.getHID().setRumble(RumbleType.kBothRumble, 1);
+  }
+
+  public double[] getAngleAndSpeed() {
+    double distance = limelightShooter.getDistanceFromGoal();
+    return shooter.getAngleAndSpeed(distance);
+  }
+
+  public double getAngle() {
+    // System.out.println("Angle: " + getAngleAndSpeed()[1] * angleTicksPerDegree);
+    return getAngleAndSpeed()[1] * angleTicksPerDegree;
+  }
+
+  public double getSpeed() {
+    // System.out.println("Speed: " + getAngleAndSpeed()[2]);
+    return getAngleAndSpeed()[2];
   }
 
   /**

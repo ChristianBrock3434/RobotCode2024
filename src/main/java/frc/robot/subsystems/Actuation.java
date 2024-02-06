@@ -43,6 +43,8 @@ public class Actuation extends SubsystemBase {
                                                 false,
                                                 false
                                               );
+
+    stopMode = new NeutralOut();
   }
   
 

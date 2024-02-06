@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.AngleController;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,7 +19,7 @@ public final class Constants {
   public static final double MaxSpeed = 6; // 6 meters per second desired top speed
   public static final double MaxAngularRate = Math.PI * 4; // Half a rotation per second max angular velocity
   
-  public static final int kDriverControllerPort = 0;
+  public static final CommandXboxController controller = new CommandXboxController(0); // My joystick
 
   public final class ActuationConstants {
     public static final double actuationGearRatio = 8;
@@ -25,7 +28,7 @@ public final class Constants {
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
     public static final double actuationStartPosition = -65 * actuationTicksPerDegree;
-    public static final double actuationPickUpPosition = 95 * actuationTicksPerDegree;
+    public static final double actuationPickUpPosition = 100 * actuationTicksPerDegree;
     public static final double actuationTuckPosition = -60 * actuationTicksPerDegree;
   }
 
@@ -42,7 +45,7 @@ public final class Constants {
   }
 
   public final class ShooterConstants {
-    public static final double shooterSequenceVelocity = 60; //45 //60 //10 for amp
+    public static final double shooterSequenceVelocity = 40; //45 //60 //10 for amp
     public static final double shooterSequenceAcceleration = 100;
 
     public static final double outtakeShooterVelocity = -40;
@@ -52,6 +55,13 @@ public final class Constants {
   public final class IndexerConstants {
     public static final double indexerVelocity = 60; //40 amp //60 shooting
     public static final double indexerAcceleration = 100;
+  }
+
+  public final class AngleControllerConstants {
+    public static final double angleTicksPerDegree = (11.78 / 360 * 4) / 1.5; //Estimate given by Adam, ask him how to do it if you need
+
+    public static final double angleStartingPosition = 0 * angleTicksPerDegree;
+    public static final double tempAnglePosition = 18 * angleTicksPerDegree;
   }
 
   public final class FieldConstants {
