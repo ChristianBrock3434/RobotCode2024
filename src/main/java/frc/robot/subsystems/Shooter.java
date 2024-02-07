@@ -272,14 +272,14 @@ public class Shooter extends SubsystemBase {
 
       try {
         double prevDis = distanceMap[i-1][0];
-        prevDis = distance - prevDis;
-        curDis = curDis - distance;
+        prevDis = Math.abs(distance - prevDis);
+        curDis = Math.abs(curDis - distance);
         // double[] arr = (curDis > prevDis) ? distanceMap[i] : distanceMap[i-1];
         // for (double j : arr) {
         //   System.out.println(j);
         // }
         // return arr;
-        return (curDis > prevDis) ? distanceMap[i] : distanceMap[i-1];
+        return (curDis < prevDis) ? distanceMap[i] : distanceMap[i-1];
       } 
       catch (ArrayIndexOutOfBoundsException e) {
         // for (double j : distanceMap[i]) {

@@ -164,7 +164,7 @@ public class AngleController extends SubsystemBase{
       @Override
       public boolean isFinished() {
         double currentPosition = angleMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition.getAsDouble() * multiplier) <= 0.1;
+        return Math.abs(currentPosition - setPosition.getAsDouble() * multiplier) <= 0.05;
       }
     };
   }

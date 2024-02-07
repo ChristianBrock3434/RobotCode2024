@@ -6,24 +6,27 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ActuationConstants.*;
-import static frc.robot.Constants.IntakeConstants.*;
-import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
-
+import static frc.robot.Constants.IntakeConstants.*;
+// import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Subsystems.*;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import java.util.ArrayList;
+import java.util.List;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopMotors;
-import frc.robot.commands.limelight.LineUpToNote;
+import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
 /**
@@ -37,6 +40,12 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
+
+  private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric() // I want field-centric
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
+
+  private boolean isRobotCentric;
 
   // Lock wheels
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -93,22 +102,55 @@ public class RobotContainer {
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     controller.rightBumper().onTrue(new PickUpPiece());
     controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
-    // joystick.a().whileTrue(intake.feedCommand(60, 100));
+    controller.a().whileTrue(intake.feedCommand(10, 100));
+
+    controller.y().onTrue(new InstantCommand(() -> isRobotCentric = ! isRobotCentric));
+
+    new Trigger(() -> isRobotCentric).whileTrue(
+       drivetrain.applyRequest(() -> driveRobot.withVelocityX(controller.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-controller.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+      ));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
-    controller.rightTrigger(0.1).whileTrue(new ShootSequence(this::getAngle, this::getSpeed)).onFalse(new StopMotors());
-    controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
+    controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
+      new ShootSequence(this::getAngle, this::getSpeed),
+      new LineUpToGoal(10)
+    )).onFalse(new StopMotors());
+    // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
+    // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
+
+    controller.leftTrigger(0.1).whileTrue(
+      new ShootSequence(() -> 18 * angleTicksPerDegree, () -> 10)
+    ).onFalse(new StopMotors());
 
     // joystick.y().whileTrue(new LineUpToNote());
-    controller.y().onTrue(angleController.setPositionCommand(tempAnglePosition));
-    controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
+    // controller.y().onTrue(angleController.setPositionCommand(tempAnglePosition));
+    // controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
 
     // joystick.getHID().setRumble(RumbleType.kBothRumble, 1);
   }
 
+  private long timeOfLastAccess = 0;
+  private double distance = 0;
+
   public double[] getAngleAndSpeed() {
-    double distance = limelightShooter.getDistanceFromGoal();
+    if (System.currentTimeMillis() - timeOfLastAccess < 500) {
+      System.out.println("distance: " + distance);
+      timeOfLastAccess = System.currentTimeMillis();
+      return shooter.getAngleAndSpeed(distance);
+    }
+
+    long startingTime = System.currentTimeMillis();
+    List<Double> distanceList = new ArrayList<>();
+    while (System.currentTimeMillis() - startingTime < 250) {
+      distanceList.add(limelightShooter.getDistanceFromGoal());
+    }
+    distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(-1);
+
+    timeOfLastAccess = System.currentTimeMillis();
     return shooter.getAngleAndSpeed(distance);
   }
 
