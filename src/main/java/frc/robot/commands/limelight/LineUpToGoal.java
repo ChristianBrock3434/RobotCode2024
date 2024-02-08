@@ -6,6 +6,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightIntake;
 import frc.robot.subsystems.LimelightShooter;
@@ -26,8 +28,16 @@ public class LineUpToGoal extends Command{
 
     @Override
     public void initialize() {
+        var alliance = DriverStation.getAlliance();
+        var pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
+        if (alliance.isEmpty()) {
+            System.out.println("The Alliance is empty, Please Select an Alliance");
+        } else if (alliance.get().equals(Alliance.Red)) {
+            pipeline = LimelightShooter.Pipeline.AprilTag3DRed;
+        } 
+
         limelightShooter.turnOnLimelight();
-        limelightShooter.setLimelightPipeline(LimelightShooter.Pipeline.AprilTag3D);
+        limelightShooter.setLimelightPipeline(pipeline);
 
         lineUPController.setSetpoint(offset);
         lineUPController.setTolerance(1.5);

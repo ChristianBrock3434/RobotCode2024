@@ -18,6 +18,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -40,12 +41,6 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
-
-  private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric() // I want field-centric
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
-
-  private boolean isRobotCentric;
 
   // Lock wheels
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -104,15 +99,6 @@ public class RobotContainer {
     controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
     controller.a().whileTrue(intake.feedCommand(10, 100));
 
-    controller.y().onTrue(new InstantCommand(() -> isRobotCentric = ! isRobotCentric));
-
-    new Trigger(() -> isRobotCentric).whileTrue(
-       drivetrain.applyRequest(() -> driveRobot.withVelocityX(controller.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(controller.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-controller.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-      ));
-
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
     controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
@@ -131,13 +117,15 @@ public class RobotContainer {
     // controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
 
     // joystick.getHID().setRumble(RumbleType.kBothRumble, 1);
+
+    // controller.y().whileTrue(new InstantCommand(() -> System.out.println(DriverStation.getAlliance())));
   }
 
   private long timeOfLastAccess = 0;
   private double distance = 0;
 
   public double[] getAngleAndSpeed() {
-    if (System.currentTimeMillis() - timeOfLastAccess < 500) {
+    if (System.currentTimeMillis() - timeOfLastAccess < 250) {
       System.out.println("distance: " + distance);
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);

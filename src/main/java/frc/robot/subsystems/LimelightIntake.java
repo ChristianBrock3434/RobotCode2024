@@ -32,8 +32,8 @@ public class LimelightIntake extends SubsystemBase {
   };
 
   public static enum Pipeline {
-    Note(0),
-    AprilTag3D(1);
+    Note(0);
+    // AprilTag3D(1);
 
     public int pipelineNum;
 

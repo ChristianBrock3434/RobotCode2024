@@ -32,7 +32,8 @@ public class LimelightShooter extends SubsystemBase {
   };
 
   public static enum Pipeline {
-    AprilTag3D(0);
+    AprilTag3DBlue(0),
+    AprilTag3DRed(1);
 
     public int pipelineNum;
 
