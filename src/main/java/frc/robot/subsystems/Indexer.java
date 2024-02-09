@@ -101,6 +101,7 @@ public class Indexer extends SubsystemBase {
       public void initialize() {
         addRequirements(Indexer.this);
         runIndexer(velocity, acceleration);
+        System.out.println("Indexer Speed:" + velocity);
       }
 
       @Override

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.Utilities;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -14,6 +16,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -90,13 +93,17 @@ public class Intake extends SubsystemBase {
    * Run the intake motor at a given velocity and acceleration
    * @param velocity in rotations per second
    * @param acceleration in rotations per second squared
+   * @param timeout in seconds; use 0 for no timeout
    * @return a command that will run the intake motor
    */
-  public Command feedCommand(double velocity, double acceleration){
+  public Command feedCommand(double velocity, double acceleration, double timeout){
     return new Command() {
+      private long startingTime;
+
       @Override
       public void initialize() {
         addRequirements(Intake.this);
+        startingTime = System.currentTimeMillis();
       }
 
       @Override
@@ -107,6 +114,16 @@ public class Intake extends SubsystemBase {
       @Override
       public void end(boolean interrupted) {
         stopIntakeMotor();
+      }
+
+      @Override
+      public boolean isFinished() {
+        System.out.println((System.currentTimeMillis() - startingTime));
+        if((timeout != 0.0) && (System.currentTimeMillis() - startingTime) >= (timeout * 1000)) {
+          return true;
+        } else {
+          return false;
+        }
       }
     };
   }

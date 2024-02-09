@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
+import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.StopMotors;
 import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
@@ -59,8 +60,13 @@ public class RobotContainer {
    * link commands to pathplanner for autos
    */
   public void linkAutoCommands() {
-    NamedCommands.registerCommand("shoot", new ShootSequence(this::getAngle, this::getSpeed));
+    NamedCommands.registerCommand("shoot1", new AutoShootSequence(this::getAngle, this::getSpeed));
+    NamedCommands.registerCommand("shoot2", new AutoShootSequence(this::getAngle, this::getSpeed));
+    NamedCommands.registerCommand("shoot3", new AutoShootSequence(this::getAngle, this::getSpeed));
+    NamedCommands.registerCommand("shoot4", new AutoShootSequence(this::getAngle, this::getSpeed));
     NamedCommands.registerCommand("intake", new PickUpPiece());
+
+    NamedCommands.registerCommand("stopMotors", new StopMotors());
 
     NamedCommands.registerCommand("lineUpToNote1", new LineUpWithNotePath("3 ring close blue", 0));
     NamedCommands.registerCommand("lineUpToNote2", new LineUpWithNotePath("3 ring close blue", 1));
@@ -96,8 +102,8 @@ public class RobotContainer {
 
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     controller.rightBumper().onTrue(new PickUpPiece());
-    controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
-    controller.a().whileTrue(intake.feedCommand(10, 100));
+    controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration, 0.0));
+    controller.a().whileTrue(intake.feedCommand(10, 100, 0.0));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
@@ -148,7 +154,7 @@ public class RobotContainer {
   }
 
   public double getSpeed() {
-    // System.out.println("Speed: " + getAngleAndSpeed()[2]);
+    System.out.println("Speed: " + getAngleAndSpeed()[2]);
     return getAngleAndSpeed()[2];
   }
 

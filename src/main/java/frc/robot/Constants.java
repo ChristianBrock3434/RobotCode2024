@@ -29,7 +29,7 @@ public final class Constants {
 
     public static final double actuationStartPosition = -65 * actuationTicksPerDegree;
     public static final double actuationPickUpPosition = 100 * actuationTicksPerDegree;
-    public static final double actuationTuckPosition = -60 * actuationTicksPerDegree;
+    public static final double actuationTuckPosition = -65 * actuationTicksPerDegree;
   }
 
   public final class IntakeConstants {

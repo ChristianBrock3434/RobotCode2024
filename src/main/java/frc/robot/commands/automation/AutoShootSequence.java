@@ -12,25 +12,24 @@ import static frc.robot.Constants.AngleControllerConstants.*;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ShakeController;
 
-public class ShootSequence extends ConditionalCommand {
+public class AutoShootSequence extends SequentialCommandGroup {
     
-    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity) {
+    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity) {
         super(
             new SequentialCommandGroup(
                 // new PrintCommand("Angle: " + angle.getAsDouble()),
                 // new PrintCommand("Speed: " + velocity.getAsDouble())
                 angleController.setPositionCommandSupplier(angle),
                 shooter.speedUpShooterSupplier(velocity, shooterSequenceAcceleration),
+                new PrintCommand("Speed: " + velocity.getAsDouble()),
                 angleController.waitUntilAtPositionSupplier(angle, 1),
                 shooter.checkIfAtSpeedSupplier(velocity, 0.8),
                 indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
                 shooter.checkIfAtSpeedSupplier(velocity, 1.0),
-                intake.feedCommand(feedVelocity, feedAcceleration, 0.0)
-            ),
-            new ShakeController(),
-            () -> (angle.getAsDouble() >= 0) && (velocity.getAsDouble() >= 0)
+                intake.feedCommand(feedVelocity, feedAcceleration, 2.0),
+                new StopMotors()
+            )
         );
     }
 }

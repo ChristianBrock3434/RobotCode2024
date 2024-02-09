@@ -23,8 +23,10 @@ public class Shooter extends SubsystemBase {
   private static final double[][] distanceMap = {
     {1.3, 18, 40},
     {1.6, 15, 40},
+    {1.96, 15, 40}, // Spencer said to do this and it works.
     {2, 10, 40},
-    {3, 2, 45}
+    {3, 2, 45},
+    {3.6, 1, 45}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);
