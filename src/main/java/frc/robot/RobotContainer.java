@@ -18,16 +18,14 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.AutoShootSequence;
-import frc.robot.commands.automation.StopMotors;
+import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
@@ -65,15 +63,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed));
     NamedCommands.registerCommand("intake", new PickUpPiece());
 
-    NamedCommands.registerCommand("stopMotors", new StopMotors());
-
     NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("3 ring close blue", 0));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("3 ring close blue", 1));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("3 ring close blue", 2));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 2));
 
-    NamedCommands.registerCommand("flashNote", limelightIntake.flashNote());
+    NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
 
     NamedCommands.registerCommand("waitForInterrupt", waitForInterrupt());
     NamedCommands.registerCommand("interrupt", interrupt());
@@ -114,13 +110,13 @@ public class RobotContainer {
     controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
       new ShootSequence(this::getAngle, this::getSpeed),
       new LineUpToGoal(10)
-    )).onFalse(new StopMotors());
+    )).onFalse(new StopShoot());
     // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
     // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
 
     controller.leftTrigger(0.1).whileTrue(
       new ShootSequence(() -> 18 * angleTicksPerDegree, () -> 10)
-    ).onFalse(new StopMotors());
+    ).onFalse(new StopShoot());
 
     // joystick.y().whileTrue(new LineUpToNote());
     // controller.y().onTrue(angleController.setPositionCommand(tempAnglePosition));
@@ -186,7 +182,7 @@ public class RobotContainer {
   }
 
   public double getSpeed() {
-    System.out.println("Speed: " + getAngleAndSpeed()[2]);
+    // System.out.println("Speed: " + getAngleAndSpeed()[2]);
     return getAngleAndSpeed()[2];
   }
 

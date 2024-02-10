@@ -65,9 +65,6 @@ public class Shooter extends SubsystemBase {
    * Initialize the both shooter motors
    */
   public void initMotors() {
-    System.out.println("Left Shooter Safety: " + leftShooterMotor.isSafetyEnabled());
-    System.out.println("Right Shooter Safety: " + rightShooterMotor.isSafetyEnabled());
-
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -237,7 +234,7 @@ public class Shooter extends SubsystemBase {
     };
   }
 
-  public Command checkIfAtSpeedSupplier(DoubleSupplier velocity, double multiplier) {
+  public Command checkIfAtSpeedSupplier(DoubleSupplier velocity) {
     return new Command() {
       @Override
       public void initialize() {
@@ -245,6 +242,7 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public void execute() {
+        // System.out.println("Speed required: " + velocity.getAsDouble());
       }
 
       @Override
@@ -254,8 +252,8 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble() * multiplier;
-        boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble() * multiplier;
+        boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
+        boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
         return leftShooterSpeed || rightShooterSpeed;
       }
     };

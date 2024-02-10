@@ -44,8 +44,6 @@ public class Indexer extends SubsystemBase {
    * Initialize the intake motor
    */
   public void initIndexerMotor() {
-    System.out.println("Indexer Safety: " + indexerMotor.isSafetyEnabled());
-
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -101,7 +99,7 @@ public class Indexer extends SubsystemBase {
       public void initialize() {
         addRequirements(Indexer.this);
         runIndexer(velocity, acceleration);
-        System.out.println("Indexer Speed:" + velocity);
+        // System.out.println("Indexer Speed:" + velocity);
       }
 
       @Override

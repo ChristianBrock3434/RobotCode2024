@@ -150,7 +150,7 @@ public class LimelightIntake extends SubsystemBase {
     turnOffLimelight();
   }
 
-  public Command flashNote() {
+  public Command prepareForNote() {
     return new Command() {
       @Override
       public void initialize() {

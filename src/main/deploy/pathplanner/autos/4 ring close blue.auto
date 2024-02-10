@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "flashNote"
+            "name": "prepareForNote"
           }
         },
         {

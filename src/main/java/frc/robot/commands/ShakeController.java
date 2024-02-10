@@ -7,10 +7,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShakeController extends Command{
     private double startingTime;
+    private double rumbleIntensity;
+
+    public ShakeController(double rumbleIntensity) {
+        this.rumbleIntensity = rumbleIntensity;
+    }
+
     @Override
     public void initialize() {
         startingTime = System.currentTimeMillis();
-        controller.getHID().setRumble(RumbleType.kBothRumble, 0.5);
+        controller.getHID().setRumble(RumbleType.kBothRumble, rumbleIntensity);
     }
 
     @Override

@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LimelightIntake;
 import frc.robot.subsystems.LimelightShooter;
 
 public class LineUpToGoal extends Command{

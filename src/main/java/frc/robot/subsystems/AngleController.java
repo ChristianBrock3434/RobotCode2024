@@ -38,8 +38,6 @@ public class AngleController extends SubsystemBase{
   }
 
   public void initAngleMotor() {
-    // System.out.println("Intake Safety: " + intakeMotor.isSafetyEnabled());
-
     angleMotor.setPosition(angleStartingPosition);
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -159,12 +157,12 @@ public class AngleController extends SubsystemBase{
     };
   }
 
-  public Command waitUntilAtPositionSupplier(DoubleSupplier setPosition, double multiplier) {
+  public Command waitUntilAtPositionSupplier(DoubleSupplier setPosition) {
     return new Command() {
       @Override
       public boolean isFinished() {
         double currentPosition = angleMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition.getAsDouble() * multiplier) <= 0.05;
+        return Math.abs(currentPosition - setPosition.getAsDouble()) <= 0.05;
       }
     };
   }
