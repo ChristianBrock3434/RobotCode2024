@@ -54,7 +54,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "path",
       "waypointRelativePos": 1.6,
       "command": {
         "type": "parallel",
@@ -63,7 +63,24 @@
             {
               "type": "named",
               "data": {
-                "name": "interrupt"
+                "name": "interruptPath"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "sendIntakeSignal"
               }
             }
           ]

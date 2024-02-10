@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.188331607432447,
-        "y": 4.420390379242297
+        "x": 6.474472948945899,
+        "y": 4.686797835134132
       },
       "isLocked": false,
       "linkedName": "FarBlueShoot"
     },
     {
       "anchor": {
-        "x": 8.487329282350872,
-        "y": 2.318731560540044
+        "x": 8.67480119575624,
+        "y": 2.7134092729723926
       },
       "prevControl": {
-        "x": 7.194759774134933,
-        "y": 3.2462241847560613
+        "x": 7.362497801918685,
+        "y": 3.8185068677829674
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,21 +31,56 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.65,
-      "rotationDegrees": 149.70331273828353,
+      "rotationDegrees": 136.08,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "path",
+      "waypointRelativePos": 0.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "interruptPath"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "sendIntakeSignal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 155.38,
+    "rotation": 136.08,
     "rotateFast": false
   },
   "reversed": false,
@@ -54,5 +89,5 @@
     "rotation": 142.77,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -44,7 +44,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "waitForInterrupt"
+                              "name": "waitForPathInterrupt"
                             }
                           },
                           {
@@ -114,7 +114,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "waitForInterrupt"
+                              "name": "waitForPathInterrupt"
                             }
                           },
                           {
@@ -171,7 +171,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "waitForInterrupt"
+                              "name": "waitForPathInterrupt"
                             }
                           },
                           {

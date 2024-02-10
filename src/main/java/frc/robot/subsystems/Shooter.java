@@ -26,7 +26,8 @@ public class Shooter extends SubsystemBase {
     {1.96, 15, 40}, // Spencer said to do this and it works.
     {2, 10, 40},
     {3, 2, 45},
-    {3.6, 1, 45}
+    {3.6, 1, 45},
+    {5.5, 0, 50}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);

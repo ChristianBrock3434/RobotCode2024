@@ -232,7 +232,7 @@ public class LimelightShooter extends SubsystemBase {
     // double[] pose = getRobotPose();
     // System.out.println("X: " + pose[0]);
     // System.out.println("Y: " + pose[1]);
-    // System.out.println("Distance: " + getDistanceFromGoal());
+    System.out.println("Distance: " + getDistanceFromGoal());
   }
 
   @Override

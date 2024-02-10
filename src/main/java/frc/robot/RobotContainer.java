@@ -69,10 +69,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 2));
 
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4));
+    
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
 
-    NamedCommands.registerCommand("waitForInterrupt", waitForInterrupt());
-    NamedCommands.registerCommand("interrupt", interrupt());
+    NamedCommands.registerCommand("waitForPathInterrupt", AutoTracker.waitForSignal(AutoTracker.tracked.PATH));
+    NamedCommands.registerCommand("interruptPath", AutoTracker.sendSignal(AutoTracker.tracked.PATH));
+
+    NamedCommands.registerCommand("waitForIntakeSignal", AutoTracker.waitForSignal(AutoTracker.tracked.INTAKE));
+    NamedCommands.registerCommand("sendIntakeSignal", AutoTracker.sendSignal(AutoTracker.tracked.INTAKE));
   }
 
   /**
@@ -127,40 +134,11 @@ public class RobotContainer {
     // controller.y().whileTrue(new InstantCommand(() -> System.out.println(DriverStation.getAlliance())));
   }
 
-  public Command waitForInterrupt() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        isInterrupted = false;
-      }
-
-      @Override
-      public boolean isFinished() {
-        return isInterrupted;
-      }
-    };
-  }
-
-  public Command interrupt() {
-    return new Command() {
-      @Override
-      public void initialize() {
-        isInterrupted = true;
-      }
-
-      @Override
-      public boolean isFinished() {
-        return true;
-      }
-    };
-  }
-
   private long timeOfLastAccess = 0;
   private double distance = 0;
 
   public double[] getAngleAndSpeed() {
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
-      // System.out.println("distance: " + distance);
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);
     }

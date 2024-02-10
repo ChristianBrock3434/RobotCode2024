@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 8.003849084621248,
-        "y": 0.7992223676755058
+        "x": 8.428127625486022,
+        "y": 0.7005529395674189
       },
       "prevControl": {
-        "x": 6.5632754342431765,
-        "y": 1.0261620523241057
+        "x": 6.987553975107951,
+        "y": 0.9274926242160189
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,10 +52,45 @@
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "path",
+      "waypointRelativePos": 1.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "interruptPath"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 1.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "sendIntakeSignal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -70,5 +105,5 @@
     "rotation": 118.99629378613305,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
