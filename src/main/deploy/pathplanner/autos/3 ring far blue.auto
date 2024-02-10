@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.5015337722983153,
+      "y": 3.8579746390262013
+    },
+    "rotation": 109.29943331650566
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 1 pick up far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 1 shoot far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 2 pick up far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 2 shoot far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 3 pick up far blue"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

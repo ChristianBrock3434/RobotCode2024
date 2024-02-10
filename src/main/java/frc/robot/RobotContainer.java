@@ -39,6 +39,8 @@ import frc.robot.commands.limelight.LineUpWithNotePath;
  */
 public class RobotContainer {
 
+  private static boolean isInterrupted = false;
+
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
@@ -60,19 +62,21 @@ public class RobotContainer {
    * link commands to pathplanner for autos
    */
   public void linkAutoCommands() {
-    NamedCommands.registerCommand("shoot1", new AutoShootSequence(this::getAngle, this::getSpeed));
-    NamedCommands.registerCommand("shoot2", new AutoShootSequence(this::getAngle, this::getSpeed));
-    NamedCommands.registerCommand("shoot3", new AutoShootSequence(this::getAngle, this::getSpeed));
-    NamedCommands.registerCommand("shoot4", new AutoShootSequence(this::getAngle, this::getSpeed));
+    NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed));
     NamedCommands.registerCommand("intake", new PickUpPiece());
 
     NamedCommands.registerCommand("stopMotors", new StopMotors());
 
-    NamedCommands.registerCommand("lineUpToNote1", new LineUpWithNotePath("3 ring close blue", 0));
-    NamedCommands.registerCommand("lineUpToNote2", new LineUpWithNotePath("3 ring close blue", 1));
-    NamedCommands.registerCommand("lineUpToNote3", new LineUpWithNotePath("3 ring close blue", 2));
+    NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
+
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("3 ring close blue", 0));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("3 ring close blue", 1));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("3 ring close blue", 2));
 
     NamedCommands.registerCommand("flashNote", limelightIntake.flashNote());
+
+    NamedCommands.registerCommand("waitForInterrupt", waitForInterrupt());
+    NamedCommands.registerCommand("interrupt", interrupt());
   }
 
   /**
@@ -102,8 +106,8 @@ public class RobotContainer {
 
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
     controller.rightBumper().onTrue(new PickUpPiece());
-    controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration, 0.0));
-    controller.a().whileTrue(intake.feedCommand(10, 100, 0.0));
+    controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
+    controller.a().whileTrue(intake.feedCommand(10, 100));
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
@@ -127,12 +131,40 @@ public class RobotContainer {
     // controller.y().whileTrue(new InstantCommand(() -> System.out.println(DriverStation.getAlliance())));
   }
 
+  public Command waitForInterrupt() {
+    return new Command() {
+      @Override
+      public void initialize() {
+        isInterrupted = false;
+      }
+
+      @Override
+      public boolean isFinished() {
+        return isInterrupted;
+      }
+    };
+  }
+
+  public Command interrupt() {
+    return new Command() {
+      @Override
+      public void initialize() {
+        isInterrupted = true;
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
   private long timeOfLastAccess = 0;
   private double distance = 0;
 
   public double[] getAngleAndSpeed() {
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
-      System.out.println("distance: " + distance);
+      // System.out.println("distance: " + distance);
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);
     }
@@ -165,6 +197,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.getAutoPath("3 ring close blue");
+    return drivetrain.getAutoPath("3 ring far blue");
   }
 }

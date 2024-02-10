@@ -96,14 +96,11 @@ public class Intake extends SubsystemBase {
    * @param timeout in seconds; use 0 for no timeout
    * @return a command that will run the intake motor
    */
-  public Command feedCommand(double velocity, double acceleration, double timeout){
+  public Command feedCommand(double velocity, double acceleration){
     return new Command() {
-      private long startingTime;
-
       @Override
       public void initialize() {
         addRequirements(Intake.this);
-        startingTime = System.currentTimeMillis();
       }
 
       @Override
@@ -118,12 +115,7 @@ public class Intake extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        System.out.println((System.currentTimeMillis() - startingTime));
-        if((timeout != 0.0) && (System.currentTimeMillis() - startingTime) >= (timeout * 1000)) {
-          return true;
-        } else {
-          return false;
-        }
+        return false;
       }
     };
   }

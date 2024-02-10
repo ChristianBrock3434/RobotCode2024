@@ -10,8 +10,10 @@ import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoShootSequence extends SequentialCommandGroup {
     
@@ -27,7 +29,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
                 shooter.checkIfAtSpeedSupplier(velocity, 0.8),
                 indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
                 shooter.checkIfAtSpeedSupplier(velocity, 1.0),
-                intake.feedCommand(feedVelocity, feedAcceleration, 2.0),
+                intake.feedCommand(feedVelocity, feedAcceleration).withTimeout(2),
                 new StopMotors()
             )
         );

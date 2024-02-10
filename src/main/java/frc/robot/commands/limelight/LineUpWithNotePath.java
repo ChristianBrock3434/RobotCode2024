@@ -104,6 +104,7 @@ public class LineUpWithNotePath extends Command {
   @Override
   public void end(boolean interrupted) {
     // limelightIntake.turnOffLimelight();
+    drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
   }
 
   // Returns true when the command should end.

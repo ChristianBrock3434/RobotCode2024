@@ -27,7 +27,7 @@ public class ShootSequence extends ConditionalCommand {
                 shooter.checkIfAtSpeedSupplier(velocity, 0.8),
                 indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
                 shooter.checkIfAtSpeedSupplier(velocity, 1.0),
-                intake.feedCommand(feedVelocity, feedAcceleration, 0.0)
+                intake.feedCommand(feedVelocity, feedAcceleration)
             ),
             new ShakeController(),
             () -> (angle.getAsDouble() >= 0) && (velocity.getAsDouble() >= 0)

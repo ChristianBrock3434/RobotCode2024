@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.003849084621248,
+        "y": 0.7992223676755058
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.697973857486177,
+        "y": 4.282253179890976
+      },
+      "isLocked": false,
+      "linkedName": "ring1FarBlue"
+    },
+    {
+      "anchor": {
+        "x": 5.033899298567829,
+        "y": 5.278814403782653
+      },
+      "prevControl": {
+        "x": 6.129129950567595,
+        "y": 4.726265606377368
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "FarBlueShoot"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 142.77,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Far Blue",
+  "previewStartingState": {
+    "rotation": 178.84,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
