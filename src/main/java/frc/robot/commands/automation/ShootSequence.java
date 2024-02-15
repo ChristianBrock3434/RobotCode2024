@@ -17,8 +17,6 @@ public class ShootSequence extends ConditionalCommand {
     public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity) {
         super(
             new SequentialCommandGroup(
-                // new PrintCommand("Angle: " + angle.getAsDouble()),
-                // new PrintCommand("Speed: " + velocity.getAsDouble())
                 angleController.setPositionCommandSupplier(angle),
                 shooter.speedUpShooterSupplier(velocity, shooterSequenceAcceleration),
                 angleController.waitUntilAtPositionSupplier(angle),

@@ -27,7 +27,7 @@ public final class Constants {
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
     public static final double actuationStartPosition = -65 * actuationTicksPerDegree;
-    public static final double actuationPickUpPosition = 100 * actuationTicksPerDegree;
+    public static final double actuationPickUpPosition = 103 * actuationTicksPerDegree;
     public static final double actuationTuckPosition = -65 * actuationTicksPerDegree;
   }
 
@@ -60,7 +60,6 @@ public final class Constants {
     public static final double angleTicksPerDegree = (11.78 / 360 * 4) / 1.5; //Estimate given by Adam, ask him how to do it if you need
 
     public static final double angleStartingPosition = 0 * angleTicksPerDegree;
-    public static final double tempAnglePosition = 18 * angleTicksPerDegree;
   }
 
   public final class FieldConstants {

@@ -30,11 +30,11 @@ public class Indexer extends SubsystemBase {
     velocityControl = new VelocityVoltage(0, 
                                           0, 
                                           true, 
-                                          0, 
+                                          0.6, 
                                           0, 
                                           false, 
                                           false, 
-                                          false
+                                          true
                                           );
 
     stopMode = new NeutralOut();
@@ -50,7 +50,7 @@ public class Indexer extends SubsystemBase {
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
-    configs.Slot0.kP = 4; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kP = 0.6; // An error of 1 rotation per second results in 2V output
     configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
@@ -153,6 +153,7 @@ public class Indexer extends SubsystemBase {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
     // System.out.println(indexerMotor.getDeviceTemp().getValueAsDouble());
+    // System.out.println("Indexer Speed: " + indexerMotor.getVelocity());
   }
 
   @Override

@@ -19,7 +19,6 @@ public class AutoShootSequence extends SequentialCommandGroup {
             // new PrintCommand("Speed: " + velocity.getAsDouble())
             angleController.setPositionCommandSupplier(angle),
             shooter.speedUpShooterSupplier(velocity, shooterSequenceAcceleration),
-            new PrintCommand("Speed: " + velocity.getAsDouble()),
             angleController.waitUntilAtPositionSupplier(angle),
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
             indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),

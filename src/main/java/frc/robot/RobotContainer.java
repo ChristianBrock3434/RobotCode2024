@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.AutoShootSequence;
+import frc.robot.commands.automation.LineUpPickUp;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
@@ -36,8 +37,6 @@ import frc.robot.commands.limelight.LineUpWithNotePath;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
-  private static boolean isInterrupted = false;
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -101,7 +100,7 @@ public class RobotContainer {
 
     // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake)); // Lock wheels on A press
 
-    // reset the field-centric heading on start button
+    // reset the field-centric heading on start button    
     controller.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     controller.x().onTrue(actuation.setPositionCommand(actuationPickUpPosition));
@@ -116,17 +115,24 @@ public class RobotContainer {
 
     controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
       new ShootSequence(this::getAngle, this::getSpeed),
-      new LineUpToGoal(10)
+      new LineUpToGoal(this::getLineUpOffset) //10
     )).onFalse(new StopShoot());
     // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
     // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
 
+    // Amp Shot
     controller.leftTrigger(0.1).whileTrue(
-      new ShootSequence(() -> 18 * angleTicksPerDegree, () -> 10)
+      new ShootSequence(() -> 2 * angleTicksPerDegree, () -> 10)
     ).onFalse(new StopShoot());
 
-    // joystick.y().whileTrue(new LineUpToNote());
-    // controller.y().onTrue(angleController.setPositionCommand(tempAnglePosition));
+    // Trap Shot
+    // controller.leftTrigger(0.1).whileTrue(
+    //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 40)
+    // ).onFalse(new StopShoot());
+
+    controller.y().whileTrue(new LineUpPickUp());
+    // controller.y().whileTrue(new LineUpToGoal(() -> 0));
+    // controller.y().onTrue(angleController.setPositionCommand(0));
     // controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
 
     // joystick.getHID().setRumble(RumbleType.kBothRumble, 1);
@@ -157,11 +163,17 @@ public class RobotContainer {
   public double getAngle() {
     // System.out.println("Angle: " + getAngleAndSpeed()[1] * angleTicksPerDegree);
     return getAngleAndSpeed()[1] * angleTicksPerDegree;
+    // return 26 * angleTicksPerDegree;
   }
 
   public double getSpeed() {
     // System.out.println("Speed: " + getAngleAndSpeed()[2]);
     return getAngleAndSpeed()[2];
+    // return 60;
+  }
+
+  public double getLineUpOffset() {
+    return getAngleAndSpeed()[3];
   }
 
   /**

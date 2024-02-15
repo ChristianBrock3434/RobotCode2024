@@ -19,15 +19,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-  // Distance, Angle, Speed
+  //TODO: Tune the table
+  // Distance, Angle, Speed, Offset
   private static final double[][] distanceMap = {
-    {1.3, 18, 40},
-    {1.6, 15, 40},
-    {1.96, 15, 40}, // Spencer said to do this and it works.
-    {2, 10, 40},
-    {3, 2, 45},
-    {3.6, 1, 45},
-    {5.5, 0, 50}
+    {5, 30, 60, 0}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);
@@ -50,7 +45,7 @@ public class Shooter extends SubsystemBase {
                                           0, 
                                           false, 
                                           false, 
-                                          false
+                                          true
                                           );
 
     sitControl = new VoltageOut(0.5,
@@ -69,7 +64,7 @@ public class Shooter extends SubsystemBase {
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.kP = 0.5; //0.5 // An error of 1 rotation per second results in 2V output
@@ -81,8 +76,8 @@ public class Shooter extends SubsystemBase {
     configs.Voltage.PeakForwardVoltage = 12;
     configs.Voltage.PeakReverseVoltage = -12;
 
-    configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    configs.CurrentLimits.SupplyCurrentLimit = 11;
+    // configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    // configs.CurrentLimits.SupplyCurrentLimit = 11;
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -92,6 +87,8 @@ public class Shooter extends SubsystemBase {
     if(!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
+
+    configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -300,8 +297,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(pdp.getCurrent(16));
-    // System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
-    // System.out.println("Left Velocity:" + leftShooterMotor.getVelocity().getValueAsDouble());
+    System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
+    System.out.println("Left Velocity:" + leftShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
