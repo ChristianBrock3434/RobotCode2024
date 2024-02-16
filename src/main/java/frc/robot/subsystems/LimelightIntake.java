@@ -13,10 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightIntake extends SubsystemBase {
   public final String LIMELIGHT = "limelight-intake";
-  private double tx = 0;
-  private double ty = 0;
-  private double ta = 0;
-  private double ts = 0;
+  NetworkTable table = NetworkTableInstance.getDefault().getTable(LIMELIGHT);
 
   public static enum LightMode {
     DEFAULT(0),
@@ -46,9 +43,6 @@ public class LimelightIntake extends SubsystemBase {
    * Limelight Subsystem
    */
   public LimelightIntake() {
-    updateLimeLight();
-
-    // turnOffLimelight();
     turnOnLimelight();
   }
 
@@ -110,44 +104,6 @@ public class LimelightIntake extends SubsystemBase {
    */
   public void setLimelightPipeline(Pipeline pipeline) {
     NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("pipeline").setNumber(pipeline.pipelineNum);
-  }
-
-  /**
-   * Gets the position of what the Limelight is detecting
-   * @return nothing, we store these values
-   */
-  public void updateLimeLight() {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable(LIMELIGHT);
-    tx = table.getEntry("tx").getDouble(0);
-    ty = table.getEntry("ty").getDouble(0);
-    ta = table.getEntry("ta").getDouble(0);
-    ts = table.getEntry("ts").getDouble(0);
-
-    // table.putValue("ledMode", 3);
-
-    // final ShuffleboardTab tab = Shuffleboard.getTab(LIMELIGHT);
-    // SmartDashboard.putNumber("ta", ta);
-    // SmartDashboard.putNumber("ts", ts);
-    // SmartDashboard.putNumber("tx", tx);
-    // SmartDashboard.putNumber("ty", ty);
-  }
-
-  /**
-   * Resets limelight and prepares for the next detection
-   */
-  public void resetLimelight() {
-    tx = 0;
-    ty = 0;
-    ta = 0;
-    ts = 0;
-
-    // SmartDashboard.putNumber("ta", ta);
-    // SmartDashboard.putNumber("ts", ts);
-    // SmartDashboard.putNumber("tx", tx);
-    // SmartDashboard.putNumber("ty", ty);
-    // SmartDashboard.putNumber("Apriltag id", -1);
-
-    turnOffLimelight();
   }
 
   public Command prepareForNote() {
@@ -252,7 +208,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return X position of the object (degrees)
    */
   public double getTX() {
-    return tx;
+    return table.getEntry("tx").getDouble(0);
     // return 1;
   }
 
@@ -260,7 +216,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return Y position of the object (degrees)
    */
   public double getTY() {
-    return ty;
+    return table.getEntry("ty").getDouble(0);
     // return 1;
   }
 
@@ -268,7 +224,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return Area of the screen the object takes up
    */
   public double getTA() {
-    return ta;
+    return table.getEntry("ta").getDouble(0);
     // return 1;
   }
 
@@ -276,7 +232,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return Skew (rotation) of the object
    */
   public double getTS() {
-    return ts;
+    return table.getEntry("ts").getDouble(0);
     // return 1;
   }
 
@@ -287,6 +243,7 @@ public class LimelightIntake extends SubsystemBase {
     // System.out.println("X: " + pose[0]);
     // System.out.println("Y: " + pose[1]);
     // System.out.println("Distance: " + getDistanceFromGoal());
+    // System.out.println("TX: " + getTX());
   }
 
   @Override

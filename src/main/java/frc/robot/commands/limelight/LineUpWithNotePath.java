@@ -60,9 +60,7 @@ public class LineUpWithNotePath extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    limelightIntake.updateLimeLight();
-    
+  public void execute() {    
     currentRot = drivetrain.getPose().getRotation().getRadians();
 
     xSpeed = m_xPIDController.calculate(drivetrain.getPose().getX());

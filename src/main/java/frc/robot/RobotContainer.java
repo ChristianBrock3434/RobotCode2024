@@ -19,15 +19,18 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
+import frc.robot.commands.automation.StopIntake;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.LineUpPickUp;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.limelight.LineUpToGoal;
+import frc.robot.commands.limelight.LineUpToNote;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
 /**
@@ -42,8 +45,9 @@ public class RobotContainer {
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
+  // TODO: Add on shooting
   // Lock wheels
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
   // public boolean intakePosition = false;
   // public boolean tuckPosition = true;
@@ -130,14 +134,16 @@ public class RobotContainer {
     //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 40)
     // ).onFalse(new StopShoot());
 
-    controller.y().whileTrue(new LineUpPickUp());
+    controller.y().whileTrue(new LineUpPickUp()).onFalse(new StopIntake());
+    // controller.y().whileTrue(new LineUpToNote());
     // controller.y().whileTrue(new LineUpToGoal(() -> 0));
     // controller.y().onTrue(angleController.setPositionCommand(0));
     // controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
 
-    // joystick.getHID().setRumble(RumbleType.kBothRumble, 1);
-
-    // controller.y().whileTrue(new InstantCommand(() -> System.out.println(DriverStation.getAlliance())));
+    controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(7));
+    controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-7));
+    controller.pov(90).whileTrue(climber.runVoltageCommand(3));
+    controller.pov(270).whileTrue(climber.runVoltageCommand(-3));
   }
 
   private long timeOfLastAccess = 0;

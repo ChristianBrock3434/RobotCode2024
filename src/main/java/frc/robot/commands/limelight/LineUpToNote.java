@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightIntake;
 
 public class LineUpToNote extends Command{
-    private PIDController lineUPController = new PIDController(0.04, 0, 0);
+    private PIDController lineUPController = new PIDController(0.08, 0.001, 0.006);
 
     private SwerveRequest.RobotCentric drive = 
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -27,33 +27,32 @@ public class LineUpToNote extends Command{
         limelightIntake.setLimelightPipeline(LimelightIntake.Pipeline.Note);
 
         lineUPController.setSetpoint(0);
-        lineUPController.setTolerance(1.5);
+        lineUPController.setTolerance(1);
     }
 
     @Override
     public void execute() {
-        limelightIntake.updateLimeLight();
-
         output = -lineUPController.calculate(limelightIntake.getTX());
 
         if (lineUPController.atSetpoint()) {
             output = 0;
         }
 
-        // System.out.println("X val: " + limelightIntake.getTX());
-        // System.out.println("output: " + output);
+        System.out.println("X val: " + limelightIntake.getTX());
+        System.out.println("output: " + output);
 
         drivetrain.applyRequest(() -> drive.withVelocityY(output)).execute();
     }
 
     @Override
     public void end(boolean interrupted) {
-        limelightIntake.turnOffLimelight();
+        // limelightIntake.turnOffLimelight();
         drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
     }
 
     @Override
     public boolean isFinished() {
       return lineUPController.atSetpoint();
+        // return false;
     }
 }

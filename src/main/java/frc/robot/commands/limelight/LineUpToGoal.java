@@ -46,8 +46,6 @@ public class LineUpToGoal extends Command{
 
     @Override
     public void execute() {
-        limelightShooter.updateLimeLight();
-
         output = lineUPController.calculate(limelightShooter.getTX());
 
         if (lineUPController.atSetpoint() || limelightShooter.getTX() == 0) {

@@ -62,6 +62,11 @@ public final class Constants {
     public static final double angleStartingPosition = 0 * angleTicksPerDegree;
   }
 
+  public final class ClimberConstants {
+    public static final double minClimberHeight = 0;
+    public static final double maxClimberHeight = 210;
+  }
+
   public final class FieldConstants {
     public static final double blueSpeakerX = -8.3;
     public static final double blueSpeakerY = 1.5;

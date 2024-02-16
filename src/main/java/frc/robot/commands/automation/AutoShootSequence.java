@@ -7,8 +7,6 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.IndexerConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
-
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class AutoShootSequence extends SequentialCommandGroup {
