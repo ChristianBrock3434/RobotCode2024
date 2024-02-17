@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -37,6 +39,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
+        // applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -44,9 +47,36 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+        // applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
+        }
+    }
+
+    //TODO: Find out why this breaks the drivetrain
+    private void applyCurrentLimiting() {
+        TalonFXConfiguration configs = new TalonFXConfiguration();
+        configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+        configs.CurrentLimits.SupplyCurrentLimit = 20;
+        for (var module : this.Modules) {
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            for (int i = 0; i < 5; ++i) {
+                status = module.getDriveMotor().getConfigurator().apply(configs);
+                if (status.isOK()) break;
+            }
+            if(!status.isOK()) {
+                System.out.println("Could not apply configs, error code: " + status.toString());
+            }
+
+            // status = StatusCode.StatusCodeNotInitialized;
+            // for (int i = 0; i < 5; ++i) {
+            //     status = module.getSteerMotor().getConfigurator().apply(configs);
+            //     if (status.isOK()) break;
+            // }
+            // if(!status.isOK()) {
+            //     System.out.println("Could not apply configs, error code: " + status.toString());
+            // }
         }
     }
 

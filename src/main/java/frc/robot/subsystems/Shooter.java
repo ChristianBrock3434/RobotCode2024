@@ -19,10 +19,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-  //TODO: Tune the table
+  // TODO: Tune the table
   // Distance, Angle, Speed, Offset
   private static final double[][] distanceMap = {
-    {5, 30, 60, 0}
+    {1.5, 0, 40, 10},
+    {1.68, 0, 40, 10},
+    {1.82, 2, 40, 10},
+    {2, 4, 40, 10},
+    {2.15, 7, 40, 10},
+    {2.35, 10, 40, 10},
+    {2.5, 12, 40, 10},
+    {2.6, 13, 40, 10},
+    {2.8, 15, 40, 10},
+    {3, 16, 40, 9},
+    {3.1, 17.5, 45, 8},
+    {3.3, 20, 45, 6},
+    {3.5, 23, 50, 5},
+    {3.6, 24, 50, 5},
+    {3.75, 25, 50, 5},
+    {3.9, 25.5, 50, 5},
+    {4.03, 27, 55, 3},
+    {4.2, 27.75, 55, 3},
+    {4.4, 28.25, 55, 2},
+    {4.5, 28.5, 55, 2},
+    {4.65, 29.75, 60, 1},
+    {4.65, 29.75, 60, 1},
+    {4.8, 30, 60, 1},
+    {5, 32.25, 65, 0}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);
@@ -48,13 +71,15 @@ public class Shooter extends SubsystemBase {
                                           true
                                           );
 
-    sitControl = new VoltageOut(0.5,
+    sitControl = new VoltageOut(2,
                                 false, 
                                 false, 
                                 false, 
                                 true);
 
     stopMode = new NeutralOut();
+
+    stopShooter();
   }
 
   /**
@@ -202,10 +227,10 @@ public class Shooter extends SubsystemBase {
 
   
   public void stopShooter() {
-    // leftShooterMotor.setControl(stopMode);
-    // rightShooterMotor.setControl(stopMode);
-    leftShooterMotor.setControl(sitControl);
-    rightShooterMotor.setControl(sitControl);
+    leftShooterMotor.setControl(stopMode);
+    rightShooterMotor.setControl(stopMode);
+    // leftShooterMotor.setControl(sitControl);
+    // rightShooterMotor.setControl(sitControl);
   }
 
   public Command checkIfAtSpeed(double velocity) {
@@ -257,8 +282,9 @@ public class Shooter extends SubsystemBase {
     };
   }
   
+  
   public double[] getAngleAndSpeed(Double distance) {
-    double[] emptyVal = {-1, -1, -1};
+    double[] emptyVal = {-1, -1, -1, -1};
     if (distance < 0) return emptyVal;
 
     for (int i = 0; i < distanceMap.length; i++) {
@@ -272,12 +298,19 @@ public class Shooter extends SubsystemBase {
         double prevDis = distanceMap[i-1][0];
         prevDis = Math.abs(distance - prevDis);
         curDis = Math.abs(curDis - distance);
-        // double[] arr = (curDis > prevDis) ? distanceMap[i] : distanceMap[i-1];
-        // for (double j : arr) {
-        //   System.out.println(j);
-        // }
-        // return arr;
-        return (curDis < prevDis) ? distanceMap[i] : distanceMap[i-1];
+        
+        double totalDis = prevDis + curDis;
+        curDis = curDis / totalDis;
+        prevDis = prevDis / totalDis;
+
+        double[] arr = {distance,
+                        distanceMap[i][1] * curDis + distanceMap[i-1][1] * prevDis,
+                        distanceMap[i][2] * curDis + distanceMap[i-1][2] * prevDis,
+                        distanceMap[i][3] * curDis + distanceMap[i-1][3] * prevDis
+                      };
+
+        // return (curDis < prevDis) ? distanceMap[i] : distanceMap[i-1];
+        return arr;
       } 
       catch (ArrayIndexOutOfBoundsException e) {
         // for (double j : distanceMap[i]) {
@@ -286,10 +319,34 @@ public class Shooter extends SubsystemBase {
         return distanceMap[i];
       }
     }
-    if (distance < distanceMap[distanceMap.length-1][0] + 0.5) {
+    if (distance < distanceMap[distanceMap.length-1][0] + 0.2) {
       return distanceMap[distanceMap.length-1];
     }
     return emptyVal;
+  }
+
+  public double[] getAngleAndSpeedEquation(Double distance) {
+    double[] emptyVal = {-1, -1, -1, -1};
+    if (distance < 0 || distance > 5.3) return emptyVal;
+
+    double angle = -14.6 + 29.1 * Math.log(distance);
+    if (angle < 0) {
+      angle = 0;
+    }
+
+    // distance = 0.03953629709 * angle + 0.0733530393 * speed + 0.05272464358
+    // (distance - 0.05272464358 - 0.03953629709 * angle) / 0.0733530393 = speed
+    // double speed = (distance - 0.05272464358 - 0.03953629709 * angle) / 0.0733530393;
+    double speed = 41.9 + -3.97 * distance + 1.74 * Math.pow(distance, 2);
+    if (distance <= 2.9) {
+      speed = 40;
+    }
+
+    // double offset = (distance - 5.027295783) / -0.2792951932;
+    double[] oldVer = getAngleAndSpeed(distance);
+
+    double[] arr = {distance, angle, speed, oldVer[3]};
+    return arr;
   }
 
 

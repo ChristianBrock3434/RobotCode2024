@@ -18,9 +18,12 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
@@ -41,6 +44,10 @@ import frc.robot.commands.limelight.LineUpWithNotePath;
  */
 public class RobotContainer {
 
+  private static SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  private static SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private static SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
@@ -48,6 +55,8 @@ public class RobotContainer {
   // TODO: Add on shooting
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
+  private final SwerveRequest.PointWheelsAt pointForward = new SwerveRequest.PointWheelsAt().withModuleDirection(new Rotation2d(0));
 
   // public boolean intakePosition = false;
   // public boolean tuckPosition = true;
@@ -96,10 +105,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-controller.getRightY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-controller.getRightX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-controller.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
     // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake)); // Lock wheels on A press
@@ -117,24 +126,25 @@ public class RobotContainer {
 
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
-    controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
-      new ShootSequence(this::getAngle, this::getSpeed),
-      new LineUpToGoal(this::getLineUpOffset) //10
+    controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
+      new LineUpToGoal(this::getLineUpOffset),
+      new ShootSequence(this::getAngle, this::getSpeed)
     )).onFalse(new StopShoot());
     // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
     // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
 
     // Amp Shot
-    controller.leftTrigger(0.1).whileTrue(
-      new ShootSequence(() -> 2 * angleTicksPerDegree, () -> 10)
-    ).onFalse(new StopShoot());
-
-    // Trap Shot
     // controller.leftTrigger(0.1).whileTrue(
-    //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 40)
+    //   new ShootSequence(() -> 2 * angleTicksPerDegree, () -> 10)
     // ).onFalse(new StopShoot());
 
-    controller.y().whileTrue(new LineUpPickUp()).onFalse(new StopIntake());
+    // Trap Shot
+    controller.leftTrigger(0.1).whileTrue(
+      new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 30)
+    ).onFalse(new StopShoot());
+
+    controller.y().whileTrue(drivetrain.applyRequest(() -> pointForward));
+    // controller.y().whileTrue(new LineUpPickUp()).onFalse(new StopIntake());
     // controller.y().whileTrue(new LineUpToNote());
     // controller.y().whileTrue(new LineUpToGoal(() -> 0));
     // controller.y().onTrue(angleController.setPositionCommand(0));
@@ -150,6 +160,7 @@ public class RobotContainer {
   private double distance = 0;
 
   public double[] getAngleAndSpeed() {
+    System.out.println("Distance: " + distance);
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);
@@ -157,7 +168,7 @@ public class RobotContainer {
 
     long startingTime = System.currentTimeMillis();
     List<Double> distanceList = new ArrayList<>();
-    while (System.currentTimeMillis() - startingTime < 250) {
+    while (System.currentTimeMillis() - startingTime < 500) {
       distanceList.add(limelightShooter.getDistanceFromGoal());
     }
     distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(-1);

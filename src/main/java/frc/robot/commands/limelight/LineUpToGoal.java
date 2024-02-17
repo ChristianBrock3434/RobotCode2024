@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightShooter;
 
 public class LineUpToGoal extends Command{
-    private PIDController lineUPController = new PIDController(0.1, 0, 0.002);
+    private PIDController lineUPController = new PIDController(0.11, 0.07, 0.002);
 
     private SwerveRequest.RobotCentric drive = 
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -41,7 +41,7 @@ public class LineUpToGoal extends Command{
         limelightShooter.setLimelightPipeline(pipeline);
 
         lineUPController.setSetpoint(offset.getAsDouble());
-        lineUPController.setTolerance(0.5);
+        lineUPController.setTolerance(2.5);
     }
 
     @Override
@@ -61,12 +61,13 @@ public class LineUpToGoal extends Command{
     @Override
     public void end(boolean interrupted) {
         // limelightShooter.turnOffLimelight();
+        System.out.println("Made Point");
         drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
     }
 
     @Override
     public boolean isFinished() {
-        //   return lineUPController.atSetpoint();
-        return false;
+        return lineUPController.atSetpoint() || offset.getAsDouble() == -1;
+        // return false;
     }
 }
