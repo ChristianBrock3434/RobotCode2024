@@ -20,32 +20,32 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
   // TODO: Tune the table
-  // Distance, Angle, Speed, Offset
+  // Distance, Angle, Speed
   private static final double[][] distanceMap = {
-    {1.5, 0, 40, 10},
-    {1.68, 0, 40, 10},
-    {1.82, 2, 40, 10},
-    {2, 4, 40, 10},
-    {2.15, 7, 40, 10},
-    {2.35, 10, 40, 10},
-    {2.5, 12, 40, 10},
-    {2.6, 13, 40, 10},
-    {2.8, 15, 40, 10},
-    {3, 16, 40, 9},
-    {3.1, 17.5, 45, 8},
-    {3.3, 20, 45, 6},
-    {3.5, 23, 50, 5},
-    {3.6, 24, 50, 5},
-    {3.75, 25, 50, 5},
-    {3.9, 25.5, 50, 5},
-    {4.03, 27, 55, 3},
-    {4.2, 27.75, 55, 3},
-    {4.4, 28.25, 55, 2},
-    {4.5, 28.5, 55, 2},
-    {4.65, 29.75, 60, 1},
-    {4.65, 29.75, 60, 1},
-    {4.8, 30, 60, 1},
-    {5, 32.25, 65, 0}
+    {1.4, 1, 65},
+    {1.6, 3, 65},
+    {1.8, 6, 65},
+    {1.9, 8, 65},
+    {2.05, 10, 65},
+    {2.25, 12, 65},
+    {2.45, 15, 65},
+    {2.6, 17, 65},
+    {2.75, 19, 65},
+    {2.9, 20.5, 65},
+    {3, 21.5, 65},
+    {3.2, 22.5, 65},
+    {3.35, 22.5, 65},
+    {3.5, 23, 65},
+    {3.6, 24, 65},
+    {3.7, 25, 65},
+    {3.85, 27.25, 65},
+    {4.03, 27.5, 65},
+    {4.2, 28.25, 65},
+    {4.35, 29.25, 65},
+    {4.5, 29.5, 65},
+    {4.65, 29.75, 65}, //come back
+    {4.8, 31.5, 65},
+    {5, 32.5, 65}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);
@@ -284,7 +284,7 @@ public class Shooter extends SubsystemBase {
   
   
   public double[] getAngleAndSpeed(Double distance) {
-    double[] emptyVal = {-1, -1, -1, -1};
+    double[] emptyVal = {-1, -1, -1};
     if (distance < 0) return emptyVal;
 
     for (int i = 0; i < distanceMap.length; i++) {
@@ -305,8 +305,7 @@ public class Shooter extends SubsystemBase {
 
         double[] arr = {distance,
                         distanceMap[i][1] * curDis + distanceMap[i-1][1] * prevDis,
-                        distanceMap[i][2] * curDis + distanceMap[i-1][2] * prevDis,
-                        distanceMap[i][3] * curDis + distanceMap[i-1][3] * prevDis
+                        distanceMap[i][2] * curDis + distanceMap[i-1][2] * prevDis
                       };
 
         // return (curDis < prevDis) ? distanceMap[i] : distanceMap[i-1];

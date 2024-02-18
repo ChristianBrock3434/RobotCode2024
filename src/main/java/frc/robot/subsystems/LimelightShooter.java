@@ -30,7 +30,8 @@ public class LimelightShooter extends SubsystemBase {
 
   public static enum Pipeline {
     AprilTag3DBlue(0),
-    AprilTag3DRed(1);
+    AprilTag3DRed(1),
+    Trap(2);
 
     public int pipelineNum;
 
@@ -155,7 +156,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return X position of the object (degrees)
    */
   public double getTX() {
-    return table.getEntry("tx").getDouble(0);
+    return table.getEntry("tx").getDouble(-1);
     // return 1;
   }
 
@@ -163,7 +164,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return Y position of the object (degrees)
    */
   public double getTY() {
-    return table.getEntry("ty").getDouble(0);
+    return table.getEntry("ty").getDouble(-1);
     // return 1;
   }
 
@@ -171,7 +172,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return Area of the screen the object takes up
    */
   public double getTA() {
-    return table.getEntry("ta").getDouble(0);
+    return table.getEntry("ta").getDouble(-1);
     // return 1;
   }
 
@@ -179,7 +180,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return Skew (rotation) of the object
    */
   public double getTS() {
-    return table.getEntry("ts").getDouble(0);
+    return table.getEntry("ts").getDouble(-1);
     // return 1;
   }
 
@@ -190,6 +191,13 @@ public class LimelightShooter extends SubsystemBase {
     // System.out.println("X: " + pose[0]);
     // System.out.println("Y: " + pose[1]);
     // System.out.println("Distance: " + getDistanceFromGoal());
+    // System.out.println("TX: " + getTX());
+    // System.out.println("TY: " + getTY());
+    // System.out.println("start");
+    // for (double d : getRobotPose()) {
+    //   System.out.println(d);
+    // }
+    // System.out.println("end");
   }
 
   @Override

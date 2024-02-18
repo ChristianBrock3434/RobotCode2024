@@ -127,21 +127,21 @@ public class RobotContainer {
     new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
     controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
-      new LineUpToGoal(this::getLineUpOffset),
+      new LineUpToGoal(),
       new ShootSequence(this::getAngle, this::getSpeed)
     )).onFalse(new StopShoot());
     // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
     // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
 
     // Amp Shot
-    // controller.leftTrigger(0.1).whileTrue(
-    //   new ShootSequence(() -> 2 * angleTicksPerDegree, () -> 10)
-    // ).onFalse(new StopShoot());
+    controller.leftTrigger(0.1).whileTrue(
+      new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 7)
+    ).onFalse(new StopShoot());
 
     // Trap Shot
-    controller.leftTrigger(0.1).whileTrue(
-      new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 30)
-    ).onFalse(new StopShoot());
+    // controller.leftTrigger(0.1).whileTrue(
+    //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
+    // ).onFalse(new StopShoot());
 
     controller.y().whileTrue(drivetrain.applyRequest(() -> pointForward));
     // controller.y().whileTrue(new LineUpPickUp()).onFalse(new StopIntake());
@@ -150,8 +150,8 @@ public class RobotContainer {
     // controller.y().onTrue(angleController.setPositionCommand(0));
     // controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
 
-    controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(7));
-    controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-7));
+    controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
+    controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
     controller.pov(90).whileTrue(climber.runVoltageCommand(3));
     controller.pov(270).whileTrue(climber.runVoltageCommand(-3));
   }
@@ -160,7 +160,7 @@ public class RobotContainer {
   private double distance = 0;
 
   public double[] getAngleAndSpeed() {
-    System.out.println("Distance: " + distance);
+    // System.out.println("Distance: " + distance);
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);
@@ -168,7 +168,7 @@ public class RobotContainer {
 
     long startingTime = System.currentTimeMillis();
     List<Double> distanceList = new ArrayList<>();
-    while (System.currentTimeMillis() - startingTime < 500) {
+    while (System.currentTimeMillis() - startingTime < 250) {
       distanceList.add(limelightShooter.getDistanceFromGoal());
     }
     distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(-1);
@@ -180,17 +180,13 @@ public class RobotContainer {
   public double getAngle() {
     // System.out.println("Angle: " + getAngleAndSpeed()[1] * angleTicksPerDegree);
     return getAngleAndSpeed()[1] * angleTicksPerDegree;
-    // return 26 * angleTicksPerDegree;
+    // return 35.75 * angleTicksPerDegree;
   }
 
   public double getSpeed() {
     // System.out.println("Speed: " + getAngleAndSpeed()[2]);
     return getAngleAndSpeed()[2];
-    // return 60;
-  }
-
-  public double getLineUpOffset() {
-    return getAngleAndSpeed()[3];
+    // return 80;
   }
 
   /**

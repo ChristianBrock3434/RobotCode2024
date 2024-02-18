@@ -15,6 +15,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AngleControllerConstants;
 
 public class AngleController extends SubsystemBase{
   private TalonFX angleMotor = new TalonFX(19);
@@ -44,7 +45,7 @@ public class AngleController extends SubsystemBase{
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
+    // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
     configs.MotionMagic.MotionMagicCruiseVelocity = 15;
     configs.MotionMagic.MotionMagicAcceleration = 20;
@@ -174,6 +175,6 @@ public class AngleController extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // System.out.println(angleMotor.getPosition().getValueAsDouble());
+    // System.out.println(angleMotor.getPosition().getValueAsDouble() / AngleControllerConstants.angleTicksPerDegree);
   }
 }

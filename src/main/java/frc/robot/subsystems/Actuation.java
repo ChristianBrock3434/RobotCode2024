@@ -154,7 +154,7 @@ public class Actuation extends SubsystemBase {
       @Override
       public boolean isFinished() {
         double currentPosition = actuationMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition) <= 0.3;
+        return Math.abs(currentPosition - setPosition) <= 0.5;
       }
     };
   }

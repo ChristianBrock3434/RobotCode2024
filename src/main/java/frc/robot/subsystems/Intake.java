@@ -208,6 +208,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // System.out.println(intakeMotor.getDeviceTemp().toString());
     // System.out.println(pdp.getCurrent(16));
     // System.out.println(getDistanceSensorTripped());
   }

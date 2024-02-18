@@ -12,8 +12,8 @@ public class PickUpPiece extends SequentialCommandGroup{
     public PickUpPiece() {
         addCommands(
             actuation.setPositionCommand(actuationPickUpPosition),
-            intake.runVoltageCommand(intakeVoltage),
             actuation.waitUntilAtPosition(actuationPickUpPosition),
+            intake.runVoltageCommand(intakeVoltage),
             intake.waitUntilTripped(),
             new InstantCommand(intake::stopIntakeMotor, intake),
             actuation.setPositionCommand(actuationTuckPosition)

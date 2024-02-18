@@ -20,10 +20,8 @@ public class LineUpToGoal extends Command{
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private double output;
-    private DoubleSupplier offset;
 
-    public LineUpToGoal(DoubleSupplier offset) {
-        this.offset = offset;
+    public LineUpToGoal() {
         addRequirements(drivetrain, limelightShooter);
     }
 
@@ -40,15 +38,17 @@ public class LineUpToGoal extends Command{
         limelightShooter.turnOnLimelight();
         limelightShooter.setLimelightPipeline(pipeline);
 
-        lineUPController.setSetpoint(offset.getAsDouble());
+        lineUPController.setSetpoint(0);
         lineUPController.setTolerance(2.5);
+
+        lineUPController.calculate(limelightShooter.getTX());
     }
 
     @Override
     public void execute() {
         output = lineUPController.calculate(limelightShooter.getTX());
 
-        if (lineUPController.atSetpoint() || limelightShooter.getTX() == 0) {
+        if (lineUPController.atSetpoint() || limelightShooter.getTX() == -1) {
             output = 0;
         }
 
@@ -67,7 +67,7 @@ public class LineUpToGoal extends Command{
 
     @Override
     public boolean isFinished() {
-        return lineUPController.atSetpoint() || offset.getAsDouble() == -1;
+        return lineUPController.atSetpoint();
         // return false;
     }
 }
