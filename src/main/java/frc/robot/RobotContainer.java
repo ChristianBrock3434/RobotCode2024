@@ -169,9 +169,12 @@ public class RobotContainer {
     long startingTime = System.currentTimeMillis();
     List<Double> distanceList = new ArrayList<>();
     while (System.currentTimeMillis() - startingTime < 250) {
-      distanceList.add(limelightShooter.getDistanceFromGoal());
+      double distance = limelightShooter.getDistanceFromGoal();
+      if (distance != Double.NaN) {
+        distanceList.add(distance);
+      }
     }
-    distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(-1);
+    distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
 
     timeOfLastAccess = System.currentTimeMillis();
     return shooter.getAngleAndSpeed(distance);

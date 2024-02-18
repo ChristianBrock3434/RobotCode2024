@@ -26,7 +26,7 @@ public class ShootSequence extends ConditionalCommand {
                 intake.feedCommand(feedVelocity, feedAcceleration)
             ),
             new ShakeController(0.5),
-            () -> (angle.getAsDouble() >= 0) && (velocity.getAsDouble() >= 0)
+            () -> (angle.getAsDouble() != Double.NaN) && (velocity.getAsDouble() != Double.NaN)
         );
     }
 }

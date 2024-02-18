@@ -143,7 +143,7 @@ public class LimelightShooter extends SubsystemBase {
     double[] pose = getRobotPose();
 
     if (pose[0] == 0 && pose[1] == 0) {
-      return -1;
+      return Double.NaN;
     }
 
     double xDistance = Math.abs(blueSpeakerX - pose[0]);
@@ -156,7 +156,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return X position of the object (degrees)
    */
   public double getTX() {
-    return table.getEntry("tx").getDouble(-1);
+    return table.getEntry("tx").getDouble(Double.NaN);
     // return 1;
   }
 
@@ -164,7 +164,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return Y position of the object (degrees)
    */
   public double getTY() {
-    return table.getEntry("ty").getDouble(-1);
+    return table.getEntry("ty").getDouble(Double.NaN);
     // return 1;
   }
 
@@ -172,7 +172,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return Area of the screen the object takes up
    */
   public double getTA() {
-    return table.getEntry("ta").getDouble(-1);
+    return table.getEntry("ta").getDouble(Double.NaN);
     // return 1;
   }
 
@@ -180,7 +180,7 @@ public class LimelightShooter extends SubsystemBase {
    * @return Skew (rotation) of the object
    */
   public double getTS() {
-    return table.getEntry("ts").getDouble(-1);
+    return table.getEntry("ts").getDouble(Double.NaN);
     // return 1;
   }
 

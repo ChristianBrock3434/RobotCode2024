@@ -44,7 +44,7 @@ public class LineUpPickUp extends ParallelDeadlineGroup {
                         .withRotationalRate(-controller.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
                     )
                 ), 
-                () -> limelightIntake.getTX() != 0
+                () -> limelightIntake.getTX() != Double.NaN
             )
         );
     }

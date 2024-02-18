@@ -34,7 +34,7 @@ public class LineUpToNote extends Command{
     public void execute() {
         output = -lineUPController.calculate(limelightIntake.getTX());
 
-        if (lineUPController.atSetpoint()) {
+        if (lineUPController.atSetpoint() || limelightIntake.getTX() == Double.NaN) {
             output = 0;
         }
 

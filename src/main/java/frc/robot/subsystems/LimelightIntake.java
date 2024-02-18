@@ -194,7 +194,7 @@ public class LimelightIntake extends SubsystemBase {
     double[] pose = getRobotPose();
 
     if (pose[0] == 0 && pose[1] == 0) {
-      return -1;
+      return Double.NaN;
     }
 
     //TODO: add support for red alliance
@@ -208,7 +208,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return X position of the object (degrees)
    */
   public double getTX() {
-    return table.getEntry("tx").getDouble(0);
+    return table.getEntry("tx").getDouble(Double.NaN);
     // return 1;
   }
 
@@ -216,7 +216,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return Y position of the object (degrees)
    */
   public double getTY() {
-    return table.getEntry("ty").getDouble(0);
+    return table.getEntry("ty").getDouble(Double.NaN);
     // return 1;
   }
 
@@ -224,7 +224,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return Area of the screen the object takes up
    */
   public double getTA() {
-    return table.getEntry("ta").getDouble(0);
+    return table.getEntry("ta").getDouble(Double.NaN);
     // return 1;
   }
 
@@ -232,7 +232,7 @@ public class LimelightIntake extends SubsystemBase {
    * @return Skew (rotation) of the object
    */
   public double getTS() {
-    return table.getEntry("ts").getDouble(0);
+    return table.getEntry("ts").getDouble(Double.NaN);
     // return 1;
   }
 

@@ -41,14 +41,14 @@ public class LineUpToGoal extends Command{
         lineUPController.setSetpoint(0);
         lineUPController.setTolerance(2.5);
 
-        lineUPController.calculate(limelightShooter.getTX());
+        // lineUPController.calculate(limelightShooter.getTX());
     }
 
     @Override
     public void execute() {
         output = lineUPController.calculate(limelightShooter.getTX());
 
-        if (lineUPController.atSetpoint() || limelightShooter.getTX() == -1) {
+        if (lineUPController.atSetpoint() || limelightShooter.getTX() == Double.NaN) {
             output = 0;
         }
 

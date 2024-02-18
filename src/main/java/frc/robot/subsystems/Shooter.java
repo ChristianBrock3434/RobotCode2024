@@ -176,7 +176,11 @@ public class Shooter extends SubsystemBase {
       @Override
       public void initialize() {
         addRequirements(Shooter.this);
-        runShooter(velocity.getAsDouble(), acceleration);
+        if (velocity.getAsDouble() == Double.NaN) {
+          stopShooter();
+        } else {
+          runShooter(velocity.getAsDouble(), acceleration);
+        }
       }
 
       @Override
@@ -275,6 +279,9 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
+        if (velocity.getAsDouble() == Double.NaN) {
+          return true;
+        }
         boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
         boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
         return leftShooterSpeed || rightShooterSpeed;
@@ -284,8 +291,8 @@ public class Shooter extends SubsystemBase {
   
   
   public double[] getAngleAndSpeed(Double distance) {
-    double[] emptyVal = {-1, -1, -1};
-    if (distance < 0) return emptyVal;
+    double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
+    if (distance == Double.NaN) return emptyVal;
 
     for (int i = 0; i < distanceMap.length; i++) {
       double curDis = distanceMap[i][0];
@@ -325,7 +332,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double[] getAngleAndSpeedEquation(Double distance) {
-    double[] emptyVal = {-1, -1, -1, -1};
+    double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
     if (distance < 0 || distance > 5.3) return emptyVal;
 
     double angle = -14.6 + 29.1 * Math.log(distance);
@@ -341,10 +348,7 @@ public class Shooter extends SubsystemBase {
       speed = 40;
     }
 
-    // double offset = (distance - 5.027295783) / -0.2792951932;
-    double[] oldVer = getAngleAndSpeed(distance);
-
-    double[] arr = {distance, angle, speed, oldVer[3]};
+    double[] arr = {distance, angle, speed};
     return arr;
   }
 
