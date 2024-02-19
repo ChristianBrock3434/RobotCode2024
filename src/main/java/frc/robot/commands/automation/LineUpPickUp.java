@@ -37,14 +37,14 @@ public class LineUpPickUp extends ParallelDeadlineGroup {
                     )
                 ), 
                 new ParallelCommandGroup(
-                    new ShakeController(0.2),
+                    new ShakeController(1.0),
                     drivetrain.applyRequest(() -> driverDrive.withVelocityX(-controller.getRightY() * MaxSpeed) // Drive forward with
                                                                                                        // negative Y (forward)
                         .withVelocityY(-controller.getRightX() * MaxSpeed) // Drive left with negative X (left)
                         .withRotationalRate(-controller.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
                     )
                 ), 
-                () -> limelightIntake.getTX() != Double.NaN
+                () -> !limelightIntake.getTX().equals(Double.NaN)
             )
         );
     }

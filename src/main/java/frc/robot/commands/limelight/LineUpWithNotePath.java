@@ -77,7 +77,7 @@ public class LineUpWithNotePath extends Command {
 
     lineUpCorrection = -m_lineUpPIDController.calculate(limelightIntake.getTX());
 
-    if (m_lineUpPIDController.atSetpoint() || limelightIntake.getTX() == Double.NaN) {
+    if (m_lineUpPIDController.atSetpoint() || limelightIntake.getTX().equals(Double.NaN)) {
       lineUpCorrection = 0;
     }
 

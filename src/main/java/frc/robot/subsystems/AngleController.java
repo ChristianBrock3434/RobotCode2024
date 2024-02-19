@@ -100,7 +100,7 @@ public class AngleController extends SubsystemBase{
     return new Command() {
       @Override
       public void execute() {
-        if (position.getAsDouble() != Double.NaN) {
+        if (!((Double) position.getAsDouble()).equals(Double.NaN)) {
           setPosition(position.getAsDouble());
         }
       }
@@ -164,7 +164,7 @@ public class AngleController extends SubsystemBase{
     return new Command() {
       @Override
       public boolean isFinished() {
-        if (setPosition.getAsDouble() == Double.NaN) {
+        if (((Double) setPosition.getAsDouble()).equals(Double.NaN)) {
           return true;
         }
         double currentPosition = angleMotor.getPosition().getValueAsDouble();

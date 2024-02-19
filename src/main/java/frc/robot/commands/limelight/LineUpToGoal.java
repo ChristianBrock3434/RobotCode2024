@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightShooter;
 
 public class LineUpToGoal extends Command{
-    private PIDController lineUPController = new PIDController(0.11, 0.07, 0.002);
+    private PIDController lineUPController = new PIDController(0.123, 0.0, 0.0125);
 
     private SwerveRequest.RobotCentric drive = 
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     private double output;
 
@@ -39,21 +41,26 @@ public class LineUpToGoal extends Command{
         limelightShooter.setLimelightPipeline(pipeline);
 
         lineUPController.setSetpoint(0);
-        lineUPController.setTolerance(2.5);
+        lineUPController.setTolerance(2.75);
 
-        // lineUPController.calculate(limelightShooter.getTX());
+        lineUPController.calculate(1000);
     }
 
     @Override
     public void execute() {
-        output = lineUPController.calculate(limelightShooter.getTX());
-
-        if (lineUPController.atSetpoint() || limelightShooter.getTX() == Double.NaN) {
+        if (limelightShooter.getTX().equals(Double.NaN)) {
+            lineUPController.calculate(1000);
             output = 0;
+        } else {
+            output = lineUPController.calculate(limelightShooter.getTX());
+
+            if (lineUPController.atSetpoint()) {
+                output = 0;
+            }
         }
 
-        // System.out.println("X val: " + limelightShooter.getTX());
-        // System.out.println("output: " + output);
+        System.out.println("X val: " + limelightShooter.getTX());
+        System.out.println("output: " + output);
 
         drivetrain.applyRequest(() -> drive.withRotationalRate(output)).execute();
     }
@@ -61,8 +68,8 @@ public class LineUpToGoal extends Command{
     @Override
     public void end(boolean interrupted) {
         // limelightShooter.turnOffLimelight();
-        System.out.println("Made Point");
-        drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
+        // System.out.println("Made Point");
+        drivetrain.applyRequest(() -> brake).execute();
     }
 
     @Override

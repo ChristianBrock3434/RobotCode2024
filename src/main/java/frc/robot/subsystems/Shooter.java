@@ -21,31 +21,31 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shooter extends SubsystemBase {
   // TODO: Tune the table
   // Distance, Angle, Speed
-  private static final double[][] distanceMap = {
-    {1.4, 1, 65},
-    {1.6, 3, 65},
-    {1.8, 6, 65},
-    {1.9, 8, 65},
-    {2.05, 10, 65},
-    {2.25, 12, 65},
-    {2.45, 15, 65},
-    {2.6, 17, 65},
-    {2.75, 19, 65},
-    {2.9, 20.5, 65},
-    {3, 21.5, 65},
-    {3.2, 22.5, 65},
-    {3.35, 22.5, 65},
-    {3.5, 23, 65},
-    {3.6, 24, 65},
-    {3.7, 25, 65},
-    {3.85, 27.25, 65},
-    {4.03, 27.5, 65},
-    {4.2, 28.25, 65},
-    {4.35, 29.25, 65},
-    {4.5, 29.5, 65},
-    {4.65, 29.75, 65}, //come back
-    {4.8, 31.5, 65},
-    {5, 32.5, 65}
+  private static final Double[][] distanceMap = {
+    {1.4, 1.0, 65.0},
+    {1.6, 3.0, 65.0},
+    {1.8, 6.0, 65.0},
+    {1.9, 8.0, 65.0},
+    {2.05, 10.0, 65.0},
+    {2.25, 12.0, 65.0},
+    {2.45, 15.0, 65.0},
+    {2.6, 17.0, 65.0},
+    {2.75, 19.0, 65.0},
+    {2.9, 20.5, 65.0},
+    {3.0, 21.5, 65.0},
+    {3.2, 22.5, 65.0},
+    {3.35, 22.5, 65.0},
+    {3.5, 23.0, 65.0},
+    {3.6, 24.0, 65.0},
+    {3.7, 25.0, 65.0},
+    {3.85, 27.25, 65.0},
+    {4.03, 27.5, 65.0},
+    {4.2, 28.25, 65.0},
+    {4.35, 29.25, 65.0},
+    {4.5, 29.5, 65.0},
+    {4.65, 29.75, 65.0}, //come back
+    {4.8, 31.5, 65.0},
+    {5.0, 32.5, 65.0}
   };
 
   private TalonFX leftShooterMotor = new TalonFX(15);
@@ -176,7 +176,7 @@ public class Shooter extends SubsystemBase {
       @Override
       public void initialize() {
         addRequirements(Shooter.this);
-        if (velocity.getAsDouble() == Double.NaN) {
+        if (((Double) velocity.getAsDouble()).equals(Double.NaN)) {
           stopShooter();
         } else {
           runShooter(velocity.getAsDouble(), acceleration);
@@ -279,7 +279,7 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public boolean isFinished() {
-        if (velocity.getAsDouble() == Double.NaN) {
+        if (((Double) velocity.getAsDouble()).equals(Double.NaN)) {
           return true;
         }
         boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
@@ -290,9 +290,9 @@ public class Shooter extends SubsystemBase {
   }
   
   
-  public double[] getAngleAndSpeed(Double distance) {
-    double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
-    if (distance == Double.NaN) return emptyVal;
+  public Double[] getAngleAndSpeed(Double distance) {
+    Double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
+    if (distance.equals(Double.NaN)) return emptyVal;
 
     for (int i = 0; i < distanceMap.length; i++) {
       double curDis = distanceMap[i][0];
@@ -310,7 +310,7 @@ public class Shooter extends SubsystemBase {
         curDis = curDis / totalDis;
         prevDis = prevDis / totalDis;
 
-        double[] arr = {distance,
+        Double[] arr = {distance,
                         distanceMap[i][1] * curDis + distanceMap[i-1][1] * prevDis,
                         distanceMap[i][2] * curDis + distanceMap[i-1][2] * prevDis
                       };
@@ -325,7 +325,7 @@ public class Shooter extends SubsystemBase {
         return distanceMap[i];
       }
     }
-    if (distance < distanceMap[distanceMap.length-1][0] + 0.2) {
+    if (distance < distanceMap[distanceMap.length-1][0] + 0.1) {
       return distanceMap[distanceMap.length-1];
     }
     return emptyVal;
@@ -333,7 +333,7 @@ public class Shooter extends SubsystemBase {
 
   public double[] getAngleAndSpeedEquation(Double distance) {
     double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
-    if (distance < 0 || distance > 5.3) return emptyVal;
+    if (distance < 0 || distance > 5.1) return emptyVal;
 
     double angle = -14.6 + 29.1 * Math.log(distance);
     if (angle < 0) {

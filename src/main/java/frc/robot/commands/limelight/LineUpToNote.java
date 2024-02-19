@@ -34,12 +34,12 @@ public class LineUpToNote extends Command{
     public void execute() {
         output = -lineUPController.calculate(limelightIntake.getTX());
 
-        if (lineUPController.atSetpoint() || limelightIntake.getTX() == Double.NaN) {
+        if (lineUPController.atSetpoint() || limelightIntake.getTX().equals(Double.NaN)) {
             output = 0;
         }
 
-        System.out.println("X val: " + limelightIntake.getTX());
-        System.out.println("output: " + output);
+        // System.out.println("X val: " + limelightIntake.getTX());
+        // System.out.println("output: " + output);
 
         drivetrain.applyRequest(() -> drive.withVelocityY(output)).execute();
     }

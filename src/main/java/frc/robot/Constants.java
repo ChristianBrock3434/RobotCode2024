@@ -26,9 +26,9 @@ public final class Constants {
     // 360 degrees per rotation, 8:1 gear ratio
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
-    public static final double actuationStartPosition = -65 * actuationTicksPerDegree;
+    public static final double actuationStartPosition = -64 * actuationTicksPerDegree;
     public static final double actuationPickUpPosition = 100 * actuationTicksPerDegree;
-    public static final double actuationTuckPosition = -65 * actuationTicksPerDegree;
+    public static final double actuationTuckPosition = -62 * actuationTicksPerDegree;
   }
 
   public final class IntakeConstants {

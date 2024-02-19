@@ -12,6 +12,7 @@ import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Subsystems.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -159,7 +160,7 @@ public class RobotContainer {
   private long timeOfLastAccess = 0;
   private double distance = 0;
 
-  public double[] getAngleAndSpeed() {
+  public Double[] getAngleAndSpeed() {
     // System.out.println("Distance: " + distance);
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
       timeOfLastAccess = System.currentTimeMillis();
@@ -169,11 +170,25 @@ public class RobotContainer {
     long startingTime = System.currentTimeMillis();
     List<Double> distanceList = new ArrayList<>();
     while (System.currentTimeMillis() - startingTime < 250) {
-      double distance = limelightShooter.getDistanceFromGoal();
-      if (distance != Double.NaN) {
-        distanceList.add(distance);
+      Double distance = limelightShooter.getDistanceFromGoal();
+      if (!distance.equals(Double.NaN)) {
+        try {
+          if (!distance.equals(distanceList.get(distanceList.size()-1))) {
+            distanceList.add(distance);
+          }
+        } catch (IndexOutOfBoundsException e) {
+          distanceList.add(distance);
+        }
+        
       }
     }
+
+    try {
+      Collections.sort(distanceList);
+      distanceList.remove(0);
+      distanceList.remove(distanceList.size() - 1);
+    } catch (IndexOutOfBoundsException e) {}
+
     distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
 
     timeOfLastAccess = System.currentTimeMillis();
@@ -199,6 +214,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.getAutoPath("3 ring far blue");
+    return drivetrain.getAutoPath("4 ring close blue");
   }
 }

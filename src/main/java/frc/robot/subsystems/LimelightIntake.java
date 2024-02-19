@@ -171,7 +171,7 @@ public class LimelightIntake extends SubsystemBase {
 
   /**
    * Finds the pose of the robot when detecting 3D april tags
-   * @return An array of doubles in the order of X, Y, Z, Pitch, Yaw, Roll
+   * @return An array of doubles in the order of X, Y, Z, Roll, Pitch, Yaw
    */
   public double[] getRobotPose() {
     double[] pose = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -207,7 +207,7 @@ public class LimelightIntake extends SubsystemBase {
   /**
    * @return X position of the object (degrees)
    */
-  public double getTX() {
+  public Double getTX() {
     return table.getEntry("tx").getDouble(Double.NaN);
     // return 1;
   }
@@ -215,7 +215,7 @@ public class LimelightIntake extends SubsystemBase {
   /**
    * @return Y position of the object (degrees)
    */
-  public double getTY() {
+  public Double getTY() {
     return table.getEntry("ty").getDouble(Double.NaN);
     // return 1;
   }
@@ -223,7 +223,7 @@ public class LimelightIntake extends SubsystemBase {
   /**
    * @return Area of the screen the object takes up
    */
-  public double getTA() {
+  public Double getTA() {
     return table.getEntry("ta").getDouble(Double.NaN);
     // return 1;
   }
@@ -231,7 +231,7 @@ public class LimelightIntake extends SubsystemBase {
   /**
    * @return Skew (rotation) of the object
    */
-  public double getTS() {
+  public Double getTS() {
     return table.getEntry("ts").getDouble(Double.NaN);
     // return 1;
   }

@@ -25,8 +25,9 @@ public class ShootSequence extends ConditionalCommand {
                 shooter.checkIfAtSpeedSupplier(velocity),
                 intake.feedCommand(feedVelocity, feedAcceleration)
             ),
-            new ShakeController(0.5),
-            () -> (angle.getAsDouble() != Double.NaN) && (velocity.getAsDouble() != Double.NaN)
+            new ShakeController(1.0),
+            // I was held against my will by the compiler
+            () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))
         );
     }
 }
