@@ -17,14 +17,11 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Actuation extends SubsystemBase {
   private TalonFX actuationMotor = new TalonFX(14);
-
-  private DigitalInput actuationLimitSwitch = new DigitalInput(0);
 
   MotionMagicVoltage motionMagicControl;
   NeutralOut stopMode;
@@ -162,12 +159,6 @@ public class Actuation extends SubsystemBase {
   public void resetEncoder() {
     actuationMotor.setPosition(actuationStartPosition);
   }
-
-
-  public Boolean getLimitSwitch() {
-    return !actuationLimitSwitch.get();
-  }
-
   
   @Override
   public void periodic() {

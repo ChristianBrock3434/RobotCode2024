@@ -15,7 +15,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -50,6 +52,8 @@ public class Shooter extends SubsystemBase {
 
   private TalonFX leftShooterMotor = new TalonFX(15);
   private TalonFX rightShooterMotor = new TalonFX(16);
+
+  private DigitalInput noteExitSensor = new DigitalInput(2);
 
   VelocityVoltage velocityControl;
   VoltageOut sitControl;
@@ -352,6 +356,35 @@ public class Shooter extends SubsystemBase {
     return arr;
   }
 
+  public Command waitUntilTripped() {
+    return new Command() {
+      @Override
+      public boolean isFinished() {
+        return getNoteSensor();
+      }
+    };
+  }
+
+  public Command waitUntilNotTripped() {
+    return new Command() {
+      @Override
+      public boolean isFinished() {
+        return !getNoteSensor();
+      }
+    };
+  }
+
+  public SequentialCommandGroup waitUntilRingLeft() {
+    return new SequentialCommandGroup(
+      waitUntilTripped(),
+      waitUntilNotTripped()
+    );
+  }
+
+  public boolean getNoteSensor() {
+    return noteExitSensor.get();
+  }
+
 
   @Override
   public void periodic() {
@@ -359,6 +392,7 @@ public class Shooter extends SubsystemBase {
     // System.out.println(pdp.getCurrent(16));
     // System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
     // System.out.println("Left Velocity:" + leftShooterMotor.getVelocity().getValueAsDouble());
+    // System.out.println("Break: " + getNoteSensor());
   }
 
   @Override

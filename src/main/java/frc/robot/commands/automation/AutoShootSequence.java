@@ -8,6 +8,7 @@ import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.IndexerConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoShootSequence extends SequentialCommandGroup {
     
@@ -21,7 +22,8 @@ public class AutoShootSequence extends SequentialCommandGroup {
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
             indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
             shooter.checkIfAtSpeedSupplier(velocity),
-            intake.feedCommand(feedVelocity, feedAcceleration).withTimeout(2),
+            intake.startFeedingCommand(feedVelocity, feedAcceleration),
+            new WaitCommand(1.5).raceWith(shooter.waitUntilRingLeft()),
             new StopShoot()
         );
     }

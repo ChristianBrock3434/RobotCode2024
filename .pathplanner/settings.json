@@ -3,15 +3,14 @@
   "robotLength": 0.6096,
   "holonomicMode": true,
   "pathFolders": [
-    "Close Blue",
     "Far Blue",
-    "Practice"
+    "Close Blue"
   ],
   "autoFolders": [
     "Practice"
   ],
-  "defaultMaxVel": 1.5,
-  "defaultMaxAccel": 1.25,
+  "defaultMaxVel": 3.0,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5

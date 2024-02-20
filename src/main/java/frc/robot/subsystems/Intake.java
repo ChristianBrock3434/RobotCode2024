@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
   private TalonFX intakeMotor = new TalonFX(13);
 
-  private DigitalInput noteSensor = new DigitalInput(1);
+  private DigitalInput rightNoteSensor = new DigitalInput(0);
+  private DigitalInput leftNoteSensor = new DigitalInput(1);
 
   VelocityVoltage velocityControlFeed;
   VoltageOut voltageControl;
@@ -115,6 +116,21 @@ public class Intake extends SubsystemBase {
     };
   }
 
+  public Command startFeedingCommand(double velocity, double acceleration){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Intake.this);
+        feedMotor(velocity, acceleration);
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
   /**
    * Run the intake motor at a given velocity and acceleration
    * @param velocity in rotations per second
@@ -201,7 +217,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean getNoteSensor() {
-    return noteSensor.get();
+    return leftNoteSensor.get() || rightNoteSensor.get();
   }
 
 
@@ -211,6 +227,8 @@ public class Intake extends SubsystemBase {
     // System.out.println(intakeMotor.getDeviceTemp().toString());
     // System.out.println(pdp.getCurrent(16));
     // System.out.println(getDistanceSensorTripped());
+    // System.out.println("Left: " + leftNoteSensor.get());
+    // System.out.println("Right: " + rightNoteSensor.get());
   }
 
   @Override

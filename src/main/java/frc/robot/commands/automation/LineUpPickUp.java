@@ -3,6 +3,7 @@ package frc.robot.commands.automation;
 import static frc.robot.Subsystems.*;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ActuationConstants.*;
+import static frc.robot.Constants.IntakeConstants.*;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -25,7 +26,7 @@ public class LineUpPickUp extends ParallelDeadlineGroup {
 
     public LineUpPickUp() {
         super(
-            new PickUpPiece(),
+            new PickUpPiece(intakeVoltage),
             new ConditionalCommand(
                 new SequentialCommandGroup(
                     limelightIntake.prepareForNote(),

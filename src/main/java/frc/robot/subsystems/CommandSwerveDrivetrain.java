@@ -131,6 +131,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return trajectory.getEndState();
     }
 
+    public boolean isMoving() {
+        double flSpeed = this.getModule(0).getDriveMotor().getVelocity().getValueAsDouble();
+        double frSpeed = this.getModule(1).getDriveMotor().getVelocity().getValueAsDouble();
+        double blSpeed = this.getModule(2).getDriveMotor().getVelocity().getValueAsDouble();
+        double brSpeed = this.getModule(3).getDriveMotor().getVelocity().getValueAsDouble();
+        return (flSpeed > 1) || (frSpeed > 1) || (blSpeed > 1) || (brSpeed > 1);
+    }
+
     public Rotation2d getRotation() {
         return this.m_pigeon2.getRotation2d();
     }

@@ -158,6 +158,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "shoot ring 2 close blue"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "shoot"
@@ -224,13 +230,19 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "tuckActuator"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "shoot ring 3 close blue"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "tuckActuator"
+            "name": "shoot"
           }
         }
       ]

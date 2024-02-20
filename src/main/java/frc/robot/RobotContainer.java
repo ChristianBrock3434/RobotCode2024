@@ -74,13 +74,13 @@ public class RobotContainer {
    */
   public void linkAutoCommands() {
     NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed));
-    NamedCommands.registerCommand("intake", new PickUpPiece());
+    NamedCommands.registerCommand("intake", new PickUpPiece(autoIntakeVoltage));
 
     NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
 
     NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0));
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 2));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3));
 
     NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0));
     NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2));
@@ -121,11 +121,9 @@ public class RobotContainer {
     controller.b().onTrue(actuation.setPositionCommand(actuationTuckPosition));
 
     // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
-    controller.rightBumper().onTrue(new PickUpPiece());
+    controller.rightBumper().onTrue(new PickUpPiece(intakeVoltage));
     controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
     controller.a().whileTrue(intake.feedCommand(10, 100));
-
-    new Trigger(actuation::getLimitSwitch).onTrue(actuation.resetEncoderCommand());
 
     controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
       new LineUpToGoal(),
@@ -188,6 +186,11 @@ public class RobotContainer {
       distanceList.remove(0);
       distanceList.remove(distanceList.size() - 1);
     } catch (IndexOutOfBoundsException e) {}
+
+    System.out.println("begin");
+    for (double d : distanceList) {
+      System.out.println(d);
+    }
 
     distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
 
