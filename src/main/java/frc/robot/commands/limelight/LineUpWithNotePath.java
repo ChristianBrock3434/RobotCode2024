@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class LineUpWithNotePath extends Command {
     //TODO: Rewrite for x and y movement while y lineup
-    private PIDController m_xPIDController = new PIDController(1.0, 0.0, 0.0);
-    private PIDController m_yPIDController = new PIDController(1.0, 0.0, 0.0);
-    private PIDController m_lineUpPIDController = new PIDController(0.04, 0.0, 0.0);
+    private PIDController m_xPIDController = new PIDController(2.0, 0.0, 0.0); //1.0
+    private PIDController m_yPIDController = new PIDController(2.0, 0.0, 0.0); //1.0
+    private PIDController m_lineUpPIDController = new PIDController(0.08, 0.0, 0.0); //0.04
 
     private final String autoPath;
     private final int index;
@@ -48,10 +48,10 @@ public class LineUpWithNotePath extends Command {
     xGoal = state.positionMeters.getX();
     yGoal = state.positionMeters.getY();
 
-    m_xPIDController.setTolerance(0.05);
+    m_xPIDController.setTolerance(0.1);
     m_xPIDController.setSetpoint(xGoal);
 
-    m_yPIDController.setTolerance(0.05);
+    m_yPIDController.setTolerance(0.1);
     m_yPIDController.setSetpoint(yGoal);
 
     m_lineUpPIDController.setTolerance(1.5);

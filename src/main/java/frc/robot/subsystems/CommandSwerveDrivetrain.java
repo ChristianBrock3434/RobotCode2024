@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -39,7 +40,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        // applyCurrentLimiting();
+        applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -47,7 +48,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
-        // applyCurrentLimiting();
+        applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -56,9 +57,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     //TODO: Find out why this breaks the drivetrain
     private void applyCurrentLimiting() {
-        TalonFXConfiguration configs = new TalonFXConfiguration();
-        configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        configs.CurrentLimits.SupplyCurrentLimit = 20;
+        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+        configs.SupplyCurrentLimitEnable = true;
+        configs.SupplyCurrentLimit = 50;
         for (var module : this.Modules) {
             StatusCode status = StatusCode.StatusCodeNotInitialized;
             for (int i = 0; i < 5; ++i) {
@@ -68,15 +69,19 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             if(!status.isOK()) {
                 System.out.println("Could not apply configs, error code: " + status.toString());
             }
+        }
 
-            // status = StatusCode.StatusCodeNotInitialized;
-            // for (int i = 0; i < 5; ++i) {
-            //     status = module.getSteerMotor().getConfigurator().apply(configs);
-            //     if (status.isOK()) break;
-            // }
-            // if(!status.isOK()) {
-            //     System.out.println("Could not apply configs, error code: " + status.toString());
-            // }
+        configs.SupplyCurrentLimitEnable = true;
+        configs.SupplyCurrentLimit = 25;
+        for (var module : this.Modules) {
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            for (int i = 0; i < 5; ++i) {
+                status = module.getSteerMotor().getConfigurator().apply(configs);
+                if (status.isOK()) break;
+            }
+            if(!status.isOK()) {
+                System.out.println("Could not apply configs, error code: " + status.toString());
+            }
         }
     }
 
@@ -131,12 +136,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return trajectory.getEndState();
     }
 
+    public Command waitUntilNotMoving() {
+        return new Command() {
+            @Override
+            public boolean isFinished() {
+                return !isMoving();
+            }
+        };
+    }
+
     public boolean isMoving() {
         double flSpeed = this.getModule(0).getDriveMotor().getVelocity().getValueAsDouble();
         double frSpeed = this.getModule(1).getDriveMotor().getVelocity().getValueAsDouble();
         double blSpeed = this.getModule(2).getDriveMotor().getVelocity().getValueAsDouble();
         double brSpeed = this.getModule(3).getDriveMotor().getVelocity().getValueAsDouble();
-        return (flSpeed > 1) || (frSpeed > 1) || (blSpeed > 1) || (brSpeed > 1);
+        return (flSpeed > 3) || (frSpeed > 3) || (blSpeed > 3) || (brSpeed > 3);
     }
 
     public Rotation2d getRotation() {

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -145,6 +147,32 @@ public class Indexer extends SubsystemBase {
   
   public void stopIndexerMotor() {
     indexerMotor.setControl(stopMode);
+  }
+
+  public Command checkIfAtSpeedSupplier(DoubleSupplier velocity) {
+    return new Command() {
+      @Override
+      public void initialize() {
+      }
+
+      @Override
+      public void execute() {
+        // System.out.println("Speed required: " + velocity.getAsDouble());
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+
+      }
+
+      @Override
+      public boolean isFinished() {
+        if (((Double) velocity.getAsDouble()).equals(Double.NaN)) {
+          return true;
+        }
+        return indexerMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble() * 0.90;
+      }
+    };
   }
 
 

@@ -14,8 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightShooter;
 
 public class LineUpToGoal extends Command{
-    private PIDController lineUPController = new PIDController(0.123, 0.0, 0.0125);
-
+    private PIDController lineUPController = new PIDController(0.123, 0.0, 0.0125); //Don't use I because of how we deal with Double.NaN
     private SwerveRequest.RobotCentric drive = 
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
@@ -24,11 +23,12 @@ public class LineUpToGoal extends Command{
     private double output;
 
     public LineUpToGoal() {
-        addRequirements(drivetrain, limelightShooter);
+        addRequirements(limelightShooter); //Not including drivetrain because of charge then shoot when stopped
     }
 
     @Override
     public void initialize() {
+        System.out.println("Made Point");
         var alliance = DriverStation.getAlliance();
         var pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
         if (alliance.isEmpty()) {
@@ -68,7 +68,7 @@ public class LineUpToGoal extends Command{
     @Override
     public void end(boolean interrupted) {
         // limelightShooter.turnOffLimelight();
-        // System.out.println("Made Point");
+        System.out.println("Made Point");
         drivetrain.applyRequest(() -> brake).execute();
     }
 

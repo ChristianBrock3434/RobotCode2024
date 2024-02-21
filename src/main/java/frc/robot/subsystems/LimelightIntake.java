@@ -208,7 +208,8 @@ public class LimelightIntake extends SubsystemBase {
    * @return X position of the object (degrees)
    */
   public Double getTX() {
-    return table.getEntry("tx").getDouble(Double.NaN);
+    double tX = table.getEntry("tx").getDouble(0);
+    return (tX != 0) ? tX : Double.NaN;
     // return 1;
   }
 
@@ -216,7 +217,8 @@ public class LimelightIntake extends SubsystemBase {
    * @return Y position of the object (degrees)
    */
   public Double getTY() {
-    return table.getEntry("ty").getDouble(Double.NaN);
+    double tY = table.getEntry("ty").getDouble(0);
+    return (tY != 0) ? tY : Double.NaN;
     // return 1;
   }
 
@@ -224,7 +226,8 @@ public class LimelightIntake extends SubsystemBase {
    * @return Area of the screen the object takes up
    */
   public Double getTA() {
-    return table.getEntry("ta").getDouble(Double.NaN);
+    double tA = table.getEntry("ta").getDouble(0);
+    return (tA != 0) ? tA : Double.NaN;
     // return 1;
   }
 
@@ -232,7 +235,8 @@ public class LimelightIntake extends SubsystemBase {
    * @return Skew (rotation) of the object
    */
   public Double getTS() {
-    return table.getEntry("ts").getDouble(Double.NaN);
+    double tS = table.getEntry("ts").getDouble(0);
+    return (tS != 0) ? tS : Double.NaN;
     // return 1;
   }
 

@@ -22,6 +22,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
             indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
             shooter.checkIfAtSpeedSupplier(velocity),
+            indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
             new WaitCommand(1.5).raceWith(shooter.waitUntilRingLeft()),
             new StopShoot()

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.474472948945899,
-        "y": 4.686797835134132
+        "x": 6.384752129464382,
+        "y": 4.555403874344239
       },
       "isLocked": false,
       "linkedName": "FarBlueShoot"
     },
     {
       "anchor": {
-        "x": 8.67480119575624,
-        "y": 2.7134092729723926
+        "x": 8.42249741560824,
+        "y": 2.3538781457020823
       },
       "prevControl": {
-        "x": 7.362497801918685,
-        "y": 3.8185068677829674
+        "x": 7.110194021770684,
+        "y": 3.458975740512657
       },
       "nextControl": null,
       "isLocked": false,
@@ -56,7 +56,7 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "parallel",
         "data": {
@@ -73,8 +73,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -86,7 +86,7 @@
   "reversed": false,
   "folder": "Far Blue",
   "previewStartingState": {
-    "rotation": 142.77,
+    "rotation": 179.44952588427378,
     "velocity": 0
   },
   "useDefaultConstraints": true

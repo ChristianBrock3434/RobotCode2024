@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "tuckActuator"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "shoot"
           }
         },

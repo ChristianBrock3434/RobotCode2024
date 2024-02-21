@@ -126,9 +126,19 @@ public class RobotContainer {
     controller.a().whileTrue(intake.feedCommand(10, 100));
 
     controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
-      new LineUpToGoal(),
-      new ShootSequence(this::getAngle, this::getSpeed)
+      shooter.speedUpShooter(65, 100),
+      drivetrain.waitUntilNotMoving(),
+      new SequentialCommandGroup(
+        new LineUpToGoal(),
+        new ShootSequence(this::getAngle, this::getSpeed) 
+      )
     )).onFalse(new StopShoot());
+
+    // controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
+    //   new LineUpToGoal(),
+    //   new ShootSequence(this::getAngle, this::getSpeed) 
+    // )).onFalse(new StopShoot());
+
     // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
     // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
 
@@ -187,10 +197,10 @@ public class RobotContainer {
       distanceList.remove(distanceList.size() - 1);
     } catch (IndexOutOfBoundsException e) {}
 
-    System.out.println("begin");
-    for (double d : distanceList) {
-      System.out.println(d);
-    }
+    // System.out.println("begin");
+    // for (double d : distanceList) {
+    //   System.out.println(d);
+    // }
 
     distance = distanceList.stream().mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
 
@@ -217,6 +227,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.getAutoPath("4 ring close blue");
+    return drivetrain.getAutoPath("3 ring far blue");
   }
 }

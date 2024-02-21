@@ -24,6 +24,7 @@ public class ShootSequence extends ConditionalCommand {
                 shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
                 indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
                 shooter.checkIfAtSpeedSupplier(velocity),
+                indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
                 intake.feedCommand(feedVelocity, feedAcceleration)
             ),
             new ShakeController(1.0),

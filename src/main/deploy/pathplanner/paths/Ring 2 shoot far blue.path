@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.67480119575624,
-        "y": 2.7134092729723926
+        "x": 8.42249741560824,
+        "y": 2.3538781457020823
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.125691174459273,
-        "y": 4.528926750161193
+        "x": 6.911799501202424,
+        "y": 3.9465519159283664
       },
       "isLocked": false,
       "linkedName": "ring2FarBlue"
@@ -32,20 +32,20 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 142.77,
+    "rotation": 173.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Far Blue",
   "previewStartingState": {
-    "rotation": 155.38,
+    "rotation": 146.30993247402,
     "velocity": 0
   },
   "useDefaultConstraints": true
