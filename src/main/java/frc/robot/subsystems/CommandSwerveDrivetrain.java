@@ -40,6 +40,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
+        // this.getPigeon2().reset();
         applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
@@ -48,6 +49,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+        // this.getPigeon2().reset();
         applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
@@ -182,5 +184,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println(getPose().getRotation().getDegrees());
     }
 }

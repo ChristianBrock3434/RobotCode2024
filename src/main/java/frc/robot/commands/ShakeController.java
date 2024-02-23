@@ -8,9 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ShakeController extends Command{
     private double startingTime;
     private double rumbleIntensity;
+    private double shakeTime;
 
-    public ShakeController(double rumbleIntensity) {
+    public ShakeController(double rumbleIntensity, double shakeTime) {
         this.rumbleIntensity = rumbleIntensity;
+        this.shakeTime = shakeTime;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class ShakeController extends Command{
 
     @Override
     public boolean isFinished() {
-        if (System.currentTimeMillis() - startingTime > 1000){
+        if (System.currentTimeMillis() - startingTime > shakeTime * 1000){
             return true;
         }
         return false;

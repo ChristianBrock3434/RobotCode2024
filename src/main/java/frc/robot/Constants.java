@@ -26,30 +26,32 @@ public final class Constants {
     // 360 degrees per rotation, 8:1 gear ratio
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
-    public static final double actuationStartPosition = -65 * actuationTicksPerDegree;
-    public static final double actuationPickUpPosition = 100 * actuationTicksPerDegree;
-    public static final double actuationTuckPosition = -65 * actuationTicksPerDegree;
+    public static final double actuationStartPosition = -65;
+    public static final double actuationPickUpPosition = 100;
+    public static final double actuationTuckPosition = -65;
   }
 
   public final class IntakeConstants {
     public static final double intakeGearRatio = 1.3333333333333333333;
     
     public static final double intakeVoltage = 5;
-    public static final double autoIntakeVoltage = 4;
+    public static final double autoIntakeVoltage = 5;
 
     public static final double feedVelocity = 60;
     public static final double feedAcceleration = 102;
+
+    public static final double intakeVelocity = 15;
+    public static final double intakeAcceleration = 40;
 
     public static final double outtakeVelocity = -15;
     public static final double outtakeAcceleration = 40;
   }
 
   public final class ShooterConstants {
-    public static final double shooterSequenceVelocity = 40; //45 //60 //10 for amp
     public static final double shooterSequenceAcceleration = 100;
 
-    public static final double outtakeShooterVelocity = -40;
-    public static final double outtakeShooterAcceleration = 100;
+    public static final double subwooferShotSpeed = 40;
+    public static final double podiumShotSpeed = 55;
   }
 
   public final class IndexerConstants {
@@ -60,13 +62,16 @@ public final class Constants {
   public final class AngleControllerConstants {
     public static final double angleTicksPerDegree = (11.78 / 360 * 4) / 1.5; //Estimate given by Adam, ask him how to do it if you need
 
-    public static final double angleStartingPosition = 0 * angleTicksPerDegree;
-    public static final double angleRestingPosition = 5 * angleTicksPerDegree;
+    public static final double angleStartingPosition = 0;
+    public static final double angleRestingPosition = 5;
+    
+    public static final double subwooferShotAngle = 3;
+    public static final double podiumShotAngle = 23;
   }
 
   public final class ClimberConstants {
     public static final double minClimberHeight = 0;
-    public static final double maxClimberHeight = 210;
+    public static final double maxClimberHeight = 240;
   }
 
   public final class FieldConstants {

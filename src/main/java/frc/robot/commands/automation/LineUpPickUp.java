@@ -38,7 +38,7 @@ public class LineUpPickUp extends ParallelDeadlineGroup {
                     )
                 ), 
                 new ParallelCommandGroup(
-                    new ShakeController(1.0),
+                    new ShakeController(1.0, 1.0),
                     drivetrain.applyRequest(() -> driverDrive.withVelocityX(-controller.getRightY() * MaxSpeed) // Drive forward with
                                                                                                        // negative Y (forward)
                         .withVelocityY(-controller.getRightX() * MaxSpeed) // Drive left with negative X (left)

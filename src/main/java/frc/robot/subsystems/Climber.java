@@ -4,7 +4,9 @@ import static frc.robot.Constants.ClimberConstants.*;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,6 +19,8 @@ public class Climber extends SubsystemBase{
   private TalonFX climberMotor = new TalonFX(18);
 
   private VoltageOut voltageControl;
+  private MotionMagicVoltage motionMagicControl;
+  private VelocityVoltage velocityControl;
   private NeutralOut StopMode;
 
   public Climber() {
@@ -28,7 +32,26 @@ public class Climber extends SubsystemBase{
                                     false, 
                                     false
                                     );
-                              
+    
+    motionMagicControl = new MotionMagicVoltage(0, 
+                                                true, 
+                                                0.03,
+                                                0,
+                                                false,
+                                                false,
+                                                false
+                                              );
+
+    // only used for tuning feed forward
+    velocityControl = new VelocityVoltage(100, 
+                                          100, 
+                                          true, 
+                                          0.03, 
+                                          0, 
+                                          false, 
+                                          false, 
+                                          false);
+
     StopMode = new NeutralOut();
   }
 
@@ -40,10 +63,14 @@ public class Climber extends SubsystemBase{
     configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
+    configs.MotionMagic.MotionMagicCruiseVelocity = 130;
+    configs.MotionMagic.MotionMagicAcceleration = 250;
+    configs.MotionMagic.MotionMagicJerk = 350;
+
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
-    configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 0.5; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kP = 10; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
 
     // Peak output of 8 volts
@@ -109,6 +136,35 @@ public class Climber extends SubsystemBase{
     };
   }
 
+   /**
+   * Run the climber motor to a given position
+   * @param position in encoder value
+   * @return a command that will run the climber motor
+   */
+  public Command setPositionCommand(double position) {
+    return new Command() {
+      @Override
+      public void execute() {
+        setPosition(position);
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
+  /**
+   * Run the climber motor to a given position
+   * @param position in encoder value
+   */
+  public void setPosition(double position) {
+    climberMotor.setControl(motionMagicControl
+                              .withPosition(position)
+                            );
+  }
+
   /**
    * Run the Climber motor at a given voltage
    * @param voltage in volts
@@ -148,6 +204,30 @@ public class Climber extends SubsystemBase{
                           );
   }
 
+  public Command runVelocity(){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Climber.this);
+      }
+
+      @Override
+      public void execute() {
+        climberMotor.setControl(velocityControl);
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+        stopClimberMotor();
+      }
+
+      @Override
+      public boolean isFinished() {
+        return false;
+      }
+    };
+  }
+
   /**
    * Stop the Climber motor
    */
@@ -166,5 +246,7 @@ public class Climber extends SubsystemBase{
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println("Climber Position: " + climberMotor.getPosition().getValueAsDouble());
+    // System.out.println("Climber velocity: " + climberMotor.getVelocity().getValueAsDouble());
+    // System.out.println("Climber voltage: " + climberMotor.getMotorVoltage().getValueAsDouble());
   }
 }

@@ -39,7 +39,7 @@ public class AngleController extends SubsystemBase{
   }
 
   public void initAngleMotor() {
-    angleMotor.setPosition(angleStartingPosition);
+    resetEncoder();
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -114,11 +114,11 @@ public class AngleController extends SubsystemBase{
 
   /**
    * Run the Angle Controller motor to a given position
-   * @param position in rotations
+   * @param position in degrees
    */
   public void setPosition(double position) {
     angleMotor.setControl(motionMagicControl
-                              .withPosition(position)
+                              .withPosition(position  * angleTicksPerDegree)
                             );
   }
 
@@ -155,7 +155,7 @@ public class AngleController extends SubsystemBase{
       @Override
       public boolean isFinished() {
         double currentPosition = angleMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition) <= 0.1;
+        return Math.abs(currentPosition - setPosition  * angleTicksPerDegree) <= 0.1;
       }
     };
   }
@@ -168,13 +168,13 @@ public class AngleController extends SubsystemBase{
           return true;
         }
         double currentPosition = angleMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition.getAsDouble()) <= 0.05;
+        return Math.abs(currentPosition - setPosition.getAsDouble() * angleTicksPerDegree) <= 0.05;
       }
     };
   }
 
   public void resetEncoder() {
-    angleMotor.setPosition(angleStartingPosition);
+    angleMotor.setPosition(angleStartingPosition  * angleTicksPerDegree);
   }
 
   @Override

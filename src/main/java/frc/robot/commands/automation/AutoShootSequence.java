@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoShootSequence extends SequentialCommandGroup {
     
-    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity) {
+    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {
         addCommands(
             // new PrintCommand("Angle: " + angle.getAsDouble()),
             // new PrintCommand("Speed: " + velocity.getAsDouble())
@@ -24,8 +24,8 @@ public class AutoShootSequence extends SequentialCommandGroup {
             shooter.checkIfAtSpeedSupplier(velocity),
             indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
-            new WaitCommand(1.5).raceWith(shooter.waitUntilRingLeft()),
-            new StopShoot()
+            new WaitCommand(1.0).raceWith(shooter.waitUntilRingLeft()),
+            new StopShoot(restingAngle)
         );
     }
 }

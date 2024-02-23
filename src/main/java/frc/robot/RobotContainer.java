@@ -7,7 +7,10 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
+import static frc.robot.Constants.ClimberConstants.maxClimberHeight;
 import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.ShooterConstants.podiumShotSpeed;
+import static frc.robot.Constants.ShooterConstants.subwooferShotSpeed;
 // import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Subsystems.*;
 
@@ -18,9 +21,11 @@ import java.util.List;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -30,11 +35,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopIntake;
+import frc.robot.Constants.ClimberConstants;
+import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
-import frc.robot.commands.automation.LineUpPickUp;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.limelight.LineUpToGoal;
-import frc.robot.commands.limelight.LineUpToNote;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
 /**
@@ -53,11 +58,13 @@ public class RobotContainer {
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
+  private static boolean isSubwooferShot = true;
+
   // TODO: Add on shooting
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-  private final SwerveRequest.PointWheelsAt pointForward = new SwerveRequest.PointWheelsAt().withModuleDirection(new Rotation2d(0));
+  // private final SwerveRequest.PointWheelsAt pointForward = new SwerveRequest.PointWheelsAt().withModuleDirection(new Rotation2d(0));
 
   // public boolean intakePosition = false;
   // public boolean tuckPosition = true;
@@ -66,25 +73,38 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     linkAutoCommands();
+    setUpNetworkTables();
     configureBindings();
+  }
+
+  public void setUpNetworkTables() {
+    SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
+
+    SmartDashboard.putBoolean("Left Intake Note Sensor", intake.getLeftNoteSensor());
+    SmartDashboard.putBoolean("Right Intake Note Sensor", intake.getRightNoteSensor());
+
+    SmartDashboard.putBoolean("Shooter line break", shooter.getNoteSensor());
   }
 
   /**
    * link commands to pathplanner for autos
    */
   public void linkAutoCommands() {
-    NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed));
+    NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed, angleRestingPosition));
     NamedCommands.registerCommand("intake", new PickUpPiece(autoIntakeVoltage));
+
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 31.5));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 31.5));
 
     NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.8)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.8)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.8)));
 
-    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2));
-    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4));
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(3.0), new PIDConstants(0.8)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.8)));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(3.0), new PIDConstants(0.8)));
     
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
 
@@ -112,57 +132,64 @@ public class RobotContainer {
             .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
-    // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake)); // Lock wheels on A press
-
     // reset the field-centric heading on start button    
-    controller.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    controller.start().onTrue(
+      new ParallelCommandGroup(
+        drivetrain.runOnce(() -> drivetrain.seedFieldRelative()),
+        new ShakeController(0.5, 0.25)
+      )
+    );
 
-    controller.x().onTrue(actuation.setPositionCommand(actuationPickUpPosition));
-    controller.b().onTrue(actuation.setPositionCommand(actuationTuckPosition));
+    controller.rightBumper().whileTrue(new PickUpPiece(intakeVoltage)).onFalse(new StopIntake());
+    controller.b().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
+    controller.x().whileTrue(intake.feedCommand(intakeVelocity, intakeAcceleration));
 
-    // joystick.rightBumper().and(this::isIntakePosition).whileTrue(intake.runIntakeCommand(15, 40));
-    controller.rightBumper().onTrue(new PickUpPiece(intakeVoltage));
-    controller.leftBumper().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
-    controller.a().whileTrue(intake.feedCommand(10, 100));
-
+    // Revved shot
     controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
       shooter.speedUpShooter(65, 100),
       drivetrain.waitUntilNotMoving(),
       new SequentialCommandGroup(
-        new LineUpToGoal(),
+        // new LineUpToGoal(),
         new ShootSequence(this::getAngle, this::getSpeed) 
       )
-    )).onFalse(new StopShoot());
+    )).onFalse(new StopShoot(angleRestingPosition));
 
-    // controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
-    //   new LineUpToGoal(),
-    //   new ShootSequence(this::getAngle, this::getSpeed) 
-    // )).onFalse(new StopShoot());
+    controller.back().onTrue(
+      new ParallelCommandGroup(
+        new InstantCommand(this::changeManualShootMode),
+        new ShakeController(0.5, 0.25)
+      )
+    );
 
-    // controller.leftTrigger(0.1).whileTrue(shooter.runShooterCommand(outtakeShooterVelocity, outtakeShooterAcceleration));
-    // controller.leftTrigger(0.1).whileTrue(new LineUpToGoal(10));
+    controller.leftTrigger(0.1)
+      .and(() -> isSubwooferShot)
+        .whileTrue(
+          new ShootSequence(() -> subwooferShotAngle, () -> subwooferShotSpeed)
+        ).onFalse(new StopShoot(angleRestingPosition));
+
+    controller.leftTrigger(0.1)
+      .and(() -> !isSubwooferShot)
+        .whileTrue(
+          new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed)
+        ).onFalse(new StopShoot(angleRestingPosition));
+    
 
     // Amp Shot
-    controller.leftTrigger(0.1).whileTrue(
-      new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 7)
-    ).onFalse(new StopShoot());
+    controller.pov(270).whileTrue(
+      new ShootSequence(() -> 0, () -> 7)
+    ).onFalse(new StopShoot(angleRestingPosition));
 
     // Trap Shot
-    // controller.leftTrigger(0.1).whileTrue(
-    //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
-    // ).onFalse(new StopShoot());
+    controller.leftBumper().whileTrue(
+      new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
+    ).onFalse(new StopShoot(angleRestingPosition));
 
-    controller.y().whileTrue(drivetrain.applyRequest(() -> pointForward));
-    // controller.y().whileTrue(new LineUpPickUp()).onFalse(new StopIntake());
-    // controller.y().whileTrue(new LineUpToNote());
-    // controller.y().whileTrue(new LineUpToGoal(() -> 0));
-    // controller.y().onTrue(angleController.setPositionCommand(0));
-    // controller.a().onTrue(angleController.setPositionCommand(angleStartingPosition));
-
-    controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
+    // controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
+    controller.pov(0).onTrue(climber.setPositionCommand(maxClimberHeight));
     controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
-    controller.pov(90).whileTrue(climber.runVoltageCommand(3));
-    controller.pov(270).whileTrue(climber.runVoltageCommand(-3));
+
+    controller.y().whileTrue(climber.runVoltageCommand(3));
+    controller.a().whileTrue(climber.runVoltageCommand(-3));
   }
 
   private long timeOfLastAccess = 0;
@@ -210,7 +237,7 @@ public class RobotContainer {
 
   public double getAngle() {
     // System.out.println("Angle: " + getAngleAndSpeed()[1] * angleTicksPerDegree);
-    return getAngleAndSpeed()[1] * angleTicksPerDegree;
+    return getAngleAndSpeed()[1];
     // return 35.75 * angleTicksPerDegree;
   }
 
@@ -218,6 +245,11 @@ public class RobotContainer {
     // System.out.println("Speed: " + getAngleAndSpeed()[2]);
     return getAngleAndSpeed()[2];
     // return 80;
+  }
+
+  public void changeManualShootMode() {
+    isSubwooferShot = !isSubwooferShot;
+    SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
   }
 
   /**
@@ -228,5 +260,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return drivetrain.getAutoPath("3 ring far blue");
+    // return drivetrain.getAutoPath("New Auto");
   }
 }

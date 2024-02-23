@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5015337722983153,
-      "y": 3.8579746390262013
+      "x": 1.454549670868242,
+      "y": 3.6537810022838304
     },
-    "rotation": 109.29943331650566
+    "rotation": 130.0
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot1FarBlue"
           }
         },
         {
@@ -88,6 +88,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "tuckActuator"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Ring 1 shoot far blue"
@@ -96,7 +102,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot2FarBlue"
           }
         },
         {
@@ -158,6 +164,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "tuckActuator"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Ring 2 shoot far blue"
@@ -166,7 +178,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot2FarBlue"
           }
         },
         {
@@ -225,6 +237,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "tuckActuator"
           }
         }
       ]

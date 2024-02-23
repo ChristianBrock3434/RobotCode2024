@@ -27,7 +27,7 @@ public class ShootSequence extends ConditionalCommand {
                 indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
                 intake.feedCommand(feedVelocity, feedAcceleration)
             ),
-            new ShakeController(1.0),
+            new ShakeController(1.0, 1.0),
             // I was held against my will by the compiler
             () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))
         );

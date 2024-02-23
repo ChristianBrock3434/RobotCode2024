@@ -3,6 +3,7 @@ package frc.robot.commands.limelight;
 import static frc.robot.Subsystems.*;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.util.PIDConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -10,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class LineUpWithNotePath extends Command {
     //TODO: Rewrite for x and y movement while y lineup
-    private PIDController m_xPIDController = new PIDController(2.0, 0.0, 0.0); //1.0
-    private PIDController m_yPIDController = new PIDController(2.0, 0.0, 0.0); //1.0
-    private PIDController m_lineUpPIDController = new PIDController(0.08, 0.0, 0.0); //0.04
+    private PIDController m_xPIDController; //1.0
+    private PIDController m_yPIDController; //1.0
+    private PIDController m_lineUpPIDController; //0.04
 
     private final String autoPath;
     private final int index;
@@ -34,10 +35,16 @@ public class LineUpWithNotePath extends Command {
    *
    * @param autoPath The name of your auto to grab the path from in path planner
    * @param index The index of the path in the auto to grab
+   * @param drivePIDConstants the PID of driving to your end state
+   * @param correctPIDConstants the PID of correction to the piece
    */
-  public LineUpWithNotePath(String autoPath, int index) {
+  public LineUpWithNotePath(String autoPath, int index, PIDConstants drivePidConstants, PIDConstants correctPidConstants) {
     this.autoPath = autoPath;
     this.index = index;
+
+    this.m_xPIDController = new PIDController(drivePidConstants.kP, drivePidConstants.kI, drivePidConstants.kD);
+    this.m_yPIDController = new PIDController(drivePidConstants.kP, drivePidConstants.kI, drivePidConstants.kD);
+    this.m_lineUpPIDController = new PIDController(correctPidConstants.kP, correctPidConstants.kI, correctPidConstants.kD);
     addRequirements(drivetrain, limelightIntake);
   }
 

@@ -3,59 +3,71 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5015337722983153,
-        "y": 3.8579746390262013
+        "x": 1.454549670868242,
+        "y": 3.6537810022838304
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9850139700279428,
-        "y": 2.9798167288642263
+        "x": 2.6841875081753006,
+        "y": 1.9088663569623863
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5156569029257874,
-        "y": 1.3116136931275284
+        "x": 3.9723795282112664,
+        "y": 1.3350353662190912
       },
       "prevControl": {
-        "x": 2.149796137625849,
-        "y": 1.6578152985121923
+        "x": 3.1643318065523425,
+        "y": 1.5809629336805036
       },
       "nextControl": {
-        "x": 4.898543946832655,
-        "y": 0.9610964758319016
+        "x": 4.738158176812294,
+        "y": 1.1019722992535605
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.352232396333552,
-        "y": 0.21079505782406668
+        "x": 8.51618410797449,
+        "y": 0.7963368851131419
       },
       "prevControl": {
-        "x": 6.911658745955481,
-        "y": 0.4377347424726667
+        "x": 6.99114026299379,
+        "y": 0.8043846067720654
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring1FarBlue"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.45,
-      "rotationDegrees": 168.83034996680385,
+      "waypointRelativePos": 1.65,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.85,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 1.5,
+      "waypointRelativePos": 1.7,
       "command": {
         "type": "parallel",
         "data": {
@@ -72,7 +84,7 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
@@ -89,20 +101,20 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 174.47245984834382,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Far Blue",
   "previewStartingState": {
-    "rotation": 118.99629378613305,
+    "rotation": 141.63251461513843,
     "velocity": 0
   },
   "useDefaultConstraints": true

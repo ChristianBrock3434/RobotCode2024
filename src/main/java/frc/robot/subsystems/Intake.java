@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -220,6 +221,13 @@ public class Intake extends SubsystemBase {
     return leftNoteSensor.get() || rightNoteSensor.get();
   }
 
+  public boolean getLeftNoteSensor() {
+    return leftNoteSensor.get();
+  }
+
+  public boolean getRightNoteSensor() {
+    return rightNoteSensor.get();
+  }
 
   @Override
   public void periodic() {
@@ -227,8 +235,8 @@ public class Intake extends SubsystemBase {
     // System.out.println(intakeMotor.getDeviceTemp().toString());
     // System.out.println(pdp.getCurrent(16));
     // System.out.println(getDistanceSensorTripped());
-    // System.out.println("Left: " + leftNoteSensor.get());
-    // System.out.println("Right: " + rightNoteSensor.get());
+    SmartDashboard.putBoolean("Left Intake Note Sensor", getLeftNoteSensor());
+    SmartDashboard.putBoolean("Right Intake Note Sensor", getRightNoteSensor());
   }
 
   @Override

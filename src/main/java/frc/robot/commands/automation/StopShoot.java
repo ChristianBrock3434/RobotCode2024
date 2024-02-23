@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class StopShoot extends SequentialCommandGroup{
     
-    public StopShoot() {
+    public StopShoot(double angle) {
         addCommands(
             new InstantCommand(shooter::stopShooter, shooter),
             new InstantCommand(indexer::stopIndexerMotor, indexer),
             new InstantCommand(intake::stopIntakeMotor, intake),
-            angleController.setPositionCommand(angleRestingPosition)
+            angleController.setPositionCommand(angle)
         );
     }
 }
