@@ -152,6 +152,19 @@ public class LimelightShooter extends SubsystemBase {
     return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
   }
 
+  public Double getAngleFromGoal() {
+    double[] pose = getRobotPose();
+
+    if (pose[0] == 0 && pose[1] == 0) {
+      return Double.NaN;
+    }
+
+    double xDistance = Math.abs(blueSpeakerX - pose[0]);
+    double yDistance = Math.abs(blueSpeakerY - pose[1]);
+
+    return Math.atan2(xDistance, yDistance);
+  }
+
   /**
    * @return X position of the object (degrees)
    */

@@ -95,7 +95,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
         AutoBuilder.configureHolonomic(
             ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
+            this::resetOrientation,  // Consumer for seeding pose against auto
             this::getCurrentRobotChassisSpeeds,
             (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
             new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
@@ -105,6 +105,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                                             new ReplanningConfig()),
             this::shouldFlipPath, 
             this); // Subsystem for requirements
+    }
+
+    public void resetOrientation() {
+        m_pigeon2.setYaw(0);
+        seedFieldRelative();
+    }
+
+    public void resetOrientation(Pose2d location) {
+        m_pigeon2.setYaw(location.getRotation().getDegrees());
+        seedFieldRelative(location);
     }
 
     private boolean shouldFlipPath() {
@@ -188,6 +198,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     @Override
     public void periodic() {
-        System.out.println(getPose().getRotation().getDegrees());
+        // System.out.println(getPose().getRotation().getDegrees());
     }
 }

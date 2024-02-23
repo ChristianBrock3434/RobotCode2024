@@ -50,8 +50,8 @@ public final class Constants {
   public final class ShooterConstants {
     public static final double shooterSequenceAcceleration = 100;
 
-    public static final double subwooferShotSpeed = 40;
-    public static final double podiumShotSpeed = 55;
+    public static final double subwooferShotSpeed = 65;
+    public static final double podiumShotSpeed = 65;
   }
 
   public final class IndexerConstants {
@@ -63,10 +63,10 @@ public final class Constants {
     public static final double angleTicksPerDegree = (11.78 / 360 * 4) / 1.5; //Estimate given by Adam, ask him how to do it if you need
 
     public static final double angleStartingPosition = 0;
-    public static final double angleRestingPosition = 5;
+    public static final double angleRestingPosition = 25;
     
-    public static final double subwooferShotAngle = 3;
-    public static final double podiumShotAngle = 23;
+    public static final double subwooferShotAngle = 5;
+    public static final double podiumShotAngle = 25;
   }
 
   public final class ClimberConstants {

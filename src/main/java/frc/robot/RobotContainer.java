@@ -27,6 +27,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -39,6 +40,7 @@ import frc.robot.Constants.ClimberConstants;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.StopShoot;
+import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
@@ -59,6 +61,12 @@ public class RobotContainer {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
   private static boolean isSubwooferShot = true;
+  private static enum ampState {
+    IDLE,
+    PREPARED,
+    SHOOTING;
+  };
+  private static ampState currentState = ampState.IDLE;
 
   // TODO: Add on shooting
   // Lock wheels
@@ -135,7 +143,7 @@ public class RobotContainer {
     // reset the field-centric heading on start button    
     controller.start().onTrue(
       new ParallelCommandGroup(
-        drivetrain.runOnce(() -> drivetrain.seedFieldRelative()),
+        drivetrain.runOnce(() -> drivetrain.resetOrientation()),
         new ShakeController(0.5, 0.25)
       )
     );
@@ -175,9 +183,37 @@ public class RobotContainer {
     
 
     // Amp Shot
-    controller.pov(270).whileTrue(
-      new ShootSequence(() -> 0, () -> 7)
-    ).onFalse(new StopShoot(angleRestingPosition));
+    // controller.pov(270).whileTrue(
+    //   new ShootSequence(() -> 0, () -> 7)
+    // ).onFalse(new StopShoot(angleRestingPosition));
+    controller.pov(270).onTrue(
+      new InstantCommand(this::incrementAmpMode)
+    );
+
+    new Trigger(() -> currentState.equals(ampState.PREPARED)).onTrue(
+      new ParallelCommandGroup(
+        new ConditionalCommand(
+          new AutoTurn(90), 
+          new AutoTurn(-90), 
+          () -> true
+        ),
+        angleController.setPositionCommand(0)
+      )
+    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+
+    new Trigger(() -> currentState.equals(ampState.SHOOTING)).onTrue(
+      new ParallelCommandGroup(
+        new AutoShootSequence(
+          () -> 0, 
+          () -> 7, 
+          angleRestingPosition
+        ).andThen(new InstantCommand(this::cancelAmpMode))
+      )
+    );
+
+    controller.pov(90).onTrue(
+      new InstantCommand(this::cancelAmpMode)
+    );
 
     // Trap Shot
     controller.leftBumper().whileTrue(
@@ -250,6 +286,19 @@ public class RobotContainer {
   public void changeManualShootMode() {
     isSubwooferShot = !isSubwooferShot;
     SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
+  }
+
+  public void incrementAmpMode() {
+    currentState = switch (currentState) {
+      case IDLE -> ampState.PREPARED;
+      case PREPARED -> ampState.SHOOTING;
+      case SHOOTING -> ampState.IDLE;
+      default -> ampState.IDLE;
+    };
+  }
+
+  public void cancelAmpMode() {
+    currentState = ampState.IDLE;
   }
 
   /**
