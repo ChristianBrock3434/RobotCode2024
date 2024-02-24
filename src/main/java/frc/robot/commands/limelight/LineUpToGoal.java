@@ -10,7 +10,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.LimelightShooter;
 
 public class LineUpToGoal extends Command{
 
@@ -27,8 +30,16 @@ public class LineUpToGoal extends Command{
 
     @Override
     public void initialize() {
-        // limelightIntake.turnOnLimelight();
-        // limelightIntake.setLimelightPipeline(LimelightIntake.Pipeline.Note);
+        var alliance = DriverStation.getAlliance();
+        var pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
+        if (alliance.isEmpty()) {
+            System.out.println("The Alliance is empty, Please Select an Alliance");
+        } else if (alliance.get().equals(Alliance.Red)) {
+            pipeline = LimelightShooter.Pipeline.AprilTag3DRed;
+        } 
+
+        limelightShooter.turnOnLimelight();
+        limelightShooter.setLimelightPipeline(pipeline);
 
         double angleFromGoal = limelightShooter.getAngleFromGoal() + 180;
         if (angleFromGoal > 180) {

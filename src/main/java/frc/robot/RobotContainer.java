@@ -25,6 +25,7 @@ import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -153,13 +154,19 @@ public class RobotContainer {
     controller.x().whileTrue(intake.feedCommand(intakeVelocity, intakeAcceleration));
 
     // Revved shot
-    controller.rightTrigger(0.1).whileTrue(new SequentialCommandGroup(
+    controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
+      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+            .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+            .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+      ),
+      new SequentialCommandGroup(
       shooter.speedUpShooter(65, 100),
       drivetrain.waitUntilNotMoving(),
       new SequentialCommandGroup(
         // new LineUpToGoal(),
         new ShootSequence(this::getAngle, this::getSpeed) 
       )
+    )
     )).onFalse(new StopShoot(angleRestingPosition));
 
     controller.back().onTrue(
@@ -172,13 +179,25 @@ public class RobotContainer {
     controller.leftTrigger(0.1)
       .and(() -> isSubwooferShot)
         .whileTrue(
-          new ShootSequence(() -> subwooferShotAngle, () -> subwooferShotSpeed)
+          new ParallelCommandGroup(
+            drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+                .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+                .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+            ),
+            new ShootSequence(() -> subwooferShotAngle, () -> subwooferShotSpeed) 
+          )
         ).onFalse(new StopShoot(angleRestingPosition));
 
     controller.leftTrigger(0.1)
       .and(() -> !isSubwooferShot)
         .whileTrue(
-          new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed)
+          new ParallelCommandGroup(
+            drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+                .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+                .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+            ),
+            new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed) 
+          )
         ).onFalse(new StopShoot(angleRestingPosition));
     
 
@@ -193,9 +212,9 @@ public class RobotContainer {
     new Trigger(() -> currentState.equals(ampState.PREPARED)).onTrue(
       new ParallelCommandGroup(
         new ConditionalCommand(
-          new AutoTurn(90), 
           new AutoTurn(-90), 
-          () -> true
+          new AutoTurn(90), 
+          () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
         ),
         angleController.setPositionCommand(0)
       )
@@ -232,7 +251,7 @@ public class RobotContainer {
   private double distance = 0;
 
   public Double[] getAngleAndSpeed() {
-    // System.out.println("Distance: " + distance);
+    System.out.println("Distance: " + distance);
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);
