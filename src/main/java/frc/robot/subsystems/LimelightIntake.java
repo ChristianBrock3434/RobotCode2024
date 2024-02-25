@@ -190,20 +190,6 @@ public class LimelightIntake extends SubsystemBase {
     // return null;
   }
 
-  public double getDistanceFromGoal() {
-    double[] pose = getRobotPose();
-
-    if (pose[0] == 0 && pose[1] == 0) {
-      return Double.NaN;
-    }
-
-    //TODO: add support for red alliance
-    double xDistance = Math.abs(blueSpeakerX - pose[0]);
-    double yDistance = Math.abs(blueSpeakerY - pose[1]);
-
-    return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-  }
-
   /**
    * @return X position of the object (degrees)
    */

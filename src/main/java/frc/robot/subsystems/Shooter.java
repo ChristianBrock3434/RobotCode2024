@@ -35,19 +35,21 @@ public class Shooter extends SubsystemBase {
     {2.6, 17.0, 65.0},
     {2.75, 19.0, 65.0},
     {2.9, 20.5, 65.0},
-    {3.0, 21.5, 65.0},
-    {3.2, 22.5, 65.0},
-    {3.35, 23.0, 65.0},
-    {3.5, 23.75, 65.0},
-    {3.6, 25.0, 65.0},
+    {3.0, 23.5, 65.0},
+    {3.2, 24.5, 65.0},
+    {3.35, 24.75, 65.0},
+    {3.5, 25.0, 65.0},
+    {3.55, 25.0, 65.0},
+    {3.6, 25.25, 65.0},
     {3.7, 26.0, 65.0},
+    {3.78, 27.5, 65.0},
     {3.85, 27.75, 65.0},
-    {4.03, 28.0, 65.0},
-    {4.2, 28.75, 65.0},
-    {4.35, 30.0, 65.0},
-    {4.5, 30.75, 65.0},
-    {4.65, 31.0, 65.0}, //come back
-    {4.8, 31.5, 65.0},
+    {4.03, 28.5, 65.0},
+    {4.2, 29.25, 65.0},
+    {4.35, 30.5, 65.0},
+    {4.5, 31.25, 65.0},
+    {4.65, 31.5, 65.0}, //come back
+    {4.8, 31.75, 65.0},
     {5.0, 33.0, 65.0}
   };
 
@@ -95,6 +97,9 @@ public class Shooter extends SubsystemBase {
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+    // configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    // configs.CurrentLimits.SupplyCurrentLimit = 45;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.kP = 0.5; //0.5 // An error of 1 rotation per second results in 2V output

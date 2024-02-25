@@ -47,6 +47,9 @@ public class AngleController extends SubsystemBase{
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
+    configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    configs.CurrentLimits.SupplyCurrentLimit = 30;
+
     configs.MotionMagic.MotionMagicCruiseVelocity = 15;
     configs.MotionMagic.MotionMagicAcceleration = 20;
     configs.MotionMagic.MotionMagicJerk = 50;

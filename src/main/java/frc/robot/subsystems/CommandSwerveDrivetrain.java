@@ -108,8 +108,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void resetOrientation() {
+        System.out.println("Resetting orientation");
         m_pigeon2.setYaw(0);
+        System.out.println("Resetting field relative");
         seedFieldRelative();
+        System.out.println("Done resetting orientation");
     }
 
     public void resetOrientation(Pose2d location) {
@@ -162,7 +165,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         double frSpeed = this.getModule(1).getDriveMotor().getVelocity().getValueAsDouble();
         double blSpeed = this.getModule(2).getDriveMotor().getVelocity().getValueAsDouble();
         double brSpeed = this.getModule(3).getDriveMotor().getVelocity().getValueAsDouble();
-        return (flSpeed > 3) || (frSpeed > 3) || (blSpeed > 3) || (brSpeed > 3);
+        return (flSpeed > 1) || (frSpeed > 1) || (blSpeed > 1) || (brSpeed > 1);
     }
 
     public Rotation2d getRotation() {

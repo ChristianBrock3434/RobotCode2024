@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class AutoTurn extends Command{
     private static boolean isFinished = false;
 
-    private PIDController rotController = new PIDController(0.15, 0.0, 0.003);
+    private static final double maxAngularRate = Math.PI * 1.3;
+
+    private PIDController rotController = new PIDController(0.25, 0.21, 0.023);
     private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
     private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
@@ -47,7 +49,11 @@ public class AutoTurn extends Command{
     public void execute() {
 
         output = rotController.calculate(drivetrain.getPose().getRotation().getDegrees());
-        if (rotController.atSetpoint()) {
+        if (output > maxAngularRate) {
+            output = maxAngularRate;
+        } else if (output < -maxAngularRate) {
+            output = -maxAngularRate;
+        } else if (rotController.atSetpoint()) {
             output = 0;
         }
 

@@ -8,6 +8,8 @@ import static frc.robot.Constants.FieldConstants.*;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -51,7 +53,7 @@ public class LimelightShooter extends SubsystemBase {
    * Switches the camera to active and turns on the lights
    */
   public void turnOnLimelight() {
-    NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("camMode").setNumber(0);
+    table.getEntry("camMode").setNumber(0);
     setLights(LightMode.DEFAULT);
   }
 
@@ -59,7 +61,7 @@ public class LimelightShooter extends SubsystemBase {
    * Switches the camera to inactive and turns off the lights
    */
   public void turnOffLimelight() {
-    NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("camMode").setNumber(1);
+    table.getEntry("camMode").setNumber(1);
     setLights(LightMode.OFF);
   }
 
@@ -82,7 +84,7 @@ public class LimelightShooter extends SubsystemBase {
    * @param lightMode LightMode enum value
    */
   public void setLights(LightMode lightMode) {
-    NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("ledMode").setNumber(lightMode.lightNum);
+    table.getEntry("ledMode").setNumber(lightMode.lightNum);
   } 
 
   /**
@@ -104,17 +106,16 @@ public class LimelightShooter extends SubsystemBase {
    * @param pipeline Pipeline enum value
    */
   public void setLimelightPipeline(Pipeline pipeline) {
-    NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("pipeline").setNumber(pipeline.pipelineNum);
+    table.getEntry("pipeline").setNumber(pipeline.pipelineNum);
   }
 
   /**
    * Scan Apriltag if you're in the right pipeline
    * @return Id of Apriltag
    */
-  public double getApriltagID() {
-    double id = NetworkTableInstance.getDefault().getTable(LIMELIGHT).getEntry("tid").getDouble(0);
-    // SmartDashboard.putNumber("Apriltag id", id);
-    return id;
+  public Double getApriltagID() {
+    double id = table.getEntry("tid").getDouble(0);
+    return (id != 0) ? id : Double.NaN;
     // return 1;
   }
 
@@ -139,28 +140,54 @@ public class LimelightShooter extends SubsystemBase {
     // return null;
   }
 
-  public Double getDistanceFromGoal() {
+  public Double getXDistance() {
     double[] pose = getRobotPose();
 
     if (pose[0] == 0 && pose[1] == 0) {
       return Double.NaN;
     }
 
-    double xDistance = Math.abs(blueSpeakerX - pose[0]);
-    double yDistance = Math.abs(blueSpeakerY - pose[1]);
+    var alliance = DriverStation.getAlliance();
+    double xDistance = Double.NaN;
+    if (alliance.isEmpty()) {
+      DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
+    } else if (alliance.get().equals(Alliance.Red)) {
+      xDistance = Math.abs(redSpeakerX - pose[0]);
+    } else if (alliance.get().equals(Alliance.Blue)) {
+      xDistance = Math.abs(blueSpeakerX - pose[0]);
+    }
+    return xDistance;
+  }
+
+  public Double getYDistance() {
+    double[] pose = getRobotPose();
+
+    if (pose[0] == 0 && pose[1] == 0) {
+      return Double.NaN;
+    }
+
+    var alliance = DriverStation.getAlliance();
+    double yDistance = Double.NaN;
+    if (alliance.isEmpty()) {
+      DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
+    } else if (alliance.get().equals(Alliance.Red)) {
+      yDistance = Math.abs(redSpeakerY - pose[1]);
+    } else if (alliance.get().equals(Alliance.Blue)) {
+      yDistance = Math.abs(blueSpeakerY - pose[1]);
+    }
+    return yDistance;
+  }
+
+  public Double getDistanceFromGoal() {
+    Double xDistance = getXDistance();
+    Double yDistance = getYDistance();
 
     return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
   }
 
   public Double getAngleFromGoal() {
-    double[] pose = getRobotPose();
-
-    if (pose[0] == 0 && pose[1] == 0) {
-      return Double.NaN;
-    }
-
-    double xDistance = Math.abs(blueSpeakerX - pose[0]);
-    double yDistance = Math.abs(blueSpeakerY - pose[1]);
+    Double xDistance = getXDistance();
+    Double yDistance = getYDistance();
 
     return Math.atan2(xDistance, yDistance);
   }

@@ -52,6 +52,7 @@ public final class Constants {
 
     public static final double subwooferShotSpeed = 65;
     public static final double podiumShotSpeed = 65;
+    public static final double chainShotSpeed = 72;
   }
 
   public final class IndexerConstants {
@@ -67,6 +68,7 @@ public final class Constants {
     
     public static final double subwooferShotAngle = 5;
     public static final double podiumShotAngle = 25;
+    public static final double chainShotAngle = 31.25;
   }
 
   public final class ClimberConstants {
@@ -78,8 +80,8 @@ public final class Constants {
     public static final double blueSpeakerX = -8.3;
     public static final double blueSpeakerY = 1.5;
 
-    public static final double redSpeakerX = 0;
-    public static final double redSpeakerY = 0;
+    public static final double redSpeakerX = 8.3;
+    public static final double redSpeakerY = 1.5;
   }
   
 }

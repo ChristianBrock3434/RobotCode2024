@@ -7,11 +7,10 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
-import static frc.robot.Constants.ClimberConstants.maxClimberHeight;
+import static frc.robot.Constants.ClimberConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
-import static frc.robot.Constants.ShooterConstants.podiumShotSpeed;
-import static frc.robot.Constants.ShooterConstants.subwooferShotSpeed;
-// import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.Constants.IndexerConstants.*;
+import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Subsystems.*;
 
 import java.util.ArrayList;
@@ -38,11 +37,13 @@ import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopIntake;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.limelight.LineUpToGoal;
+import frc.robot.commands.limelight.LineUpToTrap;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
 /**
@@ -58,16 +59,35 @@ public class RobotContainer {
   private static SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(MaxSpeed * 0.13).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
   private static boolean isSubwooferShot = true;
+
+  private static enum chainShotState {
+    IDLE,
+    PREPARED,
+    SHOOTING;
+  };
+
+  private static chainShotState currentChainShotState = chainShotState.IDLE;
+
+  
   private static enum ampState {
     IDLE,
     PREPARED,
     SHOOTING;
   };
-  private static ampState currentState = ampState.IDLE;
+
+  private static ampState currentAmpState = ampState.IDLE;
+
+  private static enum trapState {
+    IDLE,
+    PREPARED,
+    SHOOTING;
+  };
+  
+  private static trapState currentTrapState = trapState.IDLE;
 
   // TODO: Add on shooting
   // Lock wheels
@@ -150,24 +170,67 @@ public class RobotContainer {
     );
 
     controller.rightBumper().whileTrue(new PickUpPiece(intakeVoltage)).onFalse(new StopIntake());
-    controller.b().whileTrue(intake.feedCommand(outtakeVelocity, outtakeAcceleration));
-    controller.x().whileTrue(intake.feedCommand(intakeVelocity, intakeAcceleration));
+    controller.b().whileTrue(new ParallelCommandGroup(
+      intake.feedCommand(outtakeVelocity, outtakeAcceleration),
+      indexer.runIndexerCommand(-indexerVelocity, indexerAcceleration)
+    ));
+    controller.x().whileTrue(new ParallelCommandGroup(
+      intake.feedCommand(intakeVelocity, intakeAcceleration),
+      indexer.runIndexerCommand(indexerVelocity, indexerAcceleration)
+    ));
 
     // Revved shot
-    controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
-      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-            .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-            .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-      ),
-      new SequentialCommandGroup(
-      shooter.speedUpShooter(65, 100),
-      drivetrain.waitUntilNotMoving(),
-      new SequentialCommandGroup(
-        // new LineUpToGoal(),
-        new ShootSequence(this::getAngle, this::getSpeed) 
+    // controller.rightTrigger(0.1).whileTrue(new ParallelCommandGroup(
+    //   drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+    //         .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+    //         .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+    //   ),
+    //   new SequentialCommandGroup(
+    //   shooter.speedUpShooter(65, 100),
+    //   drivetrain.waitUntilNotMoving(),
+    //   new SequentialCommandGroup(
+    //     // new LineUpToGoal(),
+    //     new ShootSequence(this::getAngle, this::getSpeed) 
+    //   )
+    // )
+    // )).onFalse(new StopShoot(angleRestingPosition));
+
+    // controller.rightTrigger(0.1)
+    //   .whileTrue(
+    //     new ParallelCommandGroup(
+    //       drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+    //           .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+    //           .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+    //       ),
+    //       new ShootSequence(() -> chainShotAngle, () -> chainShotSpeed) 
+    //     )
+    //   ).onFalse(new StopShoot(angleRestingPosition));
+
+    controller.rightTrigger(0.1).onTrue(
+      new InstantCommand(this::incrementChainShotMode)
+    );
+
+    new Trigger(() -> currentChainShotState.equals(chainShotState.IDLE)).onTrue(
+      new StopShoot(angleRestingPosition)
+    );
+
+    new Trigger(() -> currentChainShotState.equals(chainShotState.PREPARED)).onTrue(
+      new ParallelCommandGroup(
+        new AutoTurn(180),
+        shooter.speedUpShooter(chainShotSpeed, shooterSequenceAcceleration),
+        angleController.setPositionCommand(chainShotAngle)
       )
-    )
-    )).onFalse(new StopShoot(angleRestingPosition));
+    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+
+    new Trigger(() -> currentChainShotState.equals(chainShotState.SHOOTING)).onTrue(
+      new ParallelCommandGroup(
+        new AutoShootSequence(
+          () -> chainShotAngle, 
+          () -> chainShotSpeed, 
+          angleRestingPosition
+        ).andThen(new InstantCommand(this::cancelChainShotMode))
+      )
+    );
 
     controller.back().onTrue(
       new ParallelCommandGroup(
@@ -199,6 +262,7 @@ public class RobotContainer {
             new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed) 
           )
         ).onFalse(new StopShoot(angleRestingPosition));
+
     
 
     // Amp Shot
@@ -209,7 +273,7 @@ public class RobotContainer {
       new InstantCommand(this::incrementAmpMode)
     );
 
-    new Trigger(() -> currentState.equals(ampState.PREPARED)).onTrue(
+    new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
       new ParallelCommandGroup(
         new ConditionalCommand(
           new AutoTurn(-90), 
@@ -220,7 +284,7 @@ public class RobotContainer {
       )
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
-    new Trigger(() -> currentState.equals(ampState.SHOOTING)).onTrue(
+    new Trigger(() -> currentAmpState.equals(ampState.SHOOTING)).onTrue(
       new ParallelCommandGroup(
         new AutoShootSequence(
           () -> 0, 
@@ -231,13 +295,37 @@ public class RobotContainer {
     );
 
     controller.pov(90).onTrue(
-      new InstantCommand(this::cancelAmpMode)
+      new ParallelCommandGroup(
+        new InstantCommand(this::cancelAmpMode),
+        new InstantCommand(this::cancelTrapMode),
+        new InstantCommand(this::cancelChainShotMode)
+      )
     );
 
     // Trap Shot
-    controller.leftBumper().whileTrue(
-      new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
-    ).onFalse(new StopShoot(angleRestingPosition));
+    // controller.leftBumper().whileTrue(
+    //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
+    // ).onFalse(new StopShoot(angleRestingPosition));
+    controller.leftBumper().onTrue(
+      new InstantCommand(this::incrementTrapMode)
+    );
+
+    new Trigger(() -> currentTrapState.equals(trapState.PREPARED)).onTrue(
+      new ParallelCommandGroup(
+        new LineUpToTrap(),
+        angleController.setPositionCommand(0)
+      )
+    ).onFalse(new InstantCommand(LineUpToTrap::stopCommand));
+
+    new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
+      new ParallelCommandGroup(
+        new AutoShootSequence(
+          () -> 0, 
+          () -> 31, //33
+          angleRestingPosition
+        ).andThen(new InstantCommand(this::cancelTrapMode))
+      )
+    );
 
     // controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
     controller.pov(0).onTrue(climber.setPositionCommand(maxClimberHeight));
@@ -307,17 +395,57 @@ public class RobotContainer {
     SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
   }
 
+  
+  public void incrementChainShotMode() {
+    currentChainShotState = switch (currentChainShotState) {
+      case IDLE -> chainShotState.PREPARED;
+      case PREPARED -> chainShotState.SHOOTING;
+      case SHOOTING -> chainShotState.IDLE;
+      default -> chainShotState.IDLE;
+    };
+    if (currentChainShotState.equals(chainShotState.IDLE)) {
+      cancelAmpMode();
+      cancelTrapMode();
+    }
+  }
+
+  public void cancelChainShotMode() {
+    currentChainShotState = chainShotState.IDLE;
+  }
+
+
   public void incrementAmpMode() {
-    currentState = switch (currentState) {
+    currentAmpState = switch (currentAmpState) {
       case IDLE -> ampState.PREPARED;
       case PREPARED -> ampState.SHOOTING;
       case SHOOTING -> ampState.IDLE;
       default -> ampState.IDLE;
     };
+    if (currentAmpState.equals(ampState.IDLE)) {
+      cancelChainShotMode();
+      cancelTrapMode();
+    }
   }
 
   public void cancelAmpMode() {
-    currentState = ampState.IDLE;
+    currentAmpState = ampState.IDLE;
+  }
+
+  public void incrementTrapMode() {
+    currentTrapState = switch (currentTrapState) {
+      case IDLE -> trapState.PREPARED;
+      case PREPARED -> trapState.SHOOTING;
+      case SHOOTING -> trapState.IDLE;
+      default -> trapState.IDLE;
+    };
+    if (currentTrapState.equals(trapState.IDLE)) {
+      cancelChainShotMode();
+      cancelAmpMode();
+    }
+  }
+
+  public void cancelTrapMode() {
+    currentTrapState = trapState.IDLE;
   }
 
   /**
