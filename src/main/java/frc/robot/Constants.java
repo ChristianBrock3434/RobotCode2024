@@ -50,7 +50,7 @@ public final class Constants {
   public final class ShooterConstants {
     public static final double shooterSequenceAcceleration = 100;
 
-    public static final double subwooferShotSpeed = 65;
+    public static final double subwooferShotSpeed = 50;
     public static final double podiumShotSpeed = 65;
     public static final double chainShotSpeed = 72;
   }
@@ -66,8 +66,8 @@ public final class Constants {
     public static final double angleStartingPosition = 0;
     public static final double angleRestingPosition = 25;
     
-    public static final double subwooferShotAngle = 5;
-    public static final double podiumShotAngle = 25;
+    public static final double subwooferShotAngle = 3;
+    public static final double podiumShotAngle = 23;
     public static final double chainShotAngle = 31.25;
   }
 

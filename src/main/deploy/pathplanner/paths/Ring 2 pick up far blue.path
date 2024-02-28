@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.033899298567829,
-        "y": 5.278814403782653
+        "x": 4.61647553822925,
+        "y": 5.152768080143863
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.384752129464382,
-        "y": 4.555403874344239
+        "x": 5.967328369125803,
+        "y": 4.429357550705449
       },
       "isLocked": false,
-      "linkedName": "FarBlueShoot"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.258545703967298,
-        "y": 2.9042874633538145
+        "x": 8.680135819615433,
+        "y": 2.8
       },
       "prevControl": {
-        "x": 6.946242310129743,
-        "y": 4.009385058164389
+        "x": 7.134305395572274,
+        "y": 3.665491838829612
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,28 +30,16 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.65,
-      "rotationDegrees": 129.99709911749912,
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 165.0,
       "rotateFast": true
     }
   ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.6,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 2.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 0.85,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -85,14 +73,14 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 129.55966796899443,
+    "rotation": 165.0,
     "rotateFast": false
   },
   "reversed": false,

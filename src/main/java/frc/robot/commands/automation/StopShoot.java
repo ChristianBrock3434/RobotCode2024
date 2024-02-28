@@ -4,9 +4,9 @@ import static frc.robot.Constants.AngleControllerConstants.*;
 import static frc.robot.Subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class StopShoot extends SequentialCommandGroup{
+public class StopShoot extends ParallelCommandGroup{
     
     public StopShoot(double angle) {
         addCommands(

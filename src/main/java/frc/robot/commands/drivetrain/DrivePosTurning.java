@@ -13,24 +13,25 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class AutoTurn extends Command{
+public class DrivePosTurning extends Command{
     private static boolean isFinished = false;
+    private static double desiredHeading;
 
-    private static final double maxAngularRate = Math.PI * 1.3;
+    private static final double maxAngularRate = Math.PI * 2.5;
 
-    private PIDController rotController = new PIDController(0.25, 0.21, 0.023); //0.25 .21 .023
+    private PIDController rotController = new PIDController(0.14, 0.21, 0.003); //0.25 .21 .023
     private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
     private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+
+    private double turningDeadband = 0.1;
 
     private SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private double output;
-    private Rotation2d angle;
 
-    public AutoTurn(double angle) {
-        this.angle = Rotation2d.fromDegrees(angle);
+    public DrivePosTurning() {
         addRequirements(drivetrain);
     }
 
@@ -40,16 +41,39 @@ public class AutoTurn extends Command{
         // limelightIntake.setLimelightPipeline(LimelightIntake.Pipeline.Note);
         isFinished = false;
 
-        rotController.setSetpoint(angle.getDegrees());
-        rotController.setTolerance(0.1);
+        // rotController.setSetpoint(angle.getDegrees());
+        rotController.setTolerance(1);
         rotController.enableContinuousInput(-180, 180);
     }
 
     @Override
     public void execute() {
+        double rotX = controller.getLeftX();
+        double rotY = controller.getLeftY();
 
-        output = -rotController.calculate(drivetrain.getRotation().getDegrees());
-        System.out.println("Output before modify: " + output);
+        double currentHeading = drivetrain.getRotation().getDegrees();
+
+        if (Math.abs(rotX) > turningDeadband || Math.abs(rotY) > turningDeadband) {
+            desiredHeading = Math.toDegrees(Math.atan2(rotY, rotX)) - 90;
+            // System.out.println("rotX: " + rotX);
+            // System.out.println("rotY: " + rotY);
+            // System.out.println("Desired heading: " + desiredHeading);
+            while (desiredHeading > 180) {
+                desiredHeading -= 360;
+            }
+            while (desiredHeading < -180) {
+                desiredHeading += 360;
+            }
+
+            // desiredHeading *= -1;
+
+        } else {
+            desiredHeading = currentHeading;
+        }
+
+        rotController.setSetpoint(desiredHeading);
+        output = -rotController.calculate(currentHeading);
+        // System.out.println("Output before modify: " + output);
         if (output > maxAngularRate) {
             output = maxAngularRate;
         } else if (output < -maxAngularRate) {
@@ -57,11 +81,11 @@ public class AutoTurn extends Command{
         } else if (rotController.atSetpoint()) {
             output = 0;
         }
-        System.out.println("Output after modify: " + output);
+        // System.out.println("Output after modify: " + output);
 
-        System.out.println("Current Angle: " + drivetrain.getRotation().getDegrees());
+        // System.out.println("Current Angle: " + drivetrain.getRotation().getDegrees());
         // System.out.println("Speed: " + output);
-        System.out.println("Setpoint: " + rotController.getSetpoint());
+        // System.out.println("Setpoint: " + rotController.getSetpoint());
 
         drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.033899298567829,
-        "y": 5.278814403782653
+        "x": 4.61647553822925,
+        "y": 5.152768080143863
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.803520837810907,
-        "y": 5.00254000508001
+        "x": 5.386097077472328,
+        "y": 4.87649368144122
       },
       "isLocked": false,
-      "linkedName": "FarBlueShoot"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -35,19 +35,7 @@
       "rotateFast": true
     }
   ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.8,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 3.5,
-        "maxAcceleration": 3.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "path",
@@ -85,8 +73,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

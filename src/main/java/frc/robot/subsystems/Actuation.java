@@ -60,7 +60,7 @@ public class Actuation extends SubsystemBase {
     // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
     configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    configs.CurrentLimits.SupplyCurrentLimit = 30;
+    configs.CurrentLimits.SupplyCurrentLimit = 40;
 
     configs.MotionMagic.MotionMagicCruiseVelocity = 60;
     configs.MotionMagic.MotionMagicAcceleration = 100;

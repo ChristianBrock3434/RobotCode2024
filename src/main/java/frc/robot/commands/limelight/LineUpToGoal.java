@@ -55,12 +55,12 @@ public class LineUpToGoal extends Command {
     @Override
     public void execute() {
 
-        output = rotController.calculate(drivetrain.getPose().getRotation().getDegrees());
+        output = rotController.calculate(drivetrain.getRotation().getDegrees());
         if (rotController.atSetpoint()) {
             output = 0;
         }
 
-        System.out.println("Current Angle: " + drivetrain.getPose().getRotation().getDegrees());
+        System.out.println("Current Angle: " + drivetrain.getRotation().getDegrees());
         System.out.println("Speed: " + output);
         System.out.println("Setpoint: " + rotController.getSetpoint());
 

@@ -18,6 +18,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -35,13 +36,15 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    
+    private double offset = 0;
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         // this.getPigeon2().reset();
-        applyCurrentLimiting();
+        // applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -50,18 +53,17 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         // this.getPigeon2().reset();
-        applyCurrentLimiting();
+        // applyCurrentLimiting();
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
 
-    //TODO: Find out why this breaks the drivetrain
-    private void applyCurrentLimiting() {
+    public void applyCurrentLimiting() {
         CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
         configs.SupplyCurrentLimitEnable = true;
-        configs.SupplyCurrentLimit = 50;
+        configs.SupplyCurrentLimit = 45;
         for (var module : this.Modules) {
             StatusCode status = StatusCode.StatusCodeNotInitialized;
             for (int i = 0; i < 5; ++i) {
@@ -77,6 +79,30 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         configs.SupplyCurrentLimit = 25;
         for (var module : this.Modules) {
             StatusCode status = StatusCode.StatusCodeNotInitialized;
+            for (int i = 0; i < 5; ++i) {
+                status = module.getSteerMotor().getConfigurator().apply(configs);
+                if (status.isOK()) break;
+            }
+            if(!status.isOK()) {
+                System.out.println("Could not apply configs, error code: " + status.toString());
+            }
+        }
+    }
+
+    public void removeCurrentLimiting() {
+        CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
+        configs.SupplyCurrentLimitEnable = false;
+        for (var module : this.Modules) {
+            StatusCode status = StatusCode.StatusCodeNotInitialized;
+            for (int i = 0; i < 5; ++i) {
+                status = module.getDriveMotor().getConfigurator().apply(configs);
+                if (status.isOK()) break;
+            }
+            if(!status.isOK()) {
+                System.out.println("Could not apply configs, error code: " + status.toString());
+            }
+
+            status = StatusCode.StatusCodeNotInitialized;
             for (int i = 0; i < 5; ++i) {
                 status = module.getSteerMotor().getConfigurator().apply(configs);
                 if (status.isOK()) break;
@@ -108,16 +134,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void resetOrientation() {
-        System.out.println("Resetting orientation");
-        m_pigeon2.setYaw(0);
-        System.out.println("Resetting field relative");
         seedFieldRelative();
-        System.out.println("Done resetting orientation");
+        offset = m_pigeon2.getAngle();
     }
 
     public void resetOrientation(Pose2d location) {
-        m_pigeon2.setYaw(location.getRotation().getDegrees());
         seedFieldRelative(location);
+        offset = m_pigeon2.getAngle() - location.getRotation().getDegrees();
     }
 
     private boolean shouldFlipPath() {
@@ -168,8 +191,26 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return (flSpeed > 1) || (frSpeed > 1) || (blSpeed > 1) || (brSpeed > 1);
     }
 
+    public void printAcceleration() {
+        double xAccel = m_pigeon2.getAccelerationX().getValueAsDouble();
+        double yAccel = m_pigeon2.getAccelerationY().getValueAsDouble();
+        double totalAccel = Math.sqrt(Math.pow(xAccel, 2) + Math.pow(yAccel, 2));
+        // System.out.println("x Acceleration: " + xAccel);
+        // System.out.println("y Acceleration: " + yAccel);
+        System.out.println("total Acceleration: " + totalAccel);
+    }
+
+    public double checkAcceleration(double targetAccel) {
+        double xAccel = m_pigeon2.getAccelerationX().getValueAsDouble();
+        double yAccel = m_pigeon2.getAccelerationY().getValueAsDouble();
+        double totalAccel = Math.sqrt(Math.pow(xAccel, 2) + Math.pow(yAccel, 2));
+        // System.out.println("x Acceleration: " + xAccel);
+        // System.out.println("y Acceleration: " + yAccel);
+        return totalAccel - targetAccel;
+    }
+
     public Rotation2d getRotation() {
-        return this.m_pigeon2.getRotation2d();
+        return Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180));
     }
 
     public Pose2d getPose() {

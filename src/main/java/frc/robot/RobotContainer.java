@@ -42,6 +42,7 @@ import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.drivetrain.AutoTurn;
+import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpToTrap;
 import frc.robot.commands.limelight.LineUpWithNotePath;
@@ -63,6 +64,7 @@ public class RobotContainer {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
   private static boolean isSubwooferShot = true;
+  private static boolean isPositionTurning = true;
 
   private static enum chainShotState {
     IDLE,
@@ -122,18 +124,18 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed, angleRestingPosition));
     NamedCommands.registerCommand("intake", new PickUpPiece(autoIntakeVoltage));
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 31.5));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 31.5));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 16, () -> 65, 31.5));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31, () -> 65, 31.5));
 
     NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.8)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.8)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.8)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(3.0), new PIDConstants(0.8)));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.8)));
-    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(3.0), new PIDConstants(0.8)));
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
     
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
 
@@ -154,16 +156,34 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
+    // drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    //     drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
+    //                                                                                        // negative Y (forward)
+    //         .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) // Drive left with negative X (left)
+    //         .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //     ));
+    drivetrain.setDefaultCommand(
+      new DrivePosTurning()
+    );
+
+    new Trigger(() -> !isPositionTurning).whileTrue(
+      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
+          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
+          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate)
+      )
+    );
+
+    controller.rightStick().onTrue(
+      new ParallelCommandGroup(
+        new InstantCommand(this::changeTurningMode),
+        new ShakeController(0.5, 0.25)
+      )
+    );
 
     // reset the field-centric heading on start button    
     controller.start().onTrue(
       new ParallelCommandGroup(
+        new InstantCommand(this::turnOnPositionTurning),
         drivetrain.runOnce(() -> drivetrain.resetOrientation()),
         new ShakeController(0.5, 0.25)
       )
@@ -232,7 +252,7 @@ public class RobotContainer {
       )
     );
 
-    controller.back().onTrue(
+    controller.leftStick().onTrue(
       new ParallelCommandGroup(
         new InstantCommand(this::changeManualShootMode),
         new ShakeController(0.5, 0.25)
@@ -243,10 +263,10 @@ public class RobotContainer {
       .and(() -> isSubwooferShot)
         .whileTrue(
           new ParallelCommandGroup(
-            drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-                .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-                .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-            ),
+            // drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+            //     .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+            //     .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+            // ),
             new ShootSequence(() -> subwooferShotAngle, () -> subwooferShotSpeed) 
           )
         ).onFalse(new StopShoot(angleRestingPosition));
@@ -255,10 +275,10 @@ public class RobotContainer {
       .and(() -> !isSubwooferShot)
         .whileTrue(
           new ParallelCommandGroup(
-            drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-                .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-                .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-            ),
+            // drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+            //     .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+            //     .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+            // ),
             new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed) 
           )
         ).onFalse(new StopShoot(angleRestingPosition));
@@ -276,8 +296,8 @@ public class RobotContainer {
     new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
       new ParallelCommandGroup(
         new ConditionalCommand(
-          new AutoTurn(-90), 
           new AutoTurn(90), 
+          new AutoTurn(-90), 
           () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
         ),
         angleController.setPositionCommand(0)
@@ -333,6 +353,8 @@ public class RobotContainer {
 
     controller.y().whileTrue(climber.runVoltageCommand(3));
     controller.a().whileTrue(climber.runVoltageCommand(-3));
+
+    // controller.y().onTrue(new InstantCommand(drivetrain::printAcceleration));
   }
 
   private long timeOfLastAccess = 0;
@@ -388,6 +410,16 @@ public class RobotContainer {
     // System.out.println("Speed: " + getAngleAndSpeed()[2]);
     return getAngleAndSpeed()[2];
     // return 80;
+  }
+  
+  public void changeTurningMode() {
+    isPositionTurning = !isPositionTurning;
+    // SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
+  }
+
+  public void turnOnPositionTurning() {
+    isPositionTurning = true;
+    // SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
   }
 
   public void changeManualShootMode() {

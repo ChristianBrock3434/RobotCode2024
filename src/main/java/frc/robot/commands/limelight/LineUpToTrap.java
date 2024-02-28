@@ -111,7 +111,7 @@ public class LineUpToTrap extends Command {
 
             // Rotation via pigey
             rotController.setSetpoint(tag.rot);
-            rotSpeed = rotController.calculate(drivetrain.getPose().getRotation().getDegrees());
+            rotSpeed = rotController.calculate(drivetrain.getRotation().getDegrees());
             if (rotController.atSetpoint()) {
                 rotSpeed = 0;
             }

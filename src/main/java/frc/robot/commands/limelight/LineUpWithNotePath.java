@@ -7,6 +7,8 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class LineUpWithNotePath extends Command {
@@ -28,6 +30,8 @@ public class LineUpWithNotePath extends Command {
     private double xSpeed;
     private double ySpeed;
     private double lineUpCorrection;
+
+    ChassisSpeeds speed;
 
 
   /**
@@ -68,9 +72,9 @@ public class LineUpWithNotePath extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {    
-    currentRot = drivetrain.getPose().getRotation().getRadians();
+    currentRot = drivetrain.getRotation().getRadians();
 
-    xSpeed = m_xPIDController.calculate(drivetrain.getPose().getX());
+    xSpeed = -m_xPIDController.calculate(drivetrain.getPose().getX());
 
     if (m_xPIDController.atSetpoint()) {
       xSpeed = 0;
@@ -82,7 +86,7 @@ public class LineUpWithNotePath extends Command {
       ySpeed = 0;
     }
 
-    lineUpCorrection = -m_lineUpPIDController.calculate(limelightIntake.getTX());
+    lineUpCorrection = m_lineUpPIDController.calculate(limelightIntake.getTX());
 
     if (m_lineUpPIDController.atSetpoint() || limelightIntake.getTX().equals(Double.NaN)) {
       lineUpCorrection = 0;
@@ -93,16 +97,19 @@ public class LineUpWithNotePath extends Command {
     // System.out.println("X Speed: " + xSpeed);
     // System.out.println("Y Speed: " + ySpeed);
 
-    double temp = xSpeed * Math.cos(currentRot) + ySpeed * Math.sin(currentRot);
-    ySpeed = -xSpeed * Math.sin(currentRot) + ySpeed * Math.cos(currentRot);
-    xSpeed = temp;
+    // double temp = xSpeed * Math.cos(currentRot) + ySpeed * Math.sin(currentRot);
+    // ySpeed = -xSpeed * Math.sin(currentRot) + ySpeed * Math.cos(currentRot);
+    // xSpeed = temp;
+
+    speed = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, 0), Rotation2d.fromDegrees(currentRot));
+    speed = speed.plus(new ChassisSpeeds(0, lineUpCorrection, 0));
 
     // System.out.println("corrected X Speed: " + xSpeed);
     // System.out.println("corrected Y Speed: " + ySpeed);
 
-    double correctedYSpeed = ySpeed + lineUpCorrection;
+    // double correctedYSpeed = ySpeed + lineUpCorrection;
 
-    drivetrain.applyRequest(() -> drive.withVelocityX(xSpeed).withVelocityY(correctedYSpeed).withRotationalRate(0.0)).execute();
+    drivetrain.applyRequest(() -> drive.withVelocityX(speed.vxMetersPerSecond).withVelocityY(speed.vyMetersPerSecond).withRotationalRate(0.0)).execute();
   }
 
   // Called once the command ends or is interrupted.

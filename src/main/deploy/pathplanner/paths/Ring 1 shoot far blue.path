@@ -3,43 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.118015665417921,
-        "y": 1.4521437316769061
+        "x": 8.059461482689013,
+        "y": 1.6043846067720653
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.724426116469922,
-        "y": 3.6889135119211747
+        "x": 6.853245318473517,
+        "y": 4.35643119503072
       },
       "isLocked": false,
-      "linkedName": "ring1FarBlue"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.033899298567829,
-        "y": 5.278814403782653
+        "x": 4.61647553822925,
+        "y": 5.152768080143863
       },
       "prevControl": {
-        "x": 6.115462616089283,
-        "y": 4.707756291404166
+        "x": 5.974932577539905,
+        "y": 4.89512967613667
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FarBlueShoot"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 176.0,
+    "rotation": 167.47119229084845,
     "rotateFast": false
   },
   "reversed": false,
