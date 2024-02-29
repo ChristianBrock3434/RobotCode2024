@@ -51,7 +51,7 @@ public class DrivePosTurning extends Command{
         double rotX = controller.getLeftX();
         double rotY = controller.getLeftY();
 
-        double currentHeading = drivetrain.getRotation().getDegrees();
+        double currentHeading = -drivetrain.getRotation().getDegrees();
 
         if (Math.abs(rotX) > turningDeadband || Math.abs(rotY) > turningDeadband) {
             desiredHeading = Math.toDegrees(Math.atan2(rotY, rotX)) - 90;
@@ -71,8 +71,8 @@ public class DrivePosTurning extends Command{
             desiredHeading = currentHeading;
         }
 
-        rotController.setSetpoint(desiredHeading);
-        output = -rotController.calculate(currentHeading);
+        // rotController.setSetpoint(desiredHeading);
+        output = -rotController.calculate(currentHeading, desiredHeading);
         // System.out.println("Output before modify: " + output);
         if (output > maxAngularRate) {
             output = maxAngularRate;
@@ -85,7 +85,7 @@ public class DrivePosTurning extends Command{
 
         // System.out.println("Current Angle: " + drivetrain.getRotation().getDegrees());
         // System.out.println("Speed: " + output);
-        // System.out.println("Setpoint: " + rotController.getSetpoint());
+        // System.out.println("Setpoint: " + desiredHeading);
 
         drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)

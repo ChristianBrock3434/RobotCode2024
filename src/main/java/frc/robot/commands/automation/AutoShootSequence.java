@@ -5,6 +5,7 @@ import static frc.robot.Subsystems.*;
 import java.util.function.DoubleSupplier;
 
 import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.IndexerConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -23,6 +24,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
             indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
             shooter.checkIfAtSpeedSupplier(velocity),
             indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
+            actuation.waitUntilAtPosition(actuationTuckPosition),
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
             new WaitCommand(1.0).raceWith(shooter.waitUntilRingLeft()),
             new StopShoot(restingAngle)

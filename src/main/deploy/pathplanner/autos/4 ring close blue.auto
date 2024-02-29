@@ -20,13 +20,13 @@
         {
           "type": "named",
           "data": {
-            "name": "tuckActuator"
+            "name": "stopIntake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot1CloseBlue"
           }
         },
         {
@@ -34,22 +34,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "waitForIntakeSignal"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intake"
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               },
               {
@@ -90,13 +77,13 @@
         {
           "type": "named",
           "data": {
-            "name": "tuckActuator"
+            "name": "stopIntake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot2CloseBlue"
           }
         },
         {
@@ -104,22 +91,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "waitForIntakeSignal"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intake"
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               },
               {
@@ -160,7 +134,7 @@
         {
           "type": "named",
           "data": {
-            "name": "tuckActuator"
+            "name": "stopIntake"
           }
         },
         {
@@ -172,7 +146,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot3CloseBlue"
           }
         },
         {
@@ -180,54 +154,15 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "waitForIntakeSignal"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intake"
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "race",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "waitForPathInterrupt"
-                            }
-                          },
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "pick up ring 3 close blue"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "lineUpToNote3CloseBlue"
-                      }
-                    }
-                  ]
+                  "pathName": "pick up ring 3 close blue"
                 }
               }
             ]
@@ -236,7 +171,7 @@
         {
           "type": "named",
           "data": {
-            "name": "tuckActuator"
+            "name": "stopIntake"
           }
         },
         {
@@ -248,7 +183,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shoot4CloseBlue"
           }
         }
       ]

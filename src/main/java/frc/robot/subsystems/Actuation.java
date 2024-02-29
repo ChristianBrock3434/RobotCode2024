@@ -59,8 +59,8 @@ public class Actuation extends SubsystemBase {
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
-    configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    configs.CurrentLimits.SupplyCurrentLimit = 40;
+    // configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    // configs.CurrentLimits.SupplyCurrentLimit = 40;
 
     configs.MotionMagic.MotionMagicCruiseVelocity = 60;
     configs.MotionMagic.MotionMagicAcceleration = 100;

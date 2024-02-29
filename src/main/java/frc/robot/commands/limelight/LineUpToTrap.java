@@ -19,7 +19,7 @@ public class LineUpToTrap extends Command {
 
     private PIDController yController = new PIDController(0.08, 0.01, 0.005);
     private PIDController xController = new PIDController(0.08, 0.01, 0.005);
-    private PIDController rotController = new PIDController(0.08, 0.0, 0.0);
+    private PIDController rotController = new PIDController(0.14, 0.21, 0.003);
 
     private SwerveRequest.RobotCentric drive = 
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -61,9 +61,9 @@ public class LineUpToTrap extends Command {
         limelightShooter.turnOnLimelight();
         limelightShooter.setLimelightPipeline(LimelightShooter.Pipeline.Trap);
 
-        yController.setTolerance(0.5);
+        yController.setTolerance(1);
 
-        xController.setTolerance(0.5);
+        xController.setTolerance(1);
 
         rotController.setTolerance(0.5);
     }

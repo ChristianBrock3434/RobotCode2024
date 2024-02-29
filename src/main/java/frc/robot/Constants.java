@@ -35,7 +35,7 @@ public final class Constants {
     public static final double intakeGearRatio = 1.3333333333333333333;
     
     public static final double intakeVoltage = 5;
-    public static final double autoIntakeVoltage = 5;
+    public static final double autoIntakeVoltage = 4;
 
     public static final double feedVelocity = 60;
     public static final double feedAcceleration = 102;

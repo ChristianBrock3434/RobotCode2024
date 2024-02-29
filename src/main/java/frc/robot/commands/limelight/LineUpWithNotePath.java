@@ -59,6 +59,9 @@ public class LineUpWithNotePath extends Command {
     xGoal = state.positionMeters.getX();
     yGoal = state.positionMeters.getY();
 
+    System.out.println("xGoal: " + xGoal);
+    System.out.println("yGoal: " + yGoal);
+
     m_xPIDController.setTolerance(0.1);
     m_xPIDController.setSetpoint(xGoal);
 
@@ -80,13 +83,13 @@ public class LineUpWithNotePath extends Command {
       xSpeed = 0;
     }
 
-    ySpeed = m_yPIDController.calculate(drivetrain.getPose().getY());
+    ySpeed = -m_yPIDController.calculate(drivetrain.getPose().getY());
 
     if (m_yPIDController.atSetpoint()) {
       ySpeed = 0;
     }
 
-    lineUpCorrection = m_lineUpPIDController.calculate(limelightIntake.getTX());
+    lineUpCorrection = -m_lineUpPIDController.calculate(limelightIntake.getTX());
 
     if (m_lineUpPIDController.atSetpoint() || limelightIntake.getTX().equals(Double.NaN)) {
       lineUpCorrection = 0;
@@ -100,6 +103,8 @@ public class LineUpWithNotePath extends Command {
     // double temp = xSpeed * Math.cos(currentRot) + ySpeed * Math.sin(currentRot);
     // ySpeed = -xSpeed * Math.sin(currentRot) + ySpeed * Math.cos(currentRot);
     // xSpeed = temp;
+
+    // currentRot *= -1;
 
     speed = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, 0), Rotation2d.fromDegrees(currentRot));
     speed = speed.plus(new ChassisSpeeds(0, lineUpCorrection, 0));

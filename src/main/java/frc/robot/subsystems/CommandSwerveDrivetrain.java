@@ -140,7 +140,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public void resetOrientation(Pose2d location) {
         seedFieldRelative(location);
-        offset = m_pigeon2.getAngle() - location.getRotation().getDegrees();
+        offset = m_pigeon2.getAngle() + location.getRotation().getDegrees();
     }
 
     private boolean shouldFlipPath() {
@@ -210,7 +210,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public Rotation2d getRotation() {
-        return Rotation2d.fromDegrees(MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180));
+        return Rotation2d.fromDegrees(-MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180));
     }
 
     public Pose2d getPose() {
@@ -242,6 +242,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     @Override
     public void periodic() {
-        // System.out.println(getPose().getRotation().getDegrees());
+        // System.out.println(getRotation().getDegrees());
     }
 }

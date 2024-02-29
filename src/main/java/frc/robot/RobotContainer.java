@@ -30,10 +30,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
+import frc.robot.commands.automation.PickUpPieceAuto;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopIntake;
 import frc.robot.Constants.ClimberConstants;
@@ -122,14 +124,24 @@ public class RobotContainer {
    */
   public void linkAutoCommands() {
     NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed, angleRestingPosition));
-    NamedCommands.registerCommand("intake", new PickUpPiece(autoIntakeVoltage));
+    NamedCommands.registerCommand("intake", new PickUpPieceAuto(autoIntakeVoltage));
+    // NamedCommands.registerCommand("intake", new PrintCommand("Intake"));
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 16, () -> 65, 31.5));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31, () -> 65, 31.5));
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 65, 20));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 65, 20));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 65, 20));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, 20));
 
-    NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 32));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 32));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("stopIntake", new ParallelCommandGroup(
+      new InstantCommand(intake::stopIntakeMotor),
+      actuation.setPositionCommand(actuationTuckPosition)
+    ));
+    // NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
+
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
@@ -296,8 +308,8 @@ public class RobotContainer {
     new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
       new ParallelCommandGroup(
         new ConditionalCommand(
-          new AutoTurn(90), 
           new AutoTurn(-90), 
+          new AutoTurn(90), 
           () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
         ),
         angleController.setPositionCommand(0)
@@ -487,7 +499,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.getAutoPath("3 ring far blue");
+    return drivetrain.getAutoPath("4 ring close blue");
     // return drivetrain.getAutoPath("New Auto");
   }
 }
