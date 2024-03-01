@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.52,
-        "y": 7.237296985292972
+        "x": 2.773092947103509,
+        "y": 5.4806715034257465
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5434216730971633,
-        "y": 7.272429494931759
+        "x": 2.7778742005415524,
+        "y": 5.457249830334182
       },
       "isLocked": false,
-      "linkedName": "ring3CloseBlue4"
+      "linkedName": "ring4CloseBlue5"
     },
     {
       "anchor": {
-        "x": 3.3634160278306275,
-        "y": 7.190453639109847
+        "x": 2.773092947103509,
+        "y": 5.4806715034257465
       },
       "prevControl": {
-        "x": 3.2931510085615385,
-        "y": 7.131899456382382
+        "x": 2.8316471298324166,
+        "y": 5.422117320696839
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,18 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -150.0,
-    "rotateFast": true
+    "rotation": 180.0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "4 Ring Close Blue",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "5 Ring Close Blue",
+  "previewStartingState": {
+    "rotation": 134.7446020730996,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

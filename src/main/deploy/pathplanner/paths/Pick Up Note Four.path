@@ -3,51 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.176042643098124,
-        "y": 5.714888234341376
+        "x": 2.773092947103509,
+        "y": 6.9264947689968235
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1643318065523425,
-        "y": 6.0310808210774765
+        "x": 2.5505870527336603,
+        "y": 6.528326326440252
       },
       "isLocked": false,
-      "linkedName": "shootRing2CloseBlue4"
+      "linkedName": "ring3CloseBlue5"
     },
     {
       "anchor": {
-        "x": 3.1199999999999997,
-        "y": 6.347273407813577
+        "x": 2.4851032868970147,
+        "y": 6.077924167260603
       },
       "prevControl": {
-        "x": 3.0582312001759626,
-        "y": 6.168830208321916
+        "x": 2.394267359397112,
+        "y": 6.320153307260343
       },
       "nextControl": {
-        "x": 3.225397528912034,
-        "y": 6.651755158003897
+        "x": 2.5553683061717036,
+        "y": 5.890550782528099
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.52,
-        "y": 7.237296985292972
+        "x": 2.773092947103509,
+        "y": 5.4806715034257465
       },
       "prevControl": {
-        "x": 3.4380260039777397,
-        "y": 7.026501204223491
+        "x": 2.6607658350837373,
+        "y": 5.703177397795595
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring3CloseBlue4"
+      "linkedName": "ring4CloseBlue5"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -115.0,
+      "rotationDegrees": 115.0,
       "rotateFast": true
     }
   ],
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "parallel",
         "data": {
@@ -71,8 +71,8 @@
       }
     },
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.0,
+      "name": "intake",
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {
@@ -80,7 +80,7 @@
             {
               "type": "named",
               "data": {
-                "name": "sendIntakeSignal"
+                "name": "intake"
               }
             }
           ]
@@ -89,21 +89,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -115.0,
+    "rotation": 115.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4 Ring Close Blue",
+  "folder": "5 Ring Close Blue",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -135.72522429905922,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -23,7 +23,7 @@ public class DrivePosTurning extends Command{
     private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
     private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
 
-    private double turningDeadband = 0.1;
+    private double turningDeadband = 0.25;
 
     private SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband

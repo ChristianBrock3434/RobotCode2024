@@ -3,59 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.176042643098124,
-        "y": 5.714888234341376
+        "x": 5.412812423342392,
+        "y": 6.628333484912334
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1643318065523425,
-        "y": 6.0310808210774765
+        "x": 6.478498549008509,
+        "y": 6.2770083885388885
       },
       "isLocked": false,
-      "linkedName": "shootRing2CloseBlue4"
+      "linkedName": "ShootRing1CloseBlue5"
     },
     {
       "anchor": {
-        "x": 3.1199999999999997,
-        "y": 6.347273407813577
+        "x": 8.059461482689013,
+        "y": 5.820285763253409
       },
       "prevControl": {
-        "x": 3.0582312001759626,
-        "y": 6.168830208321916
-      },
-      "nextControl": {
-        "x": 3.225397528912034,
-        "y": 6.651755158003897
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.52,
-        "y": 7.237296985292972
-      },
-      "prevControl": {
-        "x": 3.4380260039777397,
-        "y": 7.026501204223491
+        "x": 6.970353683931332,
+        "y": 6.089635003806385
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring3CloseBlue4"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -115.0,
-      "rotateFast": true
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 179.34,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.8,
       "command": {
         "type": "parallel",
         "data": {
@@ -71,8 +55,8 @@
       }
     },
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.0,
+      "name": "intake",
+      "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
         "data": {
@@ -89,21 +73,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -115.0,
+    "rotation": 179.34,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4 Ring Close Blue",
+  "folder": "5 Ring Close Blue",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -175.60129464500469,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -12,7 +12,7 @@
         "y": 4.529926112414497
       },
       "isLocked": false,
-      "linkedName": "ring1CloseBlue"
+      "linkedName": "ring1CloseBlue4"
     },
     {
       "anchor": {
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring2CloseBlue"
+      "linkedName": "ring2CloseBlue4"
     }
   ],
   "rotationTargets": [
@@ -100,7 +100,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Close Blue",
+  "folder": "4 Ring Close Blue",
   "previewStartingState": {
     "rotation": 147.43,
     "velocity": 0

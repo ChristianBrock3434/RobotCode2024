@@ -42,6 +42,7 @@ import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
+import frc.robot.commands.automation.AutoShootSequenceNoStop;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.drivetrain.DrivePosTurning;
@@ -128,9 +129,16 @@ public class RobotContainer {
     // NamedCommands.registerCommand("intake", new PrintCommand("Intake"));
 
     NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 65, 20));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 65, 20));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 65, 20));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, 20));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 65, 22));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 65, 26));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
+
+    
+    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, 40));
+    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 40, () -> 65, 20));
+    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 20, () -> 65, 26));
+    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 26, () -> 65, 20));
+    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
 
     NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 32));
     NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 32));
@@ -145,6 +153,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 5, new PIDConstants(2.0), new PIDConstants(0.01)));
+    
     NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
@@ -156,6 +169,11 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("waitForIntakeSignal", AutoTracker.waitForSignal(AutoTracker.tracked.INTAKE));
     NamedCommands.registerCommand("sendIntakeSignal", AutoTracker.sendSignal(AutoTracker.tracked.INTAKE));
+
+    NamedCommands.registerCommand("waitForShootSignal", AutoTracker.waitForSignal(AutoTracker.tracked.SHOOTER));
+    NamedCommands.registerCommand("sendShooterSignal", AutoTracker.sendSignal(AutoTracker.tracked.SHOOTER));
+    
+    NamedCommands.registerCommand("speedUpShooter", shooter.speedUpShooter(65, 100));
   }
 
   /**
@@ -499,7 +517,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.getAutoPath("4 ring close blue");
+    return drivetrain.getAutoPath("5 ring close blue");
     // return drivetrain.getAutoPath("New Auto");
   }
 }

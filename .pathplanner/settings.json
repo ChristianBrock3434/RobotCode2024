@@ -3,8 +3,9 @@
   "robotLength": 0.6096,
   "holonomicMode": true,
   "pathFolders": [
+    "4 Ring Close Blue",
     "Far Blue",
-    "Close Blue"
+    "5 Ring Close Blue"
   ],
   "autoFolders": [
     "Practice"

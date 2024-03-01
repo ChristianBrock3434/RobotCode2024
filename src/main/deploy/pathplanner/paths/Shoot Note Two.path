@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.743268895952912,
+        "y": 5.867129109436536
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.494788279162862,
+        "y": 6.019369984531695
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.3211515752560734,
+        "y": 6.382405917450922
+      },
+      "prevControl": {
+        "x": 4.31199378803893,
+        "y": 6.335562571267796
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "shootRing2CloseBlue5"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "shoot",
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "sendShooterSignal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -150.94539590092282,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "5 Ring Close Blue",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
