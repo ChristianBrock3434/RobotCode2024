@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.44283883432246,
-      "y": 7.307562004567661
+      "y": 7.4
     },
-    "rotation": -130.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -128,7 +128,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot1CloseBlue5"
+            "name": "shoot2CloseBlue5"
           }
         },
         {
@@ -230,7 +230,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot2CloseBlue5"
+            "name": "shoot3CloseBlue5"
           }
         },
         {
@@ -259,9 +259,15 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot Note Three"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "shoot3CloseBlue5"
+            "name": "shoot4CloseBlue5"
           }
         },
         {
@@ -269,22 +275,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "waitForIntakeSignal"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intake"
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               },
               {

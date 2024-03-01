@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.098645680886225,
-        "y": 6.312140898176232
+        "x": 2.773092947103509,
+        "y": 6.9264947689968235
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2788956448715294,
-        "y": 6.533010661058563
+        "x": 2.789585037087334,
+        "y": 6.90939356201109
       },
       "isLocked": false,
-      "linkedName": "shootRing2CloseBlue5"
+      "linkedName": "ring3CloseBlue5"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 6.9264947689968235
       },
       "prevControl": {
-        "x": 2.6207551531886186,
-        "y": 6.760906925868365
+        "x": 2.7454724753147755,
+        "y": 6.934153916982738
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ring3CloseBlue5"
+      "linkedName": "shootRing3CloseBlue5"
     }
   ],
   "rotationTargets": [],
@@ -38,15 +38,12 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -136.33940094371624,
+    "velocity": 0.0,
+    "rotation": -153.95709447724664,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "5 Ring Close Blue",
-  "previewStartingState": {
-    "rotation": -136.12330271407544,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

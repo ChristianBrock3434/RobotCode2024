@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5505870527336603,
-        "y": 6.528326326440252
+        "x": 2.695898344721082,
+        "y": 6.628333484912334
       },
       "isLocked": false,
-      "linkedName": "ring3CloseBlue5"
+      "linkedName": "shootRing3CloseBlue5"
     },
     {
       "anchor": {
-        "x": 2.4851032868970147,
-        "y": 6.077924167260603
+        "x": 2.86,
+        "y": 6.183321696172636
       },
       "prevControl": {
-        "x": 2.394267359397112,
-        "y": 6.320153307260343
+        "x": 2.751780125765949,
+        "y": 6.418299526638719
       },
       "nextControl": {
-        "x": 2.5553683061717036,
-        "y": 5.890550782528099
+        "x": 2.9301150756367123,
+        "y": 6.031080821077477
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.773092947103509,
-        "y": 5.4806715034257465
+        "x": 3.1,
+        "y": 5.64
       },
       "prevControl": {
-        "x": 2.6607658350837373,
-        "y": 5.703177397795595
+        "x": 3.023801768002964,
+        "y": 5.820285763253409
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 0.85,
+      "waypointRelativePos": 1.2,
       "command": {
         "type": "parallel",
         "data": {
@@ -80,7 +80,7 @@
             {
               "type": "named",
               "data": {
-                "name": "intake"
+                "name": "sendIntakeSignal"
               }
             }
           ]
@@ -89,10 +89,10 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 3.5,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 405.0,
+    "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -105,5 +105,5 @@
     "rotation": -135.72522429905922,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

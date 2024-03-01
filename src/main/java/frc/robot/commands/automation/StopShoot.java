@@ -1,6 +1,5 @@
 package frc.robot.commands.automation;
 
-import static frc.robot.Constants.AngleControllerConstants.*;
 import static frc.robot.Subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;

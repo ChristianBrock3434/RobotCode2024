@@ -23,30 +23,24 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.PickUpPieceAuto;
 import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopIntake;
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.AutoShootSequenceNoStop;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.drivetrain.DrivePosTurning;
-import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpToTrap;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 
@@ -94,7 +88,6 @@ public class RobotContainer {
   
   private static trapState currentTrapState = trapState.IDLE;
 
-  // TODO: Add on shooting
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
@@ -134,10 +127,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
 
     
-    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, 40));
-    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 40, () -> 65, 20));
-    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 20, () -> 65, 26));
-    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 26, () -> 65, 20));
+    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 65, 35));
+    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 65, 15));
+    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 65, 22));
+    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 65, 20));
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
 
     NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 32));
@@ -156,7 +149,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 5, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), new PIDConstants(0.01)));
     
     NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
@@ -517,6 +510,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
+    //TODO: fix parallel requiring same subsystem
     return drivetrain.getAutoPath("5 ring close blue");
     // return drivetrain.getAutoPath("New Auto");
   }
