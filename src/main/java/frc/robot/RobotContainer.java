@@ -121,39 +121,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", new PickUpPieceAuto(autoIntakeVoltage));
     // NamedCommands.registerCommand("intake", new PrintCommand("Intake"));
 
-    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 65, 20));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 65, 22));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 65, 26));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
-
-    
-    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 65, 35));
-    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 65, 15));
-    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 65, 22));
-    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 65, 20));
-    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
-
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 32));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 32));
-
     NamedCommands.registerCommand("stopIntake", new ParallelCommandGroup(
       new InstantCommand(intake::stopIntakeMotor),
       actuation.setPositionCommand(actuationTuckPosition)
     ));
     // NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
-
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
-
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), new PIDConstants(0.01)));
-    
-    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
     
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
 
@@ -167,6 +139,60 @@ public class RobotContainer {
     NamedCommands.registerCommand("sendShooterSignal", AutoTracker.sendSignal(AutoTracker.tracked.SHOOTER));
     
     NamedCommands.registerCommand("speedUpShooter", shooter.speedUpShooter(65, 100));
+
+    linkShootCommands();
+    linkLineUpCommands();
+  }
+
+  private static void linkShootCommands() {
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 65, 20));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 65, 22));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 65, 26));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
+
+    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 65, 20));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 20, () -> 65, 22));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22, () -> 65, 26));
+    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
+
+    
+    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 65, 35));
+    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 65, 15));
+    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 65, 22));
+    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 65, 20));
+    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
+
+
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 32));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 32));
+
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 65, 32));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 32, () -> 65, 32));
+  }
+
+  private static void linkLineUpCommands() {
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
+
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("4 ring close Red", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("4 ring close Red", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("4 ring close Red", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
+
+
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), new PIDConstants(0.01)));
+
+    
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
+
+    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("3 ring far red", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("3 ring far red", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("3 ring far red", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
   }
 
   /**

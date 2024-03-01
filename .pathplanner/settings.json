@@ -4,11 +4,14 @@
   "holonomicMode": true,
   "pathFolders": [
     "4 Ring Close Blue",
+    "5 Ring Close Blue",
     "Far Blue",
-    "5 Ring Close Blue"
+    "Far Red",
+    "4 Ring Close Red"
   ],
   "autoFolders": [
-    "Practice"
+    "Blue",
+    "Red"
   ],
   "defaultMaxVel": 2.0,
   "defaultMaxAccel": 2.0,

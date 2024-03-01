@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.244993259217289,
-      "y": 5.180144975674567
+      "x": 15.05,
+      "y": 3.6537810022838304
     },
-    "rotation": 144.24611274556312
+    "rotation": 50.0
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,83 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot1CloseBlue"
+            "name": "shoot1FarRed"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "waitForIntakeSignal"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "waitForPathInterrupt"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Ring 1 pick up far red"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "lineUpToNote1FarRed"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 1 shoot far red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot2FarRed"
           }
         },
         {
@@ -56,7 +132,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "pick up ring 1 close blue"
+                              "pathName": "Ring 2 pick up far red"
                             }
                           }
                         ]
@@ -65,64 +141,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote1CloseBlue"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot2CloseBlue"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "race",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "waitForPathInterrupt"
-                            }
-                          },
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "pick up ring 2 close blue"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "lineUpToNote2CloseBlue"
+                        "name": "lineUpToNote2FarRed"
                       }
                     }
                   ]
@@ -140,55 +159,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "shoot ring 2 close blue"
+            "pathName": "Ring 2 shoot far red"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot3CloseBlue"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "pick up ring 3 close blue"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "shoot ring 3 close blue"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot4CloseBlue"
+            "name": "shoot2FarRed"
           }
         }
       ]
     }
   },
-  "folder": "Blue",
+  "folder": "Red",
   "choreoAuto": false
 }
