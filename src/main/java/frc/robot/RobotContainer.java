@@ -24,6 +24,7 @@ import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -51,6 +52,8 @@ import frc.robot.commands.limelight.LineUpWithNotePath;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  private static SendableChooser<String> autoChooser = new SendableChooser<>();
 
   private static SlewRateLimiter xLimiter = new SlewRateLimiter(3);
   private static SlewRateLimiter yLimiter = new SlewRateLimiter(3);
@@ -102,6 +105,7 @@ public class RobotContainer {
     linkAutoCommands();
     setUpNetworkTables();
     configureBindings();
+    autoSelect();
   }
 
   public void setUpNetworkTables() {
@@ -111,6 +115,18 @@ public class RobotContainer {
     SmartDashboard.putBoolean("Right Intake Note Sensor", intake.getRightNoteSensor());
 
     SmartDashboard.putBoolean("Shooter line break", shooter.getNoteSensor());
+  }
+
+  public void autoSelect() {
+    autoChooser.setDefaultOption("8-7 Blue", "3 ring far blue");
+    autoChooser.addOption("1-2-3 Blue", "4 ring close blue");
+    autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
+
+    autoChooser.addOption("8-7 Red", "3 ring far red");
+    autoChooser.addOption("1-2-3 Red", "4 ring close red");
+    // autoChooser.addOption("4-5-3-2 Red", "5 ring close red");
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -264,20 +280,20 @@ public class RobotContainer {
     // )
     // )).onFalse(new StopShoot(angleRestingPosition));
 
-    // controller.rightTrigger(0.1)
-    //   .whileTrue(
-    //     new ParallelCommandGroup(
-    //       drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-    //           .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-    //           .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-    //       ),
-    //       new ShootSequence(() -> chainShotAngle, () -> chainShotSpeed) 
-    //     )
-    //   ).onFalse(new StopShoot(angleRestingPosition));
+    controller.rightTrigger(0.1)
+      .whileTrue(
+        new ParallelCommandGroup(
+          drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+              .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+              .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+          ),
+          new ShootSequence(() -> chainShotAngle, () -> chainShotSpeed) 
+        )
+      ).onFalse(new StopShoot(angleRestingPosition));
 
-    controller.rightTrigger(0.1).onTrue(
-      new InstantCommand(this::incrementChainShotMode)
-    );
+    // controller.rightTrigger(0.1).onTrue(
+    //   new InstantCommand(this::incrementChainShotMode)
+    // );
 
     new Trigger(() -> currentChainShotState.equals(chainShotState.IDLE)).onTrue(
       new StopShoot(angleRestingPosition)
@@ -536,8 +552,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //TODO: fix parallel requiring same subsystem
-    return drivetrain.getAutoPath("5 ring close blue");
+    return drivetrain.getAutoPath(autoChooser.getSelected());
     // return drivetrain.getAutoPath("New Auto");
   }
 }

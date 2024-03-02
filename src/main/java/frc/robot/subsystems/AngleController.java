@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -47,7 +48,7 @@ public class AngleController extends SubsystemBase{
     // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 
     configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    configs.CurrentLimits.SupplyCurrentLimit = 30;
+    configs.CurrentLimits.SupplyCurrentLimit = 40;
 
     configs.MotionMagic.MotionMagicCruiseVelocity = 15;
     configs.MotionMagic.MotionMagicAcceleration = 20;
@@ -183,5 +184,6 @@ public class AngleController extends SubsystemBase{
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(angleMotor.getPosition().getValueAsDouble() / AngleControllerConstants.angleTicksPerDegree);
+    SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
   }
 }

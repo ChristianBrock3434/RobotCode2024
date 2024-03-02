@@ -399,6 +399,8 @@ public class Shooter extends SubsystemBase {
     // System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
     // System.out.println("Left Velocity:" + leftShooterMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter line break", getNoteSensor());
+    SmartDashboard.putNumber("Left Shooter Speed", leftShooterMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Right Shooter Speed", rightShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override

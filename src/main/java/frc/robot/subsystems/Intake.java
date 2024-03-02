@@ -240,6 +240,8 @@ public class Intake extends SubsystemBase {
     // System.out.println(getDistanceSensorTripped());
     SmartDashboard.putBoolean("Left Intake Note Sensor", getLeftNoteSensor());
     SmartDashboard.putBoolean("Right Intake Note Sensor", getRightNoteSensor());
+
+    SmartDashboard.putNumber("Intake Speed", intakeMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
