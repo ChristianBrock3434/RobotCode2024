@@ -256,7 +256,8 @@ public class RobotContainer {
       )
     );
 
-    controller.rightBumper().whileTrue(new PickUpPiece(intakeVoltage)).onFalse(new StopIntake());
+    controller.rightBumper().onTrue(new PickUpPiece(intakeVoltage));
+    controller.leftBumper().onTrue(new StopIntake());
 
     controller.b().whileTrue(new ParallelCommandGroup(
       intake.feedCommand(outtakeVelocity, outtakeAcceleration),
@@ -290,7 +291,7 @@ public class RobotContainer {
               .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
               .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
           ),
-          new ShootSequence(() -> 20, () -> 15) 
+          new ShootSequence(() -> 20, () -> 25) 
          )
      ).onFalse(new StopShoot(angleRestingPosition));
 
