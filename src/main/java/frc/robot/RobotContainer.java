@@ -227,33 +227,37 @@ public class RobotContainer {
     //         .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
     //     ));
     drivetrain.setDefaultCommand(
-      new DrivePosTurning()
-    );
-
-    new Trigger(() -> !isPositionTurning).whileTrue(
-      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
-          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
-          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate)
+      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed * 0.2) 
+          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed * 0.2) 
+          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.2)
       )
     );
 
-    controller.rightStick().onTrue(
-      new ParallelCommandGroup(
-        new InstantCommand(this::changeTurningMode),
-        new ShakeController(0.5, 0.25)
-      )
-    );
+    // new Trigger(() -> !isPositionTurning).whileTrue(
+    //   drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
+    //       .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
+    //       .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate)
+    //   )
+    // );
+
+    // controller.rightStick().onTrue(
+    //   new ParallelCommandGroup(
+    //     new InstantCommand(this::changeTurningMode),
+    //     new ShakeController(0.5, 0.25)
+    //   )
+    // );
 
     // reset the field-centric heading on start button    
     controller.start().onTrue(
       new ParallelCommandGroup(
-        new InstantCommand(this::turnOnPositionTurning),
+        // new InstantCommand(this::turnOnPositionTurning),
         drivetrain.runOnce(() -> drivetrain.resetOrientation()),
         new ShakeController(0.5, 0.25)
       )
     );
 
     controller.rightBumper().whileTrue(new PickUpPiece(intakeVoltage)).onFalse(new StopIntake());
+
     controller.b().whileTrue(new ParallelCommandGroup(
       intake.feedCommand(outtakeVelocity, outtakeAcceleration),
       indexer.runIndexerCommand(-indexerVelocity, indexerAcceleration)
@@ -279,144 +283,143 @@ public class RobotContainer {
     // )
     // )).onFalse(new StopShoot(angleRestingPosition));
 
-    // controller.rightTrigger(0.1)
-    //   .whileTrue(
-    //     new ParallelCommandGroup(
-    //       drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-    //           .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-    //           .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-    //       ),
-    //       new ShootSequence(() -> chainShotAngle, () -> chainShotSpeed) 
-    //      )
-    //  ).onFalse(new StopShoot(angleRestingPosition));
+    controller.rightTrigger(0.1)
+      .whileTrue(
+        new ParallelCommandGroup(
+          drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+              .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+              .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+          ),
+          new ShootSequence(() -> 20, () -> 15) 
+         )
+     ).onFalse(new StopShoot(angleRestingPosition));
 
-    controller.rightTrigger(0.1).onTrue(
-      new InstantCommand(this::incrementChainShotMode)
-    );
+    // controller.rightTrigger(0.1).onTrue(
+    //   new InstantCommand(this::incrementChainShotMode)
+    // );
 
-    new Trigger(() -> currentChainShotState.equals(chainShotState.IDLE)).onTrue(
-      new StopShoot(angleRestingPosition)
-    );
+    // new Trigger(() -> currentChainShotState.equals(chainShotState.IDLE)).onTrue(
+    //   new StopShoot(angleRestingPosition)
+    // );
 
-    new Trigger(() -> currentChainShotState.equals(chainShotState.PREPARED)).onTrue(
-      new ParallelCommandGroup(
-        new AutoTurn(180),
-        shooter.speedUpShooter(chainShotSpeed, shooterSequenceAcceleration),
-        angleController.setPositionCommand(chainShotAngle)
-      )
-    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+    // new Trigger(() -> currentChainShotState.equals(chainShotState.PREPARED)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new AutoTurn(180),
+    //     shooter.speedUpShooter(chainShotSpeed, shooterSequenceAcceleration),
+    //     angleController.setPositionCommand(chainShotAngle)
+    //   )
+    // ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
-    new Trigger(() -> currentChainShotState.equals(chainShotState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> chainShotAngle, 
-          () -> chainShotSpeed, 
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelChainShotMode))
-      )
-    );
+    // new Trigger(() -> currentChainShotState.equals(chainShotState.SHOOTING)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new AutoShootSequence(
+    //       () -> chainShotAngle, 
+    //       () -> chainShotSpeed, 
+    //       angleRestingPosition
+    //     ).andThen(new InstantCommand(this::cancelChainShotMode))
+    //   )
+    // );
 
-    controller.leftStick().onTrue(
-      new ParallelCommandGroup(
-        new InstantCommand(this::changeManualShootMode),
-        new ShakeController(0.5, 0.25)
-      )
-    );
+    // controller.leftStick().onTrue(
+    //   new ParallelCommandGroup(
+    //     new InstantCommand(this::changeManualShootMode),
+    //     new ShakeController(0.5, 0.25)
+    //   )
+    // );
 
     controller.leftTrigger(0.1)
-      .and(() -> isSubwooferShot)
         .whileTrue(
           new ParallelCommandGroup(
             // drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
             //     .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
             //     .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
             // ),
-            new ShootSequence(() -> subwooferShotAngle, () -> subwooferShotSpeed) 
+            new ShootSequence(() -> subwooferShotAngle, () -> 10) 
           )
         ).onFalse(new StopShoot(angleRestingPosition));
 
-    controller.leftTrigger(0.1)
-      .and(() -> !isSubwooferShot)
-        .whileTrue(
-          new ParallelCommandGroup(
-            // drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-            //     .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-            //     .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-            // ),
-            new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed) 
-          )
-        ).onFalse(new StopShoot(angleRestingPosition));
+    // controller.leftTrigger(0.1)
+    //   .and(() -> !isSubwooferShot)
+    //     .whileTrue(
+    //       new ParallelCommandGroup(
+    //         // drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+    //         //     .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+    //         //     .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+    //         // ),
+    //         new ShootSequence(() -> podiumShotAngle, () -> podiumShotSpeed) 
+    //       )
+    //     ).onFalse(new StopShoot(angleRestingPosition));
 
     
 
-    // Amp Shot
-    // controller.pov(270).whileTrue(
-    //   new ShootSequence(() -> 0, () -> 7)
-    // ).onFalse(new StopShoot(angleRestingPosition));
-    controller.pov(270).onTrue(
-      new InstantCommand(this::incrementAmpMode)
-    );
+    // // Amp Shot
+    // // controller.pov(270).whileTrue(
+    // //   new ShootSequence(() -> 0, () -> 7)
+    // // ).onFalse(new StopShoot(angleRestingPosition));
+    // controller.pov(270).onTrue(
+    //   new InstantCommand(this::incrementAmpMode)
+    // );
 
-    new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
-      new ParallelCommandGroup(
-        new ConditionalCommand(
-          new AutoTurn(-90), 
-          new AutoTurn(90), 
-          () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
-        ),
-        angleController.setPositionCommand(0)
-      )
-    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+    // new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new ConditionalCommand(
+    //       new AutoTurn(-90), 
+    //       new AutoTurn(90), 
+    //       () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
+    //     ),
+    //     angleController.setPositionCommand(0)
+    //   )
+    // ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
-    new Trigger(() -> currentAmpState.equals(ampState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> ampAngle, 
-          () -> ampSpeed, 
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelAmpMode))
-      )
-    );
+    // new Trigger(() -> currentAmpState.equals(ampState.SHOOTING)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new AutoShootSequence(
+    //       () -> ampAngle, 
+    //       () -> ampSpeed, 
+    //       angleRestingPosition
+    //     ).andThen(new InstantCommand(this::cancelAmpMode))
+    //   )
+    // );
 
-    controller.pov(90).onTrue(
-      new ParallelCommandGroup(
-        new InstantCommand(this::cancelAmpMode),
-        new InstantCommand(this::cancelTrapMode),
-        new InstantCommand(this::cancelChainShotMode)
-      )
-    );
+    // controller.pov(90).onTrue(
+    //   new ParallelCommandGroup(
+    //     new InstantCommand(this::cancelAmpMode),
+    //     new InstantCommand(this::cancelTrapMode),
+    //     new InstantCommand(this::cancelChainShotMode)
+    //   )
+    // );
 
     // Trap Shot
     // controller.leftBumper().whileTrue(
     //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
     // ).onFalse(new StopShoot(angleRestingPosition));
-    controller.leftBumper().onTrue(
-      new InstantCommand(this::incrementTrapMode)
-    );
+    // controller.leftBumper().onTrue(
+    //   new InstantCommand(this::incrementTrapMode)
+    // );
 
-    new Trigger(() -> currentTrapState.equals(trapState.PREPARED)).onTrue(
-      new ParallelCommandGroup(
-        new LineUpToTrap(),
-        angleController.setPositionCommand(0)
-      )
-    ).onFalse(new InstantCommand(LineUpToTrap::stopCommand));
+    // new Trigger(() -> currentTrapState.equals(trapState.PREPARED)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new LineUpToTrap(),
+    //     angleController.setPositionCommand(0)
+    //   )
+    // ).onFalse(new InstantCommand(LineUpToTrap::stopCommand));
 
-    new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> trapAngle, 
-          () -> trapSpeed,
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelTrapMode))
-      )
-    );
+    // new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new AutoShootSequence(
+    //       () -> trapAngle, 
+    //       () -> trapSpeed,
+    //       angleRestingPosition
+    //     ).andThen(new InstantCommand(this::cancelTrapMode))
+    //   )
+    // );
 
     // controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
-    controller.pov(0).onTrue(climber.setPositionCommand(maxClimberHeight));
-    controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
+    // controller.pov(0).onTrue(climber.setPositionCommand(maxClimberHeight));
+    // controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
 
-    controller.y().whileTrue(climber.runVoltageCommand(3));
-    controller.a().whileTrue(climber.runVoltageCommand(-3));
+    // controller.y().whileTrue(climber.runVoltageCommand(3));
+    // controller.a().whileTrue(climber.runVoltageCommand(-3));
 
     // controller.y().onTrue(new InstantCommand(drivetrain::printAcceleration));
   }
