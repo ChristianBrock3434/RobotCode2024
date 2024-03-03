@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.61647553822925,
-        "y": 5.152768080143863
+        "x": 4.874113942236443,
+        "y": 5.094213897414956
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.386097077472328,
-        "y": 4.87649368144122
+        "x": 5.643735481479521,
+        "y": 4.817939498712312
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "shootRing2FarBlue"
     },
     {
       "anchor": {
-        "x": 8.680135819615433,
-        "y": 4.50867207012588
+        "x": 7.942353117231199,
+        "y": 4.731177964495728
       },
       "prevControl": {
-        "x": 7.146016232118054,
-        "y": 4.895129676136669
+        "x": 6.501920222100072,
+        "y": 4.778021310678856
       },
       "nextControl": null,
       "isLocked": false,
@@ -73,8 +73,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

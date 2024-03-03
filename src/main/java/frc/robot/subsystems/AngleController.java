@@ -26,9 +26,9 @@ public class AngleController extends SubsystemBase{
   public AngleController() {
     initAngleMotor();
 
-    motionMagicControl = new MotionMagicVoltage(0, 
+    motionMagicControl = new MotionMagicVoltage(0,
                                                 true, 
-                                                0.0,
+                                                -0.1,
                                                 0,
                                                 false,
                                                 false,
@@ -171,7 +171,7 @@ public class AngleController extends SubsystemBase{
           return true;
         }
         double currentPosition = angleMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition.getAsDouble() * angleTicksPerDegree) <= 0.05;
+        return Math.abs(currentPosition - setPosition.getAsDouble() * angleTicksPerDegree) <= 0.1;
       }
     };
   }

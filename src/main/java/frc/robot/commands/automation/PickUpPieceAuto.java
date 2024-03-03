@@ -3,7 +3,6 @@ package frc.robot.commands.automation;
 import static frc.robot.Subsystems.*;
 import static frc.robot.Constants.ActuationConstants.*;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class PickUpPieceAuto extends SequentialCommandGroup{
@@ -14,7 +13,7 @@ public class PickUpPieceAuto extends SequentialCommandGroup{
             actuation.waitUntilAtPosition(actuationPickUpPosition),
             intake.runVoltageCommand(voltage),
             intake.waitUntilTripped(),
-            new InstantCommand(intake::stopIntakeMotor, intake),
+            intake.stopIntakeCommand(),
             actuation.setPositionCommand(actuationTuckPosition)
         );
     }

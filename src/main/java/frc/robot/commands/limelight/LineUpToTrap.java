@@ -29,7 +29,7 @@ public class LineUpToTrap extends Command {
     double rotSpeed;
 
     private static enum Tag {
-        Blue1Trap(15, 8.5, 11.2, -61.7), //12, 10.7, -61.7
+        Blue1Trap(15, 8.5, 11.2, -60.7), //12, 10.7, -61.7
         Blue2Trap(16, Double.NaN, Double.NaN, Double.NaN),
         Blue3Trap(14, Double.NaN, Double.NaN, Double.NaN),
         Red1Trap(12, Double.NaN, Double.NaN, Double.NaN),

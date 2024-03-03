@@ -137,10 +137,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", new PickUpPieceAuto(autoIntakeVoltage));
     // NamedCommands.registerCommand("intake", new PrintCommand("Intake"));
 
-    NamedCommands.registerCommand("stopIntake", new ParallelCommandGroup(
-      new InstantCommand(intake::stopIntakeMotor),
-      actuation.setPositionCommand(actuationTuckPosition)
-    ));
+    NamedCommands.registerCommand("stopIntake", new StopIntake());
     // NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
     
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
@@ -161,15 +158,15 @@ public class RobotContainer {
   }
 
   private static void linkShootCommands() {
-    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 65, 20));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 65, 22));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 65, 26));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 50, 20));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 50, 22));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 50, 26));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 21, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 65, 20));
-    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 20, () -> 65, 22));
-    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22, () -> 65, 26));
-    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 26, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 7, 20));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 20, () -> 7, 22));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22, () -> 7, 26));
+    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 26, () -> 7, angleRestingPosition));
 
     
     NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 65, 35));
@@ -179,11 +176,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 65, 32));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 32));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 50, 32));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 31));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 31, () -> 65, 32));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 65, 32));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 32, () -> 65, 32));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 7, 32));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 32, () -> 7, 31));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 31, () -> 7, 32));
   }
 
   private static void linkLineUpCommands() {
@@ -191,9 +190,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("4 ring close Red", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("4 ring close Red", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("4 ring close Red", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("4 ring close red", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("4 ring close red", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("4 ring close red", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
 
     NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
@@ -280,20 +279,20 @@ public class RobotContainer {
     // )
     // )).onFalse(new StopShoot(angleRestingPosition));
 
-    controller.rightTrigger(0.1)
-      .whileTrue(
-        new ParallelCommandGroup(
-          drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
-              .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
-              .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
-          ),
-          new ShootSequence(() -> chainShotAngle, () -> chainShotSpeed) 
-        )
-      ).onFalse(new StopShoot(angleRestingPosition));
+    // controller.rightTrigger(0.1)
+    //   .whileTrue(
+    //     new ParallelCommandGroup(
+    //       drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed)
+    //           .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
+    //           .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
+    //       ),
+    //       new ShootSequence(() -> chainShotAngle, () -> chainShotSpeed) 
+    //      )
+    //  ).onFalse(new StopShoot(angleRestingPosition));
 
-    // controller.rightTrigger(0.1).onTrue(
-    //   new InstantCommand(this::incrementChainShotMode)
-    // );
+    controller.rightTrigger(0.1).onTrue(
+      new InstantCommand(this::incrementChainShotMode)
+    );
 
     new Trigger(() -> currentChainShotState.equals(chainShotState.IDLE)).onTrue(
       new StopShoot(angleRestingPosition)
@@ -372,8 +371,8 @@ public class RobotContainer {
     new Trigger(() -> currentAmpState.equals(ampState.SHOOTING)).onTrue(
       new ParallelCommandGroup(
         new AutoShootSequence(
-          () -> 0, 
-          () -> 7, 
+          () -> ampAngle, 
+          () -> ampSpeed, 
           angleRestingPosition
         ).andThen(new InstantCommand(this::cancelAmpMode))
       )
@@ -405,8 +404,8 @@ public class RobotContainer {
     new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
       new ParallelCommandGroup(
         new AutoShootSequence(
-          () -> 0, 
-          () -> 31, //33
+          () -> trapAngle, 
+          () -> trapSpeed,
           angleRestingPosition
         ).andThen(new InstantCommand(this::cancelTrapMode))
       )

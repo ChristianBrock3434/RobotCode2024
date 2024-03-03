@@ -28,9 +28,9 @@ public class AutoShootSequenceNoStop extends SequentialCommandGroup {
             indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
             actuation.waitUntilAtPosition(actuationTuckPosition),
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
-            new WaitCommand(1.0).raceWith(shooter.waitUntilRingLeft()),
-            actuation.setPositionCommand(restingAngle),
-            new InstantCommand(intake::stopIntakeMotor)
+            new WaitCommand(0.5).raceWith(shooter.waitUntilRingLeft()),
+            intake.stopIntakeCommand(),
+            actuation.setPositionCommand(restingAngle)
             // new StopShoot(restingAngle)
         );
     }

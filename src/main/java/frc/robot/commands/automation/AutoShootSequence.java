@@ -26,7 +26,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
             indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
             actuation.waitUntilAtPosition(actuationTuckPosition),
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
-            new WaitCommand(1.0).raceWith(shooter.waitUntilRingLeft()),
+            new WaitCommand(0.5).raceWith(shooter.waitUntilRingLeft()),
             new StopShoot(restingAngle)
         );
     }

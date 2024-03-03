@@ -77,13 +77,13 @@ public class LineUpWithNotePath extends Command {
   public void execute() {    
     currentRot = drivetrain.getRotation().getRadians();
 
-    xSpeed = -m_xPIDController.calculate(drivetrain.getPose().getX());
+    xSpeed = m_xPIDController.calculate(drivetrain.getPose().getX());
 
     if (m_xPIDController.atSetpoint()) {
       xSpeed = 0;
     }
 
-    ySpeed = -m_yPIDController.calculate(drivetrain.getPose().getY());
+    ySpeed = m_yPIDController.calculate(drivetrain.getPose().getY());
 
     if (m_yPIDController.atSetpoint()) {
       ySpeed = 0;
@@ -106,7 +106,7 @@ public class LineUpWithNotePath extends Command {
 
     // currentRot *= -1;
 
-    speed = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, 0), Rotation2d.fromDegrees(currentRot));
+    speed = ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(xSpeed, ySpeed, 0), Rotation2d.fromRadians(currentRot));
     speed = speed.plus(new ChassisSpeeds(0, lineUpCorrection, 0));
 
     // System.out.println("corrected X Speed: " + xSpeed);

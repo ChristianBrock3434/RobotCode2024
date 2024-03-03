@@ -15,7 +15,7 @@ public class PickUpPiece extends SequentialCommandGroup{
             actuation.waitUntilAtPosition(actuationPickUpPosition),
             intake.runVoltageCommand(voltage),
             intake.waitUntilTripped(),
-            new InstantCommand(intake::stopIntakeMotor, intake),
+            intake.stopIntakeCommand(),
             actuation.setPositionCommand(actuationTuckPosition),
             new ShakeController(1.0, 1.0)
         );

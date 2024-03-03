@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
@@ -206,13 +207,41 @@ public class Intake extends SubsystemBase {
     };
   }
 
+  public Command stopIntakeCommand() {
+    // return stopIntakeFast().withTimeout(0.2);
+    return new InstantCommand(this::stopIntakeMotor, this);
+  }
+
+  private Command stopIntakeFast() {
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Intake.this);
+        intakeMotor.setControl(velocityControlFeed.withVelocity(0).withAcceleration(100));
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+        stopIntakeMotor();
+      }
+    };
+  }
   
   public void stopIntakeMotor() {
+    // System.out.println("Intake stopped");
     intakeMotor.setControl(stopMode);
+    // intakeMotor.setControl(velocityControlFeed.withVelocity(0).withAcceleration(20));
   }
 
   public Command waitUntilTripped() {
     return new Command() {
+      @Override
+      public void execute() {
+        if (getNoteSensor()) {
+          stopIntakeMotor();
+        }
+      }
+
       @Override
       public boolean isFinished() {
         return getNoteSensor();
@@ -237,7 +266,10 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     // System.out.println(intakeMotor.getDeviceTemp().toString());
     // System.out.println(pdp.getCurrent(16));
-    // System.out.println(getDistanceSensorTripped());
+    // System.out.println(getNoteSensor());
+    // if (getNoteSensor()) {
+    //   System.out.println("detect");
+    // } 
     SmartDashboard.putBoolean("Left Intake Note Sensor", getLeftNoteSensor());
     SmartDashboard.putBoolean("Right Intake Note Sensor", getRightNoteSensor());
 

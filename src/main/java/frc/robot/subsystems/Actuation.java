@@ -35,7 +35,7 @@ public class Actuation extends SubsystemBase {
 
     motionMagicControl = new MotionMagicVoltage(0, 
                                                 true, 
-                                                0.2,
+                                                -0.35,
                                                 0,
                                                 false,
                                                 false,
@@ -58,10 +58,10 @@ public class Actuation extends SubsystemBase {
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
+    // configs.MotorOutput.DutyCycleNeutralDeadband = 0.05;
 
-    // configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    // configs.CurrentLimits.SupplyCurrentLimit = 40;
+    configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    configs.CurrentLimits.SupplyCurrentLimit = 40;
 
     configs.MotionMagic.MotionMagicCruiseVelocity = 30;
     configs.MotionMagic.MotionMagicAcceleration = 50;
@@ -69,7 +69,7 @@ public class Actuation extends SubsystemBase {
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    configs.Slot0.kP = 5; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kP = 20; // An error of 1 rotation per second results in 2V output
     configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
@@ -114,6 +114,8 @@ public class Actuation extends SubsystemBase {
    * @param position in encoder value
    */
   public void setPosition(double position) {
+    // System.out.println("Actuator Up");
+
     actuationMotor.setControl(motionMagicControl
                               .withPosition(position * actuationTicksPerDegree)
                             );

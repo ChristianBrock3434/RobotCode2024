@@ -34,8 +34,8 @@ public final class Constants {
   public final class IntakeConstants {
     public static final double intakeGearRatio = 1.3333333333333333333;
     
-    public static final double intakeVoltage = 3;
-    public static final double autoIntakeVoltage = 3;
+    public static final double intakeVoltage = 5; //3
+    public static final double autoIntakeVoltage = 5;
 
     public static final double feedVelocity = 60;
     public static final double feedAcceleration = 102;
@@ -50,8 +50,11 @@ public final class Constants {
   public final class ShooterConstants {
     public static final double shooterSequenceAcceleration = 100;
 
-    public static final double subwooferShotSpeed = 50;
-    public static final double podiumShotSpeed = 65;
+    public static final double trapSpeed = 29;
+    public static final double ampSpeed = 7;
+
+    public static final double subwooferShotSpeed = 40;
+    public static final double podiumShotSpeed = 55;
     public static final double chainShotSpeed = 60;
   }
 
@@ -65,10 +68,13 @@ public final class Constants {
 
     public static final double angleStartingPosition = 0;
     public static final double angleRestingPosition = 25;
+
+    public static final double trapAngle = 0;
+    public static final double ampAngle = 0;
     
     public static final double subwooferShotAngle = 3;
-    public static final double podiumShotAngle = 23;
-    public static final double chainShotAngle = 31.25;
+    public static final double podiumShotAngle = 21;
+    public static final double chainShotAngle = 31.5;
   }
 
   public final class ClimberConstants {

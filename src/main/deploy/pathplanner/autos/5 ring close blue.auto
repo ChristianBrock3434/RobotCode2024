@@ -244,9 +244,35 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Pick Up Note Three"
+                  "commands": [
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.01
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Pick Up Note Three"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "lineUpToNote3CloseBlue5"
+                      }
+                    }
+                  ]
                 }
               }
             ]

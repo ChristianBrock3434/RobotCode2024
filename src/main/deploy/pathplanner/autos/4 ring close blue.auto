@@ -160,9 +160,41 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "pick up ring 3 close blue"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "waitForPathInterrupt"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "pick up ring 3 close blue"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "lineUpToNote3CloseBlue"
+                      }
+                    }
+                  ]
                 }
               }
             ]
