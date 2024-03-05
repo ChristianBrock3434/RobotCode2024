@@ -219,6 +219,12 @@
           "data": {
             "name": "shoot3FarBlue"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ring 3 pick up far blue"
+          }
         }
       ]
     }

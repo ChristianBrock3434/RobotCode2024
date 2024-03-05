@@ -8,6 +8,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import frc.robot.subsystems.LimelightShooter;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -17,6 +20,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class LineUpToTrap extends Command {
     private static boolean isFinished = false;
 
+    private SlewRateLimiter xLimiter = new SlewRateLimiter(1);
+    private SlewRateLimiter yLimiter = new SlewRateLimiter(1);
+
+    // private ProfiledPIDController yController = new ProfiledPIDController(0.1, 
+    //                                                                     0.01, 
+    //                                                                     0.005, 
+    //                                                                     new Constraints(5,5));
+    // private ProfiledPIDController xController = new ProfiledPIDController(0.1, 
+    //                                                                     0.01, 
+    //                                                                     0.005, 
+    //                                                                     new Constraints(5, 5));
+    // private ProfiledPIDController rotController = new ProfiledPIDController(0.14, 
+    //                                                                     0.21, 
+    //                                                                     0.003, 
+    //                                                                     new Constraints(5, 5));
     private PIDController yController = new PIDController(0.08, 0.01, 0.005);
     private PIDController xController = new PIDController(0.08, 0.01, 0.005);
     private PIDController rotController = new PIDController(0.14, 0.21, 0.003);
@@ -29,7 +47,7 @@ public class LineUpToTrap extends Command {
     double rotSpeed;
 
     private static enum Tag {
-        Blue1Trap(15, 8.5, 11.2, -60.7), //12, 10.7, -61.7
+        Blue1Trap(15, 16.3, 12.8, -59.7), //12, 10.7, -61.7
         Blue2Trap(16, Double.NaN, Double.NaN, Double.NaN),
         Blue3Trap(14, Double.NaN, Double.NaN, Double.NaN),
         Red1Trap(12, Double.NaN, Double.NaN, Double.NaN),
@@ -61,9 +79,9 @@ public class LineUpToTrap extends Command {
         limelightShooter.turnOnLimelight();
         limelightShooter.setLimelightPipeline(LimelightShooter.Pipeline.Trap);
 
-        yController.setTolerance(1);
+        yController.setTolerance(0.25);
 
-        xController.setTolerance(1);
+        xController.setTolerance(0.5);
 
         rotController.setTolerance(0.5);
     }
@@ -96,16 +114,18 @@ public class LineUpToTrap extends Command {
             // }
 
             // Move to x and y via limelight
+            xSpeed = -xLimiter.calculate(controller.getRightX());
+            ySpeed = -yLimiter.calculate(controller.getRightY());
+
             xController.setSetpoint(tag.x);
-            xSpeed = xController.calculate(limelightShooter.getTX());
-            if (xController.atSetpoint()) {
-                xSpeed = 0;
-                
-            }
+            xController.calculate(limelightShooter.getTX());
 
             yController.setSetpoint(tag.y);
-            ySpeed = yController.calculate(limelightShooter.getTY());
-            if (yController.atSetpoint()) {
+            yController.calculate(limelightShooter.getTY());
+
+            if (xController.atSetpoint() && yController.atSetpoint()) {
+                controller.getHID().setRumble(RumbleType.kRightRumble, 1.0);
+                xSpeed = 0;
                 ySpeed = 0;
             }
 

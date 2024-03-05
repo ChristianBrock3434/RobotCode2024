@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 8.90264171398528,
-        "y": 2.915998299899595
+        "y": 2.85
       },
       "prevControl": {
         "x": 7.356811289942121,
-        "y": 3.781490138729207
+        "y": 3.715491838829612
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.25,
       "rotationDegrees": 155.0,
       "rotateFast": true
     }
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "parallel",
         "data": {

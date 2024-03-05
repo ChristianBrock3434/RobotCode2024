@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.PickUpPieceAuto;
 import frc.robot.commands.automation.ShootSequence;
+import frc.robot.commands.automation.ShootTrap;
 import frc.robot.commands.automation.StopIntake;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
@@ -119,6 +120,7 @@ public class RobotContainer {
 
   public void autoSelect() {
     autoChooser.setDefaultOption("8-7 Blue", "3 ring far blue");
+    autoChooser.addOption("8-7 Park Blue", "3 ring far blue park");
     autoChooser.addOption("1-2-3 Blue", "4 ring close blue");
     autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
 
@@ -161,7 +163,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 50, 20));
     NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20, () -> 50, 22));
     NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 50, 26));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 21, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 23, () -> 50, angleRestingPosition));
 
     NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 7, 20));
     NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 20, () -> 7, 22));
@@ -177,8 +179,8 @@ public class RobotContainer {
 
 
     NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 50, 32));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32, () -> 65, 31));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 31, () -> 65, 32));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32.5, () -> 65, 31));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 32.5, () -> 65, 32));
 
     NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 7, 32));
     NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 32, () -> 7, 31));
@@ -403,11 +405,7 @@ public class RobotContainer {
 
     new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
       new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> trapAngle, 
-          () -> trapSpeed,
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelTrapMode))
+        new ShootTrap().andThen(new InstantCommand(this::cancelTrapMode))
       )
     );
 
