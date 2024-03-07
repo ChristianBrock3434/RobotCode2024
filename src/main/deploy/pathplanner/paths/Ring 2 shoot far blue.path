@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.036039809597451,
+        "x": 8.46,
         "y": 3.361010088639293
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.888377828110864,
-        "y": 4.0285277717488395
+        "x": 7.312295139821096,
+        "y": 4.028454045039661
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.72,
+        "x": 4.720000000000001,
         "y": 5.32
       },
       "prevControl": {
-        "x": 5.647029154258022,
-        "y": 4.672623781766821
+        "x": 5.6470056118929435,
+        "y": 4.672590070900031
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shootRing2FarBlue"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -75,7 +75,7 @@
   "reversed": false,
   "folder": "Far Blue",
   "previewStartingState": {
-    "rotation": 146.30993247402,
+    "rotation": 146.31,
     "velocity": 0
   },
   "useDefaultConstraints": true

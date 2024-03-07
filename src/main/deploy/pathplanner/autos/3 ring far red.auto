@@ -94,9 +94,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Ring 1 shoot far red"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Ring 1 shoot far red"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "waitForShootSignal"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "speedUpShooter"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -157,15 +183,41 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Ring 2 shoot far red"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Ring 2 shoot far red"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "waitForShootSignal"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "speedUpShooter"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot2FarRed"
+            "name": "shoot3FarRed"
           }
         }
       ]

@@ -72,9 +72,9 @@ public final class Constants {
     public static final double trapAngle = 0;
     public static final double ampAngle = 0;
     
-    public static final double subwooferShotAngle = 3;
-    public static final double podiumShotAngle = 21;
-    public static final double chainShotAngle = 32;
+    public static final double subwooferShotAngle = 1.25;
+    public static final double podiumShotAngle = 23;
+    public static final double chainShotAngle = 32.5;
   }
 
   public final class ClimberConstants {
