@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class LineUpWithNotePath extends Command {
-    //TODO: Rewrite for x and y movement while y lineup
     private PIDController m_xPIDController; //1.0
     private PIDController m_yPIDController; //1.0
     private PIDController m_lineUpPIDController; //0.04

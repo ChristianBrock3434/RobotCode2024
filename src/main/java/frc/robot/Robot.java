@@ -7,6 +7,11 @@ package frc.robot;
 import static frc.robot.Constants.AngleControllerConstants.*;
 import static frc.robot.Subsystems.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -81,7 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     drivetrain.applyCurrentLimiting();
-    new StopShoot(angleRestingPosition).schedule();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -89,6 +94,17 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isEmpty()) {
+      DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
+    } else if (alliance.get().equals(Alliance.Red)) {
+      var translation = new Translation2d(drivetrain.getPose().getX(), drivetrain.getPose().getY());
+      var rot = drivetrain.getRotation().plus(Rotation2d.fromDegrees(180));
+      drivetrain.resetOrientation(new Pose2d(null, null));
+    }
+    
+    new StopShoot(angleRestingPosition).schedule();
   }
 
   /** This function is called periodically during operator control. */

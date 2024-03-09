@@ -84,13 +84,21 @@ public class RobotContainer {
 
   private static ampState currentAmpState = ampState.IDLE;
 
-  private static enum trapState {
+  // private static enum trapState {
+  //   IDLE,
+  //   PREPARED,
+  //   SHOOTING;
+  // };
+  
+  // private static trapState currentTrapState = trapState.IDLE;
+
+  private static enum passState {
     IDLE,
     PREPARED,
     SHOOTING;
   };
   
-  private static trapState currentTrapState = trapState.IDLE;
+  private static passState currentPassState = passState.IDLE;
 
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -162,14 +170,14 @@ public class RobotContainer {
 
   private static void linkShootCommands() {
     NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 50, 20.5));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 20.5, () -> 50, 22));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22, () -> 50, 23));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 23, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 21.5, () -> 50, 23.5));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 23.5, () -> 50, 24.5));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 24.5, () -> 50, angleRestingPosition));
 
     NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 50, 20));
-    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 20.5, () -> 50, 22));
-    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22, () -> 50, 26));
-    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 23, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 21.5, () -> 50, 23.5));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 23.5, () -> 50, 24.5));
+    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 24.5, () -> 50, angleRestingPosition));
 
     
     NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 65, 35));
@@ -179,13 +187,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 20, () -> 50, 32.5));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 32.5, () -> 65, 32.5));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 32.5, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 16.5, () -> 50, 34.25));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.25, () -> 65, 34.25));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.25, () -> 65, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 50, 32.5));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 32.5, () -> 65, 32.5));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 32.5, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 16.5, () -> 50, 34.25));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 65, 34.25));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.25, () -> 65, angleRestingPosition));
   }
 
   private static void linkLineUpCommands() {
@@ -384,8 +392,39 @@ public class RobotContainer {
     controller.pov(90).onTrue(
       new ParallelCommandGroup(
         new InstantCommand(this::cancelAmpMode),
-        new InstantCommand(this::cancelTrapMode),
+        new InstantCommand(this::cancelPassMode),
         new InstantCommand(this::cancelChainShotMode)
+      )
+    );
+
+    // Pass Shot
+    // controller.leftBumper().whileTrue(
+    //   new ShootSequence(() -> passShotAngle, () -> passShotSpeed)
+    // ).onFalse(new StopShoot(angleRestingPosition));
+
+    controller.leftBumper().onTrue(
+      new InstantCommand(this::incrementPassMode)
+    );
+
+    new Trigger(() -> currentPassState.equals(passState.IDLE)).onTrue(
+      new StopShoot(angleRestingPosition)
+    );
+
+    new Trigger(() -> currentPassState.equals(passState.PREPARED)).onTrue(
+      new ParallelCommandGroup(
+        // new AutoTurn(180),
+        shooter.speedUpShooter(passShotSpeed, shooterSequenceAcceleration),
+        angleController.setPositionCommand(passShotAngle)
+      )
+    );
+
+    new Trigger(() -> currentPassState.equals(passState.SHOOTING)).onTrue(
+      new ParallelCommandGroup(
+        new AutoShootSequence(
+          () -> passShotAngle, 
+          () -> passShotSpeed, 
+          angleRestingPosition
+        ).andThen(new InstantCommand(this::cancelPassMode))
       )
     );
 
@@ -393,29 +432,36 @@ public class RobotContainer {
     // controller.leftBumper().whileTrue(
     //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
     // ).onFalse(new StopShoot(angleRestingPosition));
-    controller.leftBumper().onTrue(
-      new InstantCommand(this::incrementTrapMode)
-    );
+    // controller.leftBumper().onTrue(
+    //   new InstantCommand(this::incrementTrapMode)
+    // );
 
-    new Trigger(() -> currentTrapState.equals(trapState.PREPARED)).onTrue(
-      new ParallelCommandGroup(
-        new LineUpToTrap(),
-        angleController.setPositionCommand(0)
-      )
-    ).onFalse(new InstantCommand(LineUpToTrap::stopCommand));
+    // new Trigger(() -> currentTrapState.equals(trapState.PREPARED)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new LineUpToTrap(),
+    //     angleController.setPositionCommand(0)
+    //   )
+    // ).onFalse(new InstantCommand(LineUpToTrap::stopCommand));
 
-    new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new ShootTrap().andThen(new InstantCommand(this::cancelTrapMode))
-      )
-    );
+    // new Trigger(() -> currentTrapState.equals(trapState.SHOOTING)).onTrue(
+    //   new ParallelCommandGroup(
+    //     new ShootTrap().andThen(new InstantCommand(this::cancelTrapMode))
+    //   )
+    // );
 
     // controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
-    controller.pov(0).onTrue(climber.setPositionCommand(maxClimberHeight));
+    controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
     controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
+    // controller.pov(0).whileTrue(climber.runVoltageCommand(3));
+    // controller.pov(180).whileTrue(climber.runVoltageCommand(-3));
 
-    controller.y().whileTrue(climber.runVoltageCommand(3));
-    controller.a().whileTrue(climber.runVoltageCommand(-3));
+    controller.y().whileTrue(angleController.anglePercentControl(-0.1));
+    controller.a().whileTrue(angleController.anglePercentControl(0.1));
+
+    controller.back().onTrue(angleController.resetEncoderCommand());
+
+    // controller.y().whileTrue(climber.runVoltageCommand(3));
+    // controller.a().whileTrue(climber.runVoltageCommand(-3));
 
     // controller.y().onTrue(new InstantCommand(drivetrain::printAcceleration));
   }
@@ -424,7 +470,7 @@ public class RobotContainer {
   private double distance = 0;
 
   public Double[] getAngleAndSpeed() {
-    System.out.println("Distance: " + distance);
+    // System.out.println("Distance: " + distance);
     if (System.currentTimeMillis() - timeOfLastAccess < 250) {
       timeOfLastAccess = System.currentTimeMillis();
       return shooter.getAngleAndSpeed(distance);
@@ -500,7 +546,7 @@ public class RobotContainer {
     };
     if (currentChainShotState.equals(chainShotState.IDLE)) {
       cancelAmpMode();
-      cancelTrapMode();
+      cancelPassMode();
     }
   }
 
@@ -518,7 +564,7 @@ public class RobotContainer {
     };
     if (currentAmpState.equals(ampState.IDLE)) {
       cancelChainShotMode();
-      cancelTrapMode();
+      cancelPassMode();
     }
   }
 
@@ -526,21 +572,38 @@ public class RobotContainer {
     currentAmpState = ampState.IDLE;
   }
 
-  public void incrementTrapMode() {
-    currentTrapState = switch (currentTrapState) {
-      case IDLE -> trapState.PREPARED;
-      case PREPARED -> trapState.SHOOTING;
-      case SHOOTING -> trapState.IDLE;
-      default -> trapState.IDLE;
+  // public void incrementTrapMode() {
+  //   currentTrapState = switch (currentTrapState) {
+  //     case IDLE -> trapState.PREPARED;
+  //     case PREPARED -> trapState.SHOOTING;
+  //     case SHOOTING -> trapState.IDLE;
+  //     default -> trapState.IDLE;
+  //   };
+  //   if (currentTrapState.equals(trapState.IDLE)) {
+  //     cancelChainShotMode();
+  //     cancelAmpMode();
+  //   }
+  // }
+
+  // public void cancelTrapMode() {
+  //   currentTrapState = trapState.IDLE;
+  // }
+
+  public void incrementPassMode() {
+    currentPassState = switch (currentPassState) {
+      case IDLE -> passState.PREPARED;
+      case PREPARED -> passState.SHOOTING;
+      case SHOOTING -> passState.IDLE;
+      default -> passState.IDLE;
     };
-    if (currentTrapState.equals(trapState.IDLE)) {
+    if (currentPassState.equals(passState.IDLE)) {
       cancelChainShotMode();
       cancelAmpMode();
     }
   }
 
-  public void cancelTrapMode() {
-    currentTrapState = trapState.IDLE;
+  public void cancelPassMode() {
+    currentPassState = passState.IDLE;
   }
 
   /**
