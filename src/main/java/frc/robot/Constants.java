@@ -54,8 +54,9 @@ public final class Constants {
     public static final double ampSpeed = 7;
 
     public static final double subwooferShotSpeed = 40;
-    public static final double podiumShotSpeed = 55;
+    public static final double podiumShotSpeed = 55; //55 Half Line Shot 62
     public static final double chainShotSpeed = 60;
+    public static final double passShotSpeed = 40;
   }
 
   public final class IndexerConstants {
@@ -73,8 +74,9 @@ public final class Constants {
     public static final double ampAngle = 0;
     
     public static final double subwooferShotAngle = 1.25;
-    public static final double podiumShotAngle = 23;
-    public static final double chainShotAngle = 32.5;
+    public static final double podiumShotAngle = 23.5; //23 Half Line Shot 34.75
+    public static final double chainShotAngle = 34.5;
+    public static final double passShotAngle = 14.25;
   }
 
   public final class ClimberConstants {

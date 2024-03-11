@@ -48,11 +48,11 @@ public class LineUpToTrap extends Command {
 
     private static enum Tag {
         Blue1Trap(15, 16.3, 12.8, -59.7), //12, 10.7, -61.7
-        Blue2Trap(16, Double.NaN, Double.NaN, Double.NaN),
-        Blue3Trap(14, Double.NaN, Double.NaN, Double.NaN),
-        Red1Trap(12, Double.NaN, Double.NaN, Double.NaN),
-        Red2Trap(11, Double.NaN, Double.NaN, Double.NaN),
-        Red3Trap(13, Double.NaN, Double.NaN, Double.NaN);
+        Blue2Trap(16, 16.3, 12.8, -59.7),
+        Blue3Trap(14, 16.3, 12.8, -59.7),
+        Red1Trap(12, 16.3, 12.8, -59.7),
+        Red2Trap(11, 16.3, 12.8, -59.7),
+        Red3Trap(13, 16.3, 12.8, -59.7);
 
         public int tagNum;
         public Double x;
