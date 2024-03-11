@@ -20,7 +20,7 @@ public final class Constants {
   
   public static final CommandXboxController controller = new CommandXboxController(0); // My joystick
 
-  public static double farShotDistance = 8; // meters
+  public static double farShotDistance = 5; // meters
 
   public final class ActuationConstants {
     public static final double actuationGearRatio = 8;
