@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.automation.StopShoot;
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    // Shuffleboard.update();
     CommandScheduler.getInstance().run();
   }
 
@@ -99,7 +101,8 @@ public class Robot extends TimedRobot {
     if (alliance.isEmpty()) {
       DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
     } else if (alliance.get().equals(Alliance.Red)) {
-      var translation = new Translation2d(drivetrain.getPose().getX(), drivetrain.getPose().getY());
+      var pose = drivetrain.getPose();
+      var translation = new Translation2d(pose.getX(), pose.getY());
       var rot = drivetrain.getRotation().plus(Rotation2d.fromDegrees(-180));
       drivetrain.resetOrientation(new Pose2d(translation, rot));
     }

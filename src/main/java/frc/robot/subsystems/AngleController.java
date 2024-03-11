@@ -13,15 +13,17 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AngleController extends SubsystemBase{
   private PowerDistribution pdp = new PowerDistribution(30, ModuleType.kRev);
   private TalonFX angleMotor = new TalonFX(19);
+
+  private DigitalInput zeroSensor = new DigitalInput(4);
 
   MotionMagicVoltage motionMagicControl;
   NeutralOut stopMode;
@@ -200,11 +202,19 @@ public class AngleController extends SubsystemBase{
     return pdp.getCurrent(8);
   }
 
+  public double getAngle() {
+    return angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree;
+  }
+
+  public boolean getZeroSensor() {
+    return !zeroSensor.get();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(angleMotor.getPosition().getValueAsDouble() / AngleControllerConstants.angleTicksPerDegree);
-    SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
-    SmartDashboard.putNumber("Angle Current", getCurrentDraw());
+    // SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
+    // SmartDashboard.putNumber("Angle Current", getCurrentDraw());
   }
 }

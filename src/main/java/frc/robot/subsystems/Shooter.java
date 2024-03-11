@@ -16,7 +16,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -391,6 +390,14 @@ public class Shooter extends SubsystemBase {
     return noteExitSensor.get();
   }
 
+  public double getLeftVelocity() {
+    return leftShooterMotor.getVelocity().getValueAsDouble();
+  }
+
+  public double getRightVelocity() {
+    return rightShooterMotor.getVelocity().getValueAsDouble();
+  }
+
 
   @Override
   public void periodic() {
@@ -398,9 +405,9 @@ public class Shooter extends SubsystemBase {
     // System.out.println(pdp.getCurrent(16));
     // System.out.println("Right Velocity:" + rightShooterMotor.getVelocity().getValueAsDouble());
     // System.out.println("Left Velocity:" + leftShooterMotor.getVelocity().getValueAsDouble());
-    SmartDashboard.putBoolean("Shooter line break", getNoteSensor());
-    SmartDashboard.putNumber("Left Shooter Speed", leftShooterMotor.getVelocity().getValueAsDouble());
-    SmartDashboard.putNumber("Right Shooter Speed", rightShooterMotor.getVelocity().getValueAsDouble());
+    // SmartDashboard.putBoolean("Shooter line break", getNoteSensor());
+    // SmartDashboard.putNumber("Left Shooter Speed", leftShooterMotor.getVelocity().getValueAsDouble());
+    // SmartDashboard.putNumber("Right Shooter Speed", rightShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override

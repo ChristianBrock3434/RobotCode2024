@@ -23,7 +23,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.generated.TunerConstants;
@@ -214,6 +213,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return Rotation2d.fromDegrees(-MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180));
     }
 
+    public double getDegrees() {
+        return -MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180);
+    }
+
     public Pose2d getPose() {
         return this.m_odometry.getEstimatedPosition();
     }
@@ -224,6 +227,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+    }
+
+    public double getX() {
+        return getPose().getX();
+    }
+
+    public double getY() {
+        return getPose().getX();
     }
 
     private void startSimThread() {
@@ -244,6 +255,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     @Override
     public void periodic() {
         // System.out.println(getRotation().getDegrees());
-        SmartDashboard.putNumber("Rotation", getRotation().getDegrees());
+        // SmartDashboard.putNumber("Rotation", getRotation().getDegrees());
     }
 }

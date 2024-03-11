@@ -17,7 +17,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -165,6 +164,10 @@ public class Actuation extends SubsystemBase {
   public void resetEncoder() {
     actuationMotor.setPosition(actuationStartPosition * actuationTicksPerDegree);
   }
+
+  public double getAngle() {
+    return actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree;
+  }
   
   @Override
   public void periodic() {
@@ -173,7 +176,7 @@ public class Actuation extends SubsystemBase {
     // System.out.println(actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
     // System.out.println(actuationMotor.getMotorVoltage());
 
-    SmartDashboard.putNumber("Actuation Angle", actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
+    // SmartDashboard.putNumber("Actuation Angle", actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
   }
 
   @Override

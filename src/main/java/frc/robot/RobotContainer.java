@@ -113,18 +113,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     linkAutoCommands();
-    setUpNetworkTables();
     configureBindings();
     autoSelect();
-  }
-
-  public void setUpNetworkTables() {
-    SmartDashboard.putBoolean("Manual Shot", isSubwooferShot);
-
-    SmartDashboard.putBoolean("Left Intake Note Sensor", intake.getLeftNoteSensor());
-    SmartDashboard.putBoolean("Right Intake Note Sensor", intake.getRightNoteSensor());
-
-    SmartDashboard.putBoolean("Shooter line break", shooter.getNoteSensor());
+    ShuffleboardHandler.initSensorTab();
+    ShuffleboardHandler.initDriverTab(autoChooser, () -> isSubwooferShot);
   }
 
   public void autoSelect() {
@@ -138,7 +130,7 @@ public class RobotContainer {
     autoChooser.addOption("1-2-3 Red", "new 4 ring close red");
     // autoChooser.addOption("4-5-3-2 Red", "5 ring close red");
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -456,7 +448,7 @@ public class RobotContainer {
     // controller.pov(0).whileTrue(climber.runVoltageCommand(3));
     // controller.pov(180).whileTrue(climber.runVoltageCommand(-3));
 
-    controller.y().whileTrue(angleController.anglePercentControl(-0.1));
+    // controller.y().whileTrue(angleController.anglePercentControl(-0.1));
     controller.a().whileTrue(angleController.anglePercentControl(0.1));
 
     // controller.back().onTrue(angleController.resetEncoderCommand());
@@ -471,7 +463,7 @@ public class RobotContainer {
     // controller.y().whileTrue(climber.runVoltageCommand(3));
     // controller.a().whileTrue(climber.runVoltageCommand(-3));
 
-    // controller.y().onTrue(new InstantCommand(drivetrain::printAcceleration));
+    controller.y().onTrue(new InstantCommand(ShuffleboardHandler::updateDriverTab));
   }
 
   private long timeOfLastAccess = 0;

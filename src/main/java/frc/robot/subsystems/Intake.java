@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -261,6 +260,10 @@ public class Intake extends SubsystemBase {
     return rightNoteSensor.get();
   }
 
+  public double getVelocity() {
+    return intakeMotor.getVelocity().getValueAsDouble();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -270,10 +273,10 @@ public class Intake extends SubsystemBase {
     // if (getNoteSensor()) {
     //   System.out.println("detect");
     // } 
-    SmartDashboard.putBoolean("Left Intake Note Sensor", getLeftNoteSensor());
-    SmartDashboard.putBoolean("Right Intake Note Sensor", getRightNoteSensor());
+    // SmartDashboard.putBoolean("Left Intake Note Sensor", getLeftNoteSensor());
+    // SmartDashboard.putBoolean("Right Intake Note Sensor", getRightNoteSensor());
 
-    SmartDashboard.putNumber("Intake Speed", intakeMotor.getVelocity().getValueAsDouble());
+    // SmartDashboard.putNumber("Intake Speed", intakeMotor.getVelocity().getValueAsDouble());
   }
 
   @Override
