@@ -4,17 +4,20 @@
   "holonomicMode": true,
   "pathFolders": [
     "4 Ring Close Blue",
+    "4 Ring Close Red",
     "5 Ring Close Blue",
     "Far Blue",
     "Far Red",
-    "4 Ring Close Red"
+    "New 4 Ring Close Red",
+    "New Far Red"
   ],
   "autoFolders": [
     "Blue",
+    "New Red",
     "Red"
   ],
-  "defaultMaxVel": 3.5,
-  "defaultMaxAccel": 3.5,
+  "defaultMaxVel": 3.25,
+  "defaultMaxAccel": 3.25,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5

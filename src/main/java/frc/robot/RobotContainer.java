@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
@@ -132,9 +133,9 @@ public class RobotContainer {
     autoChooser.addOption("1-2-3 Blue", "4 ring close blue");
     // autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
 
-    autoChooser.addOption("8-7 Red", "3 ring far red");
-    autoChooser.addOption("8-7 Park Red", "3 ring far red park");
-    autoChooser.addOption("1-2-3 Red", "4 ring close red");
+    autoChooser.addOption("8-7 Red", "new 3 ring far red");
+    autoChooser.addOption("8-7 Park Red", "new 3 ring far red park");
+    autoChooser.addOption("1-2-3 Red", "new 4 ring close red");
     // autoChooser.addOption("4-5-3-2 Red", "5 ring close red");
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -191,9 +192,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.25, () -> 65, 34.25));
     NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.25, () -> 65, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 16.5, () -> 50, 34.25));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 65, 34.25));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.25, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 17.5, () -> 50, 35.25));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 35.25, () -> 65, 35.25));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 35.25, () -> 65, angleRestingPosition));
   }
 
   private static void linkLineUpCommands() {
@@ -201,9 +202,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("4 ring close red", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("4 ring close red", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("4 ring close red", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
 
 
     NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
@@ -216,9 +217,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
 
-    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("3 ring far red", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("3 ring far red", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("3 ring far red", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
   }
 
   /**
@@ -458,7 +459,14 @@ public class RobotContainer {
     controller.y().whileTrue(angleController.anglePercentControl(-0.1));
     controller.a().whileTrue(angleController.anglePercentControl(0.1));
 
-    controller.back().onTrue(angleController.resetEncoderCommand());
+    // controller.back().onTrue(angleController.resetEncoderCommand());
+
+    controller.back().onTrue(new SequentialCommandGroup(
+      new InstantCommand(angleController::runUp),
+      angleController.waitUntilStalling(),
+      angleController.resetEncoderCommand(),
+      angleController.setPositionCommand(angleRestingPosition)
+    ));
 
     // controller.y().whileTrue(climber.runVoltageCommand(3));
     // controller.a().whileTrue(climber.runVoltageCommand(-3));

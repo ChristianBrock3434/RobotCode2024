@@ -100,8 +100,8 @@ public class Robot extends TimedRobot {
       DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
     } else if (alliance.get().equals(Alliance.Red)) {
       var translation = new Translation2d(drivetrain.getPose().getX(), drivetrain.getPose().getY());
-      var rot = drivetrain.getRotation().plus(Rotation2d.fromDegrees(180));
-      drivetrain.resetOrientation(new Pose2d(null, null));
+      var rot = drivetrain.getRotation().plus(Rotation2d.fromDegrees(-180));
+      drivetrain.resetOrientation(new Pose2d(translation, rot));
     }
     
     new StopShoot(angleRestingPosition).schedule();

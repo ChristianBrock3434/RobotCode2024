@@ -5,7 +5,7 @@
       "x": 15.05,
       "y": 3.6537810022838304
     },
-    "rotation": 70.0
+    "rotation": 50.0
   },
   "command": {
     "type": "sequential",
@@ -69,7 +69,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Ring 1 pick up far red"
+                              "pathName": "new Ring 1 pick up far red"
                             }
                           }
                         ]
@@ -100,7 +100,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Ring 1 shoot far red"
+                  "pathName": "new Ring 1 shoot far red"
                 }
               },
               {
@@ -158,7 +158,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Ring 2 pick up far red"
+                              "pathName": "new Ring 2 pick up far red"
                             }
                           }
                         ]
@@ -189,7 +189,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Ring 2 shoot far red"
+                  "pathName": "new Ring 2 shoot far red"
                 }
               },
               {
@@ -219,10 +219,16 @@
           "data": {
             "name": "shoot3FarRed"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "new Ring 3 pick up far red"
+          }
         }
       ]
     }
   },
-  "folder": "Red",
+  "folder": "New Red",
   "choreoAuto": false
 }

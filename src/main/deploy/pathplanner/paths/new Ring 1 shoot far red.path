@@ -3,39 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.743268895952912,
-        "y": 5.867129109436536
+        "x": 8.44,
+        "y": 1.6043846067720653
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.974932577539905,
-        "y": 6.569779302183426
+        "x": 9.646324866453657,
+        "y": 4.356383548511762
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.098645680886225,
-        "y": 6.312140898176232
+        "x": 11.879999999999999,
+        "y": 5.152768080143863
       },
       "prevControl": {
-        "x": 4.23001793221846,
-        "y": 6.37069508090514
+        "x": 10.521547920279474,
+        "y": 4.89510352694529
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shootRing2CloseBlue5"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
-      "name": "shoot",
-      "waypointRelativePos": 0.5,
+      "name": "Shoot",
+      "waypointRelativePos": 0.15,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -57,13 +69,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -172.09283729704165,
+    "rotation": 7.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "5 Ring Close Blue",
+  "folder": "New Far Red",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 1.1599999999999966,
     "velocity": 0
   },
   "useDefaultConstraints": true

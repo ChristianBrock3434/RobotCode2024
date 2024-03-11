@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.05,
-      "y": 3.6537810022838304
+      "x": 15.26,
+      "y": 5.180144975674567
     },
-    "rotation": 70.0
+    "rotation": 35.75
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,64 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot1FarRed"
+            "name": "shoot1CloseRed"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "waitForPathInterrupt"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "new pick up ring 1 close red"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "lineUpToNote1CloseRed"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot2CloseRed"
           }
         },
         {
@@ -69,7 +126,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Ring 1 pick up far red"
+                              "pathName": "new pick up ring 2 close red"
                             }
                           }
                         ]
@@ -78,7 +135,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote1FarRed"
+                        "name": "lineUpToNote2CloseRed"
                       }
                     }
                   ]
@@ -94,41 +151,15 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Ring 1 shoot far red"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "waitForShootSignal"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "speedUpShooter"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "new shoot ring 2 close red"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot2FarRed"
+            "name": "shoot3CloseRed"
           }
         },
         {
@@ -146,6 +177,12 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
                       "type": "race",
                       "data": {
                         "commands": [
@@ -158,7 +195,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Ring 2 pick up far red"
+                              "pathName": "new pick up ring 3 close red"
                             }
                           }
                         ]
@@ -167,7 +204,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote2FarRed"
+                        "name": "lineUpToNote3CloseRed"
                       }
                     }
                   ]
@@ -183,46 +220,20 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Ring 2 shoot far red"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "waitForShootSignal"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "speedUpShooter"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "new shoot ring 3 close red"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot3FarRed"
+            "name": "shoot4CloseRed"
           }
         }
       ]
     }
   },
-  "folder": "Red",
+  "folder": "New Red",
   "choreoAuto": false
 }

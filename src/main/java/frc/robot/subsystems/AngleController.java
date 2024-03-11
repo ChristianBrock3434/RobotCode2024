@@ -13,11 +13,14 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AngleController extends SubsystemBase{
+  private PowerDistribution pdp = new PowerDistribution(30, ModuleType.kRev);
   private TalonFX angleMotor = new TalonFX(19);
 
   MotionMagicVoltage motionMagicControl;
@@ -142,7 +145,7 @@ public class AngleController extends SubsystemBase{
   public Command resetEncoderCommand() {
     return new Command() {
       @Override
-      public void execute() {
+      public void initialize() {
         resetEncoder();
       }
 
@@ -176,8 +179,25 @@ public class AngleController extends SubsystemBase{
     };
   }
 
+  public void runUp() {
+    angleMotor.set(-0.1);
+  }
+
   public void resetEncoder() {
     angleMotor.setPosition(angleStartingPosition  * angleTicksPerDegree);
+  }
+  
+  public Command waitUntilStalling() {
+    return new Command() {
+      @Override
+      public boolean isFinished() {
+        return getCurrentDraw() > 8;
+      }
+    };
+  }
+
+  public double getCurrentDraw() {
+    return pdp.getCurrent(8);
   }
 
   @Override
@@ -185,5 +205,6 @@ public class AngleController extends SubsystemBase{
     // This method will be called once per scheduler run
     // System.out.println(angleMotor.getPosition().getValueAsDouble() / AngleControllerConstants.angleTicksPerDegree);
     SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
+    SmartDashboard.putNumber("Angle Current", getCurrentDraw());
   }
 }
