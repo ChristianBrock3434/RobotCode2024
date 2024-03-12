@@ -24,7 +24,8 @@ public class ShuffleboardHandler {
         sensorTab.addNumber("Gyro", drivetrain::getDegrees)
                         .withPosition(6, 1)
                         .withSize(2, 2)
-                        .withWidget(BuiltInWidgets.kGyro);
+                        .withWidget(BuiltInWidgets.kGyro)
+                        .withProperties(Map.of("Counter Clockwise", true));
         sensorTab.addNumber("x Pose", drivetrain::getX)
                         .withPosition(1, 0);
         sensorTab.addNumber("y Pose", drivetrain::getY)

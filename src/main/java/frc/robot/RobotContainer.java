@@ -439,9 +439,8 @@ public class RobotContainer {
     controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
     controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
 
-    // TODO: decide if need this or climber fine control
-    controller.y().whileTrue(angleController.anglePercentControl(-0.1));
-    controller.a().whileTrue(angleController.anglePercentControl(0.1));
+    controller.y().whileTrue(climber.runVoltageCommand(3));
+    controller.a().whileTrue(climber.runVoltageCommand(-3));
 
     // Reset angle
     controller.back().onTrue(new SequentialCommandGroup(
