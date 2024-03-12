@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightShooter;
 
 public class InShootingRange extends Command {
+    private static boolean isFinished = false;
 
-    private static final double deadzone = 0.3;
+    private static final double deadzone = 0.15;
 
     public InShootingRange() {
         addRequirements(limelightShooter);
@@ -19,6 +20,8 @@ public class InShootingRange extends Command {
 
     @Override
     public void initialize() {
+        isFinished = false;
+
         var alliance = DriverStation.getAlliance();
         var pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
         if (alliance.isEmpty()) {
@@ -38,6 +41,8 @@ public class InShootingRange extends Command {
         double distanceFromGoal = limelightShooter.getDistanceFromGoal();
         if (distanceFromGoal >= farShotDistance - deadzone && distanceFromGoal <= farShotDistance + deadzone) {
             controller.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+        } else {
+            controller.getHID().setRumble(RumbleType.kBothRumble, 0);
         }
     }
 
@@ -49,6 +54,10 @@ public class InShootingRange extends Command {
     @Override
     public boolean isFinished() {
         // return true;
-        return false;
+        return isFinished;
+    }
+
+    public static void stopCommand() {
+        isFinished = true;
     }
 }

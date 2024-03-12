@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-  // TODO: Tune the table
   // Distance, Angle, Speed
   private static final Double[][] distanceMap = {
     {1.4, 1.0, 65.0},
@@ -47,7 +46,7 @@ public class Shooter extends SubsystemBase {
     {4.2, 29.25, 65.0},
     {4.35, 30.5, 65.0},
     {4.5, 31.25, 65.0},
-    {4.65, 31.5, 65.0}, //come back
+    {4.65, 31.5, 65.0},
     {4.8, 31.75, 65.0},
     {5.0, 33.0, 65.0}
   };
@@ -180,6 +179,12 @@ public class Shooter extends SubsystemBase {
     };
   }
 
+  /**
+   * Run the shooter at a given velocity and acceleration
+   * @param velocity in rotations per second
+   * @param acceleration in rotations per second squared
+   * @return a command that will run the shooter
+   */
   public Command speedUpShooterSupplier(DoubleSupplier velocity, double acceleration){
     return new Command() {
       @Override
@@ -217,6 +222,11 @@ public class Shooter extends SubsystemBase {
   }
 
 
+  /**
+   * Run the Shooting motors at a given percent
+   * @param speed 1 to -1
+   * @return a command that will run the intake motor
+   */
   public Command runShooterPercent(double speed) {
     return new Command() {
       @Override
@@ -238,14 +248,19 @@ public class Shooter extends SubsystemBase {
     };
   }
 
-  
+  /**
+   * Stop the shooter motors
+   */
   public void stopShooter() {
     leftShooterMotor.setControl(stopMode);
     rightShooterMotor.setControl(stopMode);
-    // leftShooterMotor.setControl(sitControl);
-    // rightShooterMotor.setControl(sitControl);
   }
 
+  /**
+   * Check if the shooter is at a given speed
+   * @param velocity in rotations per second
+   * @return a command that will wait until the shooter is at a given speed
+   */
   public Command checkIfAtSpeed(double velocity) {
     return new Command() {
       @Override
@@ -270,6 +285,11 @@ public class Shooter extends SubsystemBase {
     };
   }
 
+  /**
+   * Check if the shooter is at a given speed
+   * @param velocity in rotations per second
+   * @return a command that will wait until the shooter is at a given speed
+   */
   public Command checkIfAtSpeedSupplier(DoubleSupplier velocity) {
     return new Command() {
       @Override
@@ -298,7 +318,11 @@ public class Shooter extends SubsystemBase {
     };
   }
   
-  
+  /**
+   * Get the angle and speed for a given distance
+   * @param distance in meters
+   * @return a Double array with the angle and speed
+   */
   public Double[] getAngleAndSpeed(Double distance) {
     Double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
     if (distance.equals(Double.NaN)) return emptyVal;
@@ -340,6 +364,12 @@ public class Shooter extends SubsystemBase {
     return emptyVal;
   }
 
+  /**
+   * Get the angle and speed for a given distance
+   * @param distance in meters
+   * @return a Double array with the angle and speed
+   */
+  @Deprecated
   public double[] getAngleAndSpeedEquation(Double distance) {
     double[] emptyVal = {Double.NaN, Double.NaN, Double.NaN};
     if (distance < 0 || distance > 5.1) return emptyVal;
@@ -361,6 +391,10 @@ public class Shooter extends SubsystemBase {
     return arr;
   }
 
+  /**
+   * Wait until the note sensor is tripped
+   * @return a command that will wait until the note sensor is tripped
+   */
   public Command waitUntilTripped() {
     return new Command() {
       @Override
@@ -370,6 +404,10 @@ public class Shooter extends SubsystemBase {
     };
   }
 
+  /**
+   * Wait until the note sensor is not tripped
+   * @return a command that will wait until the note sensor is not tripped
+   */
   public Command waitUntilNotTripped() {
     return new Command() {
       @Override
@@ -379,6 +417,10 @@ public class Shooter extends SubsystemBase {
     };
   }
 
+  /**
+   * Wait until the note sensor is tripped and then not tripped, ensuring the note has left the robot
+   * @return a command that will wait until the note has left the robot
+   */
   public SequentialCommandGroup waitUntilRingLeft() {
     return new SequentialCommandGroup(
       waitUntilTripped(),
@@ -386,14 +428,26 @@ public class Shooter extends SubsystemBase {
     );
   }
 
+  /**
+   * Get the note sensor value
+   * @return a boolean representing the note sensor value
+   */
   public boolean getNoteSensor() {
     return noteExitSensor.get();
   }
 
+  /**
+   * Get the left shooter velocity
+   * @return a double representing the left shooter velocity
+   */
   public double getLeftVelocity() {
     return leftShooterMotor.getVelocity().getValueAsDouble();
   }
 
+  /**
+   * Get the right shooter velocity
+   * @return a double representing the right shooter velocity
+   */
   public double getRightVelocity() {
     return rightShooterMotor.getVelocity().getValueAsDouble();
   }

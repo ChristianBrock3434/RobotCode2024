@@ -120,6 +120,12 @@ public class Intake extends SubsystemBase {
     };
   }
 
+  /**
+   * Run the intake motor at a given velocity and acceleration
+   * @param velocity in rotations per second
+   * @param acceleration in rotations per second squared
+   * @return a command that will run the intake motor
+   */
   public Command startFeedingCommand(double velocity, double acceleration){
     return new Command() {
       @Override
@@ -164,11 +170,6 @@ public class Intake extends SubsystemBase {
         runVoltage(voltage);
       }
 
-      // @Override
-      // public void end(boolean interrupted) {
-      //   stopIntakeMotor();
-      // }
-
       @Override
       public boolean isFinished() {
         return true;
@@ -187,6 +188,11 @@ public class Intake extends SubsystemBase {
   }
 
 
+  /**
+   * Run the intake motor at a given percent
+   * @param speed 1 to -1
+   * @return a command that will run the intake motor
+   */
   public Command runIntakePercent(double speed) {
     return new Command() {
       @Override
@@ -206,11 +212,20 @@ public class Intake extends SubsystemBase {
     };
   }
 
+  /**
+   * Stop the intake motor
+   * @return a command that will stop the intake motor
+   */
   public Command stopIntakeCommand() {
     // return stopIntakeFast().withTimeout(0.2);
     return new InstantCommand(this::stopIntakeMotor, this);
   }
 
+  /**
+   * Stop the intake motor quickly
+   * @return a command that will stop the intake motor
+   */
+  @Deprecated
   private Command stopIntakeFast() {
     return new Command() {
       @Override
@@ -226,12 +241,19 @@ public class Intake extends SubsystemBase {
     };
   }
   
+  /**
+   * Stop the intake motor
+   */
   public void stopIntakeMotor() {
     // System.out.println("Intake stopped");
     intakeMotor.setControl(stopMode);
     // intakeMotor.setControl(velocityControlFeed.withVelocity(0).withAcceleration(20));
   }
 
+  /**
+   * Wait until the note sensor is tripped
+   * @return a command that will wait until the note sensor is tripped
+   */
   public Command waitUntilTripped() {
     return new Command() {
       @Override
@@ -248,18 +270,34 @@ public class Intake extends SubsystemBase {
     };
   }
 
+  /**
+   * Wait until either note sensor is tripped
+   * @return a command that will wait until the note sensor is tripped
+   */
   public boolean getNoteSensor() {
     return leftNoteSensor.get() || rightNoteSensor.get();
   }
 
+  /**
+   * Get the state of the left note sensor
+   * @return true if the sensor is tripped
+   */
   public boolean getLeftNoteSensor() {
     return leftNoteSensor.get();
   }
 
+  /**
+   * Get the state of the right note sensor
+   * @return true if the sensor is tripped
+   */
   public boolean getRightNoteSensor() {
     return rightNoteSensor.get();
   }
 
+  /**
+   * Get the velocity of the intake motor
+   * @return the velocity in rotations per second
+   */
   public double getVelocity() {
     return intakeMotor.getVelocity().getValueAsDouble();
   }

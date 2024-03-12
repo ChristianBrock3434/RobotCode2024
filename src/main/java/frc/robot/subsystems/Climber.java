@@ -55,6 +55,9 @@ public class Climber extends SubsystemBase{
     StopMode = new NeutralOut();
   }
 
+  /**
+   * Initialize the climber motor
+   */
   public void initClimberMotor() {
     resetClimber();
 

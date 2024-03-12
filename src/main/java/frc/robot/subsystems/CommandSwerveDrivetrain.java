@@ -60,6 +60,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
     }
 
+    /**
+     * Apply current limiting to the drive and steer motors
+     */
     public void applyCurrentLimiting() {
         CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
         configs.SupplyCurrentLimitEnable = true;
@@ -89,6 +92,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
     }
 
+    /**
+     * Remove current limiting from the drive and steer motors
+     */
     public void removeCurrentLimiting() {
         CurrentLimitsConfigs configs = new CurrentLimitsConfigs();
         configs.SupplyCurrentLimitEnable = false;
@@ -113,6 +119,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
     }
 
+    /**
+     * Configure the path planner for the swerve drivetrain
+     */
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -133,11 +142,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this); // Subsystem for requirements
     }
 
+    /**
+     * Sets the rotation of the robot to zero
+     */
     public void resetOrientation() {
         seedFieldRelative();
         offset = m_pigeon2.getAngle();
     }
 
+    /**
+     * Sets the rotation of the robot to the given location
+     * @param location the location to set the rotation to
+     */
     public void resetOrientation(Pose2d location) {
         seedFieldRelative(location);
         offset = m_pigeon2.getAngle() + location.getRotation().getDegrees();
@@ -147,14 +163,30 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return false;
     }
 
+    /**
+     * Apply a swerve request to the drivetrain
+     * @param requestSupplier the supplier of the swerve request
+     * @return a command that will apply the swerve request
+     */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
+    /**
+     * Get an auto based off of the name
+     * @param pathName the name of the path
+     * @return a command that will run the path
+     */
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
 
+    /**
+     * Get the end state of a path
+     * @param autoName the name of the auto to grab from
+     * @param index the index of the path in that auto
+     * @return the end state of the path
+     */
     public State getEndPath(String autoName, int index){
         var pathGroup = new PathPlannerAuto(autoName).getPathGroupFromAutoFile(autoName);
         var path = pathGroup.get(index);
@@ -174,6 +206,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return trajectory.getEndState();
     }
 
+    /**
+     * wait until the drivetrain is not moving
+     * @return a command that will wait until the drivetrain is not moving
+     */
     public Command waitUntilNotMoving() {
         return new Command() {
             @Override
@@ -183,6 +219,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         };
     }
 
+    /**
+     * Checks if the drivetrain is moving
+     * @return if the drivetrain is moving
+     */
     public boolean isMoving() {
         double flSpeed = this.getModule(0).getDriveMotor().getVelocity().getValueAsDouble();
         double frSpeed = this.getModule(1).getDriveMotor().getVelocity().getValueAsDouble();
@@ -191,6 +231,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return (flSpeed > 1) || (frSpeed > 1) || (blSpeed > 1) || (brSpeed > 1);
     }
 
+    /**
+     * print the current acceleration of the robot
+     */
     public void printAcceleration() {
         double xAccel = m_pigeon2.getAccelerationX().getValueAsDouble();
         double yAccel = m_pigeon2.getAccelerationY().getValueAsDouble();
@@ -200,6 +243,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         System.out.println("total Acceleration: " + totalAccel);
     }
 
+    /**
+     * check the acceleration of the robot
+     * @param targetAccel the target acceleration
+     * @return the difference between the target and actual acceleration
+     */
     public double checkAcceleration(double targetAccel) {
         double xAccel = m_pigeon2.getAccelerationX().getValueAsDouble();
         double yAccel = m_pigeon2.getAccelerationY().getValueAsDouble();
@@ -209,34 +257,64 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return totalAccel - targetAccel;
     }
 
+    /**
+     * get the current rotation of the robot
+     * @return the current rotation of the robot
+     */
     public Rotation2d getRotation() {
         return Rotation2d.fromDegrees(-MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180));
     }
 
+    /**
+     * get the current rotation of the robot in degrees
+     * @return the current rotation of the robot in degrees
+     */
     public double getDegrees() {
         return -MathUtil.inputModulus(m_pigeon2.getAngle() - offset, -180, 180);
     }
 
+    /**
+     * get the current position of the robot
+     * @return the current position of the robot
+     */
     public Pose2d getPose() {
         return this.m_odometry.getEstimatedPosition();
     }
 
+    /**
+     * get the offset applied to a given swerve module
+     * @param index the index of the swerve module
+     * @return the offset applied to the swerve module
+     */
     public double getOffset(int index) {
         return this.getModule(index).getCANcoder().getPosition().getValueAsDouble();
     }
 
+    /**
+     * get the current ChassisSpeeds of the robot
+     * @return the current ChassisSpeeds of the robot
+     */
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
+    /**
+     * get the current x position of the robot
+     * @return the current x position of the robot
+     */
     public double getX() {
         return getPose().getX();
     }
 
+    /**
+     * get the current y position of the robot
+     * @return the current y position of the robot
+     */
     public double getY() {
         return getPose().getX();
     }
 
+    @Deprecated
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 

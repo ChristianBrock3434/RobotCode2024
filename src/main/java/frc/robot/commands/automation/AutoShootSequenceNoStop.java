@@ -9,7 +9,6 @@ import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.IndexerConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -17,8 +16,6 @@ public class AutoShootSequenceNoStop extends SequentialCommandGroup {
     
     public AutoShootSequenceNoStop(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {
         addCommands(
-            // new PrintCommand("Angle: " + angle.getAsDouble()),
-            // new PrintCommand("Speed: " + velocity.getAsDouble())
             angleController.setPositionCommandSupplier(angle),
             shooter.speedUpShooterSupplier(velocity, shooterSequenceAcceleration),
             angleController.waitUntilAtPositionSupplier(angle),
@@ -31,7 +28,6 @@ public class AutoShootSequenceNoStop extends SequentialCommandGroup {
             new WaitCommand(0.5).raceWith(shooter.waitUntilRingLeft()),
             intake.stopIntakeCommand(),
             actuation.setPositionCommand(restingAngle)
-            // new StopShoot(restingAngle)
         );
     }
 }

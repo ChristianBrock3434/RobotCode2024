@@ -120,9 +120,10 @@ public class Actuation extends SubsystemBase {
                             );
   }
 
-
- 
-
+  /**
+   * Run the actuation motor at a given percent
+   * @param speed 1 to -1
+   */
   public Command runActuatorPercent(double speed) {
     return new Command() {
       @Override
@@ -137,6 +138,10 @@ public class Actuation extends SubsystemBase {
     };
   }
 
+  /**
+   * Reset the encoder to it's starting position
+   * @return a command that will reset the encoder
+   */
   public Command resetEncoderCommand() {
     return new Command() {
       @Override
@@ -151,6 +156,11 @@ public class Actuation extends SubsystemBase {
     };
   }
 
+  /**
+   * wait until the actuation motor is at a given position
+   * @param setPosition in degrees
+   * @return a command that will wait until the actuation motor is at a given position
+   */
   public Command waitUntilAtPosition(double setPosition) {
     return new Command() {
       @Override
@@ -161,10 +171,17 @@ public class Actuation extends SubsystemBase {
     };
   }
 
+  /**
+   * Reset the actuation motor encoder to it's starting position
+   */
   public void resetEncoder() {
     actuationMotor.setPosition(actuationStartPosition * actuationTicksPerDegree);
   }
 
+  /**
+   * Get the actuation motor's current position
+   * @return the actuation motor's current position in degrees
+   */
   public double getAngle() {
     return actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree;
   }

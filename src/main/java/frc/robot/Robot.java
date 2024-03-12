@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.automation.StopShoot;
@@ -54,6 +53,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     // Shuffleboard.update();
+    ShuffleboardHandler.updateDriverTab();
     CommandScheduler.getInstance().run();
   }
 
@@ -79,10 +79,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    double accel = drivetrain.checkAcceleration(3.5);
-    if (accel >= 0) {
-      System.out.println("accel: " + accel);
-    }
+    // if (accel >= 0) {
+    //   System.out.println("accel: " + accel);
+    // }
   }
 
   @Override
@@ -97,6 +96,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    // Swap Rotation after auto if on Red Alliance
     var alliance = DriverStation.getAlliance();
     if (alliance.isEmpty()) {
       DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);

@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AngleController extends SubsystemBase{
-  private PowerDistribution pdp = new PowerDistribution(30, ModuleType.kRev);
+  // private PowerDistribution pdp = new PowerDistribution(30, ModuleType.kRev);
   private TalonFX angleMotor = new TalonFX(19);
 
   private DigitalInput zeroSensor = new DigitalInput(4);
@@ -43,6 +43,9 @@ public class AngleController extends SubsystemBase{
     stopMode = new NeutralOut();
   }
 
+  /**
+   * Initialize the Angle Controller motor
+   */
   public void initAngleMotor() {
     resetEncoder();
 
@@ -82,7 +85,7 @@ public class AngleController extends SubsystemBase{
 
   /**
    * Run the Angle Controller motor to a given position
-   * @param position in rotations
+   * @param position in degrees
    * @return a command that will run the Angle Controller motor
    */
   public Command setPositionCommand(double position) {
@@ -100,9 +103,9 @@ public class AngleController extends SubsystemBase{
   }
 
   /**
-   * Supplier because the codebase hates you
-   * @param position
-   * @return
+   * Run the Angle Controller motor to a given position
+   * @param position in degrees
+   * @return a command that will run the Angle Controller motor
    */
   public Command setPositionCommandSupplier(DoubleSupplier position) {
     return new Command() {
@@ -130,6 +133,10 @@ public class AngleController extends SubsystemBase{
                             );
   }
 
+  /**
+   * Run the Angle Controller motor at a given percent
+   * @param percent 1 to -1
+   */
   public Command anglePercentControl(double power) {
     return new Command() {
       @Override
@@ -144,6 +151,10 @@ public class AngleController extends SubsystemBase{
     };
   }
 
+  /**
+   * Reset the Angle Controller motor encoder to it's starting position
+   * @return a command that will reset the Angle Controller motor encoder
+   */
   public Command resetEncoderCommand() {
     return new Command() {
       @Override
@@ -158,6 +169,11 @@ public class AngleController extends SubsystemBase{
     };
   }
 
+  /**
+   * wait until the Angle Controller motor is at a given position
+   * @param setPosition in degrees
+   * @return a command that will wait until the Angle Controller motor is at a given position
+   */
   public Command waitUntilAtPosition(double setPosition) {
     return new Command() {
       @Override
@@ -168,6 +184,11 @@ public class AngleController extends SubsystemBase{
     };
   }
 
+  /**
+   * wait until the Angle Controller motor is at a given position
+   * @param setPosition in degrees
+   * @return a command that will wait until the Angle Controller motor is at a given position
+   */
   public Command waitUntilAtPositionSupplier(DoubleSupplier setPosition) {
     return new Command() {
       @Override
@@ -181,31 +202,52 @@ public class AngleController extends SubsystemBase{
     };
   }
 
-  public void runUp() {
-    angleMotor.set(-0.1);
+  /**
+   * Run the Angle Controller motor down at 10%
+   */
+  public void runDown() {
+    angleMotor.set(0.1);
   }
 
+  /**
+   * reset the Angle Controller motor encoder to it's starting position
+   */
   public void resetEncoder() {
     angleMotor.setPosition(angleStartingPosition  * angleTicksPerDegree);
   }
+
+  /**
+   * Sets the Angle Controller motor encoder to where the bumper switch is
+   */
+  public void zeroOnSensor() {
+    angleMotor.setPosition(5.715);
+  }
   
-  public Command waitUntilStalling() {
+  /**
+   * wait until the bumper switch is pressed
+   * @return a command that will wait until the bumper switch is pressed
+   */
+  public Command waitUntilPressed() {
     return new Command() {
       @Override
       public boolean isFinished() {
-        return getCurrentDraw() > 8;
+        return getZeroSensor();
       }
     };
   }
 
-  public double getCurrentDraw() {
-    return pdp.getCurrent(8);
-  }
-
+  /**
+   * Get the current angle of the Angle Controller motor
+   * @return the current angle in degrees
+   */
   public double getAngle() {
     return angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree;
   }
 
+  /**
+   * Get the current state of the bumper switch
+   * @return the current state of the bumper switch
+   */
   public boolean getZeroSensor() {
     return !zeroSensor.get();
   }
@@ -213,7 +255,7 @@ public class AngleController extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // System.out.println(angleMotor.getPosition().getValueAsDouble() / AngleControllerConstants.angleTicksPerDegree);
+    // System.out.println(angleMotor.getPosition().getValueAsDouble());
     // SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
     // SmartDashboard.putNumber("Angle Current", getCurrentDraw());
   }

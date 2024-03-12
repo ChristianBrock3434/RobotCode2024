@@ -20,7 +20,7 @@ public final class Constants {
   
   public static final CommandXboxController controller = new CommandXboxController(0); // My joystick
 
-  public static double farShotDistance = 5; // meters
+  public static double farShotDistance = 4.5; // meters
 
   public final class ActuationConstants {
     public static final double actuationGearRatio = 8;
@@ -78,7 +78,7 @@ public final class Constants {
     public static double subwooferShotAngle = 1.25;
     public static double podiumShotAngle = 23.5; //23 Half Line Shot 34.75
     public static double chainShotAngle = 34.5;
-    public static final double passShotAngle = 14.25;
+    public static double passShotAngle = 14.25;
   }
 
   public final class ClimberConstants {

@@ -100,6 +100,12 @@ public class Indexer extends SubsystemBase {
     };
   }
 
+  /**
+   * Run the intake motor at a given velocity and acceleration
+   * @param velocity in rotations per second
+   * @param acceleration in rotations per second squared
+   * @return a command that will run the intake motor
+   */
   public Command speedUpIndexer(double velocity, double acceleration){
     return new Command() {
       @Override
@@ -130,6 +136,11 @@ public class Indexer extends SubsystemBase {
   }
 
 
+  /**
+   * Run the intake motor at a given percentage speed
+   * @param speed 1 to -1
+   * @return a command that will run the intake motor
+   */
   public Command runIndexerPercent(double speed) {
     return new Command() {
       @Override
@@ -149,11 +160,18 @@ public class Indexer extends SubsystemBase {
     };
   }
 
-  
+  /**
+   * Stop the intake motor
+   */
   public void stopIndexerMotor() {
     indexerMotor.setControl(stopMode);
   }
 
+  /**
+   * Checks if the indexer is at a certain speed
+   * @param velocity the speed to check for in rotations per second
+   * @return a command that will wait until the indexer is at a certain speed
+   */
   public Command checkIfAtSpeedSupplier(DoubleSupplier velocity) {
     return new Command() {
       @Override
@@ -162,12 +180,10 @@ public class Indexer extends SubsystemBase {
 
       @Override
       public void execute() {
-        // System.out.println("Speed required: " + velocity.getAsDouble());
       }
 
       @Override
       public void end(boolean interrupted) {
-
       }
 
       @Override
@@ -180,6 +196,10 @@ public class Indexer extends SubsystemBase {
     };
   }
 
+  /**
+   * Get the current speed of the indexer
+   * @return the speed of the indexer in rotations per second
+   */
   public double getVelocity() {
     return indexerMotor.getVelocity().getValueAsDouble();
   }
