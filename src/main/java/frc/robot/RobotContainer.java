@@ -127,7 +127,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("8-7 Blue", "3 ring far blue");
     autoChooser.addOption("8-7 Park Blue", "3 ring far blue park");
     autoChooser.addOption("1-2-3 Blue", "4 ring close blue");
-    // autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
+    autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
 
     autoChooser.addOption("8-7 Red", "new 3 ring far red");
     autoChooser.addOption("8-7 Park Red", "new 3 ring far red park");
