@@ -82,7 +82,7 @@ public class LineUpToTrap extends Command {
 
         System.out.println("Start Line Up");
         limelightShooter.turnOnLimelight();
-        limelightShooter.setLimelightPipeline(LimelightShooter.Pipeline.Trap);
+        // limelightShooter.setLimelightPipeline(LimelightShooter.Pipeline.Trap);
 
         yController.setTolerance(0.25);
 

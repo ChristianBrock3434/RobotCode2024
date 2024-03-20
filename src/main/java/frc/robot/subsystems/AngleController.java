@@ -14,11 +14,12 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The AngleController class represents a subsystem that controls the angle of the shooter.
+ */
 public class AngleController extends SubsystemBase{
   // private PowerDistribution pdp = new PowerDistribution(30, ModuleType.kRev);
   private TalonFX angleMotor = new TalonFX(19);

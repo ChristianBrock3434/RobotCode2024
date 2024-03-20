@@ -11,6 +11,15 @@ import static frc.robot.Constants.IntakeConstants.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+/**
+ * Represents an automated shooting sequence for a robot.
+ * This class extends the SequentialCommandGroup class.
+ * It contains a series of commands that are executed sequentially to perform the shooting sequence in auto.
+ *
+ * @param angle A DoubleSupplier that provides the angle for the shooter.
+ * @param velocity A DoubleSupplier that provides the velocity for the shooter.
+ * @param restingAngle The resting angle for the shooter after the shooting sequence is completed.
+ */
 public class AutoShootSequence extends SequentialCommandGroup {
     
     public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {

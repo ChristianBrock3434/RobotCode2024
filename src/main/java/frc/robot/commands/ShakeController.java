@@ -9,11 +9,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightIntake;
 import frc.robot.subsystems.LimelightShooter;
 
-public class ShakeController extends Command{
+/**
+ * The ShakeController class represents a command that shakes the controller for a specified duration and intensity.
+ */
+public class ShakeController extends Command {
     private double startingTime;
     private double rumbleIntensity;
     private double shakeTime;
 
+    /**
+     * Constructs a new ShakeController command with the specified rumble intensity and shake time.
+     *
+     * @param rumbleIntensity The intensity of the controller rumble.
+     * @param shakeTime       The duration of the controller shake in seconds.
+     */
     public ShakeController(double rumbleIntensity, double shakeTime) {
         this.rumbleIntensity = rumbleIntensity;
         this.shakeTime = shakeTime;
@@ -36,7 +45,7 @@ public class ShakeController extends Command{
 
     @Override
     public boolean isFinished() {
-        if (System.currentTimeMillis() - startingTime > shakeTime * 1000){
+        if (System.currentTimeMillis() - startingTime > shakeTime * 1000) {
             return true;
         }
         return false;

@@ -16,6 +16,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * The ShuffleboardHandler class handles the initialization of Shuffleboard tabs for sensor and driver data.
+ * It provides methods to add various types of data to the Shuffleboard tabs.
+ */
 public class ShuffleboardHandler {
     private static ShuffleboardTab sensorTab = Shuffleboard.getTab("Sensors");
 
@@ -174,7 +178,7 @@ public class ShuffleboardHandler {
                         .withPosition(0, 3)
                         .withSize(4, 1);
                     
-        driverTab.addCamera("Limelight Shooter", "shooter", "mjpg:http://10.17.30.213:5800")
+        driverTab.addCamera("Limelight Intake", "intake", "mjpg:http://10.17.30.93:5800")
                         .withPosition(5, 0)
                         .withSize(5, 5)
                         .withProperties(Map.of("Show Controls", false));

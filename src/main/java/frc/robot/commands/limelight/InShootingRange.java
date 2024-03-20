@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightShooter;
 
+/**
+ * A command that checks if the robot is in the shooting range based on the distance from the goal.
+ */
 public class InShootingRange extends Command {
     private static boolean isFinished = false;
 
@@ -22,18 +25,18 @@ public class InShootingRange extends Command {
     public void initialize() {
         isFinished = false;
 
-        var alliance = DriverStation.getAlliance();
-        var pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
-        if (alliance.isEmpty()) {
-            System.out.println("The Alliance is empty, Please Select an Alliance");
-        } else if (alliance.get().equals(Alliance.Red)) {
-            pipeline = LimelightShooter.Pipeline.AprilTag3DRed;
-        } else if (alliance.get().equals(Alliance.Blue)) {
-            pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
-        }
+        // var alliance = DriverStation.getAlliance();
+        // var pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
+        // if (alliance.isEmpty()) {
+        //     System.out.println("The Alliance is empty, Please Select an Alliance");
+        // } else if (alliance.get().equals(Alliance.Red)) {
+        //     pipeline = LimelightShooter.Pipeline.AprilTag3DRed;
+        // } else if (alliance.get().equals(Alliance.Blue)) {
+        //     pipeline = LimelightShooter.Pipeline.AprilTag3DBlue;
+        // }
 
         limelightShooter.turnOnLimelight();
-        limelightShooter.setLimelightPipeline(pipeline);
+        // limelightShooter.setLimelightPipeline(pipeline);
     }
 
     @Override
@@ -57,6 +60,9 @@ public class InShootingRange extends Command {
         return isFinished;
     }
 
+    /*
+     * sets the isFinished boolean to true, ending the command
+     */
     public static void stopCommand() {
         isFinished = true;
     }

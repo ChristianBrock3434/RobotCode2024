@@ -13,6 +13,9 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * This class represents a command for performing an automatic turn in the drivetrain.
+ */
 public class AutoTurn extends Command{
     private static boolean isFinished = false;
 
@@ -81,6 +84,9 @@ public class AutoTurn extends Command{
         // return false;
     }
 
+    /*
+     * sets the isFinished boolean to true, ending the command
+     */
     public static void stopCommand() {
         isFinished = true;
     }

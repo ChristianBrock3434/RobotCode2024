@@ -20,6 +20,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The Actuation subsystem controls the actuation motor that moves a mechanism to a specific position.
+ */
 public class Actuation extends SubsystemBase {
   private TalonFX actuationMotor = new TalonFX(14);
 
@@ -27,7 +30,7 @@ public class Actuation extends SubsystemBase {
   NeutralOut stopMode;
   
   /**
-   * Creates a new Intake.
+   * Creates a new Actuation.
    */
   public Actuation() {
     initActuationMotor();

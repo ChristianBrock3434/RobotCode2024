@@ -12,6 +12,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * This command is responsible for controlling the drivetrain to perform position-based turning.
+ * It uses a PID controller to calculate the desired heading and applies the necessary velocity and rotational rate to achieve the desired turning motion.
+ */
 public class DrivePosTurning extends Command{
     private static boolean isFinished = false;
     private static double desiredHeading;
@@ -104,6 +108,9 @@ public class DrivePosTurning extends Command{
         // return false;
     }
 
+    /*
+     * sets the isFinished boolean to true, ending the command
+     */
     public static void stopCommand() {
         isFinished = true;
     }

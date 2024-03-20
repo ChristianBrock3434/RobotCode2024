@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The `LimelightShooter` class represents a subsystem that interacts with the Limelight camera for shooting purposes.
+ * It provides methods to control the camera mode, lights, pipeline, and retrieve information about detected objects.
+ */
 public class LimelightShooter extends SubsystemBase {
   public final String LIMELIGHT = "limelight-shooter";
   NetworkTable table = NetworkTableInstance.getDefault().getTable(LIMELIGHT);
@@ -31,9 +35,7 @@ public class LimelightShooter extends SubsystemBase {
   };
 
   public static enum Pipeline {
-    AprilTag3DBlue(0),
-    AprilTag3DRed(1),
-    Trap(2);
+    PoseEstimation(0);
 
     public int pipelineNum;
 
@@ -140,6 +142,11 @@ public class LimelightShooter extends SubsystemBase {
     // return null;
   }
 
+  /**
+   * Calculates the distance in the X-axis between the robot's pose and the target speaker.
+   * 
+   * @return The distance in the X-axis between the robot's pose and the target speaker. If the robot's pose is not available, returns Double.NaN.
+   */
   public Double getXDistance() {
     double[] pose = getRobotPose();
 
@@ -159,6 +166,11 @@ public class LimelightShooter extends SubsystemBase {
     return xDistance;
   }
 
+  /**
+   * Calculates the distance in the Y-axis from the robot's current position to the target speaker.
+   * 
+   * @return The distance in the Y-axis from the robot's current position to the target speaker. If the robot's pose is not available, returns Double.NaN.
+   */
   public Double getYDistance() {
     double[] pose = getRobotPose();
 
@@ -178,6 +190,11 @@ public class LimelightShooter extends SubsystemBase {
     return yDistance;
   }
 
+  /**
+   * Calculates the distance from the goal using the x and y distances.
+   * 
+   * @return The distance from the goal.
+   */
   public Double getDistanceFromGoal() {
     Double xDistance = getXDistance();
     Double yDistance = getYDistance();
@@ -185,6 +202,11 @@ public class LimelightShooter extends SubsystemBase {
     return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
   }
 
+  /**
+   * Calculates the angle from the robot to the goal using the x and y distances.
+   * 
+   * @return The angle from the robot to the goal in radians.
+   */
   public Double getAngleFromGoal() {
     Double xDistance = getXDistance();
     Double yDistance = getYDistance();

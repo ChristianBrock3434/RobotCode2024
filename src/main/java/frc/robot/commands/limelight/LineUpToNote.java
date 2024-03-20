@@ -9,6 +9,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.LimelightIntake;
 
+/**
+ * This command is responsible for aligning the robot with a target note using the Limelight camera.
+ */
 public class LineUpToNote extends Command{
     private PIDController lineUPController = new PIDController(0.08, 0.001, 0.006);
 

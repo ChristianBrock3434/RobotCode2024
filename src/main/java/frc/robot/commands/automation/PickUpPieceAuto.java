@@ -5,8 +5,17 @@ import static frc.robot.Constants.ActuationConstants.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class PickUpPieceAuto extends SequentialCommandGroup{
+/**
+ * This class represents a command group for picking up a piece in auto.
+ * It extends the SequentialCommandGroup class.
+ */
+public class PickUpPieceAuto extends SequentialCommandGroup {
 
+    /**
+     * Constructs a new PickUpPieceAuto object with the specified voltage.
+     * 
+     * @param voltage the voltage to be used for running the intake
+     */
     public PickUpPieceAuto(double voltage) {
         addCommands(
             actuation.setPositionCommand(actuationPickUpPosition),

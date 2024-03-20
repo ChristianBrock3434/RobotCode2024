@@ -15,15 +15,23 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.limelight.LineUpToNote;
 
+/**
+ * This class represents a command group that aligns the robot to pick up a piece.
+ * It consists of a series of commands that are executed in parallel or sequentially.
+ */
 public class LineUpPickUp extends ParallelDeadlineGroup {
 
-    private static final SwerveRequest.FieldCentric driverDrive = new SwerveRequest.FieldCentric() // I want field-centric
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
+    private static final SwerveRequest.FieldCentric driverDrive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
     private static final SwerveRequest.RobotCentric autoDrive = 
                     new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
+    /**
+     * Constructs a new instance of the LineUpPickUp command group.
+     * It includes commands for picking up a piece and aligning the robot to the target.
+     */
     public LineUpPickUp() {
         super(
             new PickUpPiece(intakeVoltage),
@@ -39,10 +47,9 @@ public class LineUpPickUp extends ParallelDeadlineGroup {
                 ), 
                 new ParallelCommandGroup(
                     new ShakeController(1.0, 1.0),
-                    drivetrain.applyRequest(() -> driverDrive.withVelocityX(-controller.getRightY() * MaxSpeed) // Drive forward with
-                                                                                                       // negative Y (forward)
-                        .withVelocityY(-controller.getRightX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-controller.getLeftX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    drivetrain.applyRequest(() -> driverDrive.withVelocityX(-controller.getRightY() * MaxSpeed)
+                        .withVelocityY(-controller.getRightX() * MaxSpeed)
+                        .withRotationalRate(-controller.getLeftX() * MaxAngularRate)
                     )
                 ), 
                 () -> !limelightIntake.getTX().equals(Double.NaN)

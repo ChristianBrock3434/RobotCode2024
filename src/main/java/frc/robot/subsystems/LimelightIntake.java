@@ -9,6 +9,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The `LimelightIntake` class represents a subsystem that controls the Limelight camera and its functionalities.
+ * It provides methods to turn on/off the camera, set the light mode, switch the pipeline, and retrieve information from the Limelight.
+ */
 public class LimelightIntake extends SubsystemBase {
   public final String LIMELIGHT = "limelight-intake";
   NetworkTable table = NetworkTableInstance.getDefault().getTable(LIMELIGHT);

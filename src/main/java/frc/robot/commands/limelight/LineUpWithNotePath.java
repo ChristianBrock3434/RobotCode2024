@@ -11,6 +11,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * This command is used to go to the last place in a path while lining up to a note.
+ * It utilizes PID controllers for driving to the end state and correcting the alignment.
+ */
 public class LineUpWithNotePath extends Command {
     private PIDController m_xPIDController; //1.0
     private PIDController m_yPIDController; //1.0

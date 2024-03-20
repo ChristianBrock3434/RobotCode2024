@@ -15,6 +15,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The `Climber` class represents a subsystem that controls the climber mechanism of the robot.
+ * It provides methods to control the climber motor, set the position of the climber, and run the climber at a specified voltage.
+ */
 public class Climber extends SubsystemBase{
   private TalonFX climberMotor = new TalonFX(18);
 
@@ -90,6 +94,12 @@ public class Climber extends SubsystemBase{
     }
   }
 
+  /**
+   * Creates a command that controls the climber motor at a specified percentage.
+   * 
+   * @param percent The percentage at which to control the climber motor.
+   * @return The command object that controls the climber motor.
+   */
   public Command climberPercentControl(double percent) {
     return new Command() {
       @Override
@@ -207,6 +217,11 @@ public class Climber extends SubsystemBase{
                           );
   }
 
+  /**
+   * Runs the climber motor at a specified velocity.
+   * 
+   * @return The command to run the climber motor at a specified velocity.
+   */
   public Command runVelocity(){
     return new Command() {
       @Override
