@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
@@ -99,6 +98,10 @@ public class RobotContainer {
     ShuffleboardHandler.initDriverTab(autoChooser, () -> isSubwooferShot);
   }
 
+  /**
+   * Selects the autonomous mode based on user input.
+   * This method sets up the options for the autonomous mode chooser and assigns the corresponding auto paths to each option.
+   */
   public void autoSelect() {
     // autoChooser.setDefaultOption("8-7 Blue", "3 ring far blue");
     // autoChooser.addOption("8-7 Park Blue", "3 ring far blue park");
@@ -564,6 +567,10 @@ public class RobotContainer {
     isSubwooferShot = !isSubwooferShot;
   }
 
+  /**
+   * Increments the shooting mode to the next state.
+   * The shooting mode follows the sequence: IDLE -> PREPARED -> SHOOTING -> IDLE.
+   */
   public void incrementShootingMode() {
     currentShootingState = switch (currentShootingState) {
       case IDLE -> shootingState.PREPARED;
@@ -573,15 +580,29 @@ public class RobotContainer {
     };
   }
 
+  /**
+   * sets the shooting state to the IDLE.
+   */
   public void stopShooting() {
     currentShootingState = shootingState.IDLE;
   }
 
+  /**
+   * Sets the shooting type for the robot.
+   * 
+   * @param type The shooting type to set.
+   */
   public void setShootingType(shootingType type) {
     currentShootingType = type;
     currentShootingState = shootingState.PREPARED;
   }
 
+  /**
+   * Sets the shooting type command.
+   *
+   * @param type the shooting type to set
+   * @return the command object that sets the shooting type
+   */
   public Command setShootingTypeCommand(shootingType type) {
     return new Command() {
       @Override

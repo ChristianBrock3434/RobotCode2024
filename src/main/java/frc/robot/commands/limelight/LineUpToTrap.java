@@ -8,15 +8,20 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import frc.robot.subsystems.LimelightShooter;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 
 // Get tag number, choose from enum for tag, move to x and y via limelight, rotation via pigey
 //15 x: 8.55
 //15 y: 14.11
+
+/**
+ * This class represents a command that aligns the robot to a specific trap using the Limelight vision system.
+ * It utilizes PID controllers to control the robot's position and rotation based on the detected tag from the Limelight.
+ * The robot will move towards the target trap and adjust its position and rotation to align with the target.
+ * Once the robot is aligned with the target trap, the command will be considered finished.
+ */
 public class LineUpToTrap extends Command {
     private static boolean isFinished = false;
 
@@ -156,6 +161,9 @@ public class LineUpToTrap extends Command {
         return isFinished;
     }
 
+    /*
+     * sets the isFinished boolean to true, ending the command
+     */
     public static void stopCommand() {
         isFinished = true;
     }

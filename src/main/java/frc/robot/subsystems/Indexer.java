@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Subsystems.indexer;
-
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.StatusCode;
@@ -19,6 +17,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The Indexer class represents a subsystem that controls the indexer motor.
+ * It provides methods to initialize, run, and stop the indexer motor, as well as
+ * check its speed and create commands to control it.
+ */
 public class Indexer extends SubsystemBase {
   private TalonFX indexerMotor = new TalonFX(17);
 
@@ -26,7 +29,7 @@ public class Indexer extends SubsystemBase {
   NeutralOut stopMode;
   
   /**
-   * Creates a new Intake.
+   * Creates a new indexer.
    */
   public Indexer() {
     initIndexerMotor();
@@ -45,7 +48,7 @@ public class Indexer extends SubsystemBase {
   }
    
   /**
-   * Initialize the intake motor
+   * Initialize the indexer motor
    */
   public void initIndexerMotor() {
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -76,10 +79,10 @@ public class Indexer extends SubsystemBase {
   }
 
   /**
-   * Run the intake motor at a given velocity and acceleration
+   * Run the indexer motor at a given velocity and acceleration
    * @param velocity in rotations per second
    * @param acceleration in rotations per second squared
-   * @return a command that will run the intake motor
+   * @return a command that will run the indexer motor
    */
   public Command runIndexerCommand(double velocity, double acceleration){
     return new Command() {
@@ -101,10 +104,10 @@ public class Indexer extends SubsystemBase {
   }
 
   /**
-   * Run the intake motor at a given velocity and acceleration
+   * Run the indexer motor at a given velocity and acceleration
    * @param velocity in rotations per second
    * @param acceleration in rotations per second squared
-   * @return a command that will run the intake motor
+   * @return a command that will run the indexer motor
    */
   public Command speedUpIndexer(double velocity, double acceleration){
     return new Command() {
@@ -124,7 +127,7 @@ public class Indexer extends SubsystemBase {
 
 
   /**
-   * Run the intake motor at a given velocity and acceleration
+   * Run the indexer motor at a given velocity and acceleration
    * @param velocity in rotations per second
    * @param acceleration in rotations per second squared
    */
@@ -137,9 +140,9 @@ public class Indexer extends SubsystemBase {
 
 
   /**
-   * Run the intake motor at a given percentage speed
+   * Run the indexer motor at a given percentage speed
    * @param speed 1 to -1
-   * @return a command that will run the intake motor
+   * @return a command that will run the indexer motor
    */
   public Command runIndexerPercent(double speed) {
     return new Command() {
@@ -161,7 +164,7 @@ public class Indexer extends SubsystemBase {
   }
 
   /**
-   * Stop the intake motor
+   * Stop the indexer motor
    */
   public void stopIndexerMotor() {
     indexerMotor.setControl(stopMode);

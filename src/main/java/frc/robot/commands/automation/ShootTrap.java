@@ -2,8 +2,6 @@ package frc.robot.commands.automation;
 
 import static frc.robot.Subsystems.*;
 
-import java.util.function.DoubleSupplier;
-
 import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.angleRestingPosition;
@@ -13,6 +11,9 @@ import static frc.robot.Constants.IntakeConstants.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+/**
+ * A command group that represents the sequence of commands to shoot at the trap.
+ */
 public class ShootTrap extends SequentialCommandGroup {
     
     public ShootTrap() {

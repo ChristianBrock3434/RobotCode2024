@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * The Intake class represents the intake subsystem of the robot.
+ * It controls the intake motor and provides methods to run the motor at different velocities and voltages.
+ */
 public class Intake extends SubsystemBase {
   private TalonFX intakeMotor = new TalonFX(13);
 
@@ -226,7 +230,7 @@ public class Intake extends SubsystemBase {
    * @return a command that will stop the intake motor
    */
   @Deprecated
-  private Command stopIntakeFast() {
+  public Command stopIntakeFast() {
     return new Command() {
       @Override
       public void initialize() {

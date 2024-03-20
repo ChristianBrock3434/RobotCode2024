@@ -2,6 +2,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * The AutoTracker class provides methods for tracking signals and waiting for signals in autonomous mode.
+ */
 public class AutoTracker {
   public static boolean[] tracker = {
       false,
