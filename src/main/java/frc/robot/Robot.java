@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.automation.StopShoot;
+import frc.robot.commands.automation.ZeroAngle;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -107,7 +108,8 @@ public class Robot extends TimedRobot {
       drivetrain.resetOrientation(new Pose2d(translation, rot));
     }
     
-    new StopShoot(angleRestingPosition).schedule();
+    // new StopShoot(angleRestingPosition).schedule();
+    new ZeroAngle().schedule();
   }
 
   /** This function is called periodically during operator control. */
