@@ -38,7 +38,7 @@ public class Indexer extends SubsystemBase {
                                           0, 
                                           false, 
                                           false, 
-                                          true
+                                          false
                                           );
 
     stopMode = new NeutralOut();

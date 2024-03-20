@@ -3,6 +3,7 @@ package frc.robot;
 import static frc.robot.Constants.farShotDistance;
 import static frc.robot.Constants.ActuationConstants.actuationPickUpPosition;
 import static frc.robot.Constants.AngleControllerConstants.*;
+import static frc.robot.Constants.ShooterConstants.ampSpeed;
 import static frc.robot.Subsystems.*;
 
 import java.util.Map;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShuffleboardHandler {
     private static ShuffleboardTab sensorTab = Shuffleboard.getTab("Sensors");
@@ -96,6 +98,9 @@ public class ShuffleboardHandler {
     private static GenericEntry SubwooferShotAngle;
     private static GenericEntry PassShotAngle;
 
+    private static GenericEntry ampShotSpeed;
+    private static GenericEntry ampShotAngle;
+
     private static GenericEntry IntakeAngle;
 
     /**
@@ -103,7 +108,7 @@ public class ShuffleboardHandler {
      * @param autoChooser The SendableChooser for the autonomous mode
      * @param manualMode The BooleanSupplier for the manual mode
      */
-    public static void initDriverTab (SendableChooser<String> autoChooser, BooleanSupplier manualMode) {
+    public static void initDriverTab (SendableChooser<Command> autoChooser, BooleanSupplier manualMode) {
         // test = driverTab.add("Test", 0).withWidget(BuiltInWidgets.kNumberSlider).getEntry();
         FarShotAngle = driverTab.add("Far Shot Angle", chainShotAngle)
                         .withPosition(0, 0)
@@ -119,18 +124,32 @@ public class ShuffleboardHandler {
                         .withProperties(Map.of("min", farShotDistance-3, "max", farShotDistance+3))
                         .getEntry();
 
-        PodiumShotAngle = driverTab.add("Podium Shot Angle", podiumShotAngle)
+        // PodiumShotAngle = driverTab.add("Podium Shot Angle", podiumShotAngle)
+        //                 .withPosition(0, 1)
+        //                 .withSize(2, 1)
+        //                 .withWidget(BuiltInWidgets.kNumberSlider)
+        //                 .withProperties(Map.of("min", podiumShotAngle-3, "max", podiumShotAngle+3))
+        //                 .getEntry();
+
+        ampShotAngle = driverTab.add("Amp Shot Angle", ampAngle)
                         .withPosition(0, 1)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", podiumShotAngle-3, "max", podiumShotAngle+3))
+                        .withProperties(Map.of("min", ampAngle-3, "max", ampAngle+3))
                         .getEntry();
 
-        SubwooferShotAngle = driverTab.add("Subwoofer Shot Angle", subwooferShotAngle)
+        // SubwooferShotAngle = driverTab.add("Subwoofer Shot Angle", subwooferShotAngle)
+        //                 .withPosition(2, 1)
+        //                 .withSize(2, 1)
+        //                 .withWidget(BuiltInWidgets.kNumberSlider)
+        //                 .withProperties(Map.of("min", 0, "max", subwooferShotAngle+5))
+        //                 .getEntry();
+
+        ampShotSpeed = driverTab.add("Amp Shot Speed", ampSpeed)
                         .withPosition(2, 1)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", 0, "max", subwooferShotAngle+5))
+                        .withProperties(Map.of("min", ampSpeed-5, "max", ampSpeed+5))
                         .getEntry();
 
         PassShotAngle = driverTab.add("Pass Shot Angle", passShotAngle)
@@ -167,9 +186,12 @@ public class ShuffleboardHandler {
     public static void updateDriverTab () {
         chainShotAngle = FarShotAngle.getDouble(chainShotAngle);
         farShotDistance = FarShotRange.getDouble(farShotDistance);
-        podiumShotAngle = PodiumShotAngle.getDouble(podiumShotAngle);
-        subwooferShotAngle = SubwooferShotAngle.getDouble(subwooferShotAngle);
+        // podiumShotAngle = PodiumShotAngle.getDouble(podiumShotAngle);
+        // subwooferShotAngle = SubwooferShotAngle.getDouble(subwooferShotAngle);
         passShotAngle = PassShotAngle.getDouble(passShotAngle);
         actuationPickUpPosition = IntakeAngle.getDouble(actuationPickUpPosition);
+
+        ampSpeed = ampShotSpeed.getDouble(ampSpeed);
+        ampAngle = ampShotAngle.getDouble(ampAngle);
     }
 }

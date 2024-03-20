@@ -23,7 +23,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -39,6 +38,7 @@ import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.AutoShootSequenceNoStop;
 import frc.robot.commands.automation.StopShoot;
+import frc.robot.commands.automation.ZeroAngle;
 import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.InShootingRange;
@@ -52,7 +52,8 @@ import frc.robot.commands.limelight.LineUpWithNotePath;
  */
 public class RobotContainer {
 
-  private static SendableChooser<String> autoChooser = new SendableChooser<>();
+  // private static SendableChooser<String> autoChooser = new SendableChooser<>();
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   // Artificial Acceleration for less sliding and more control
   private static SlewRateLimiter xLimiter = new SlewRateLimiter(3);
@@ -99,17 +100,34 @@ public class RobotContainer {
   }
 
   public void autoSelect() {
-    autoChooser.setDefaultOption("8-7 Blue", "3 ring far blue");
-    autoChooser.addOption("8-7 Park Blue", "3 ring far blue park");
-    autoChooser.addOption("1-2-3 Blue", "4 ring close blue");
-    autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
+    // autoChooser.setDefaultOption("8-7 Blue", "3 ring far blue");
+    // autoChooser.addOption("8-7 Park Blue", "3 ring far blue park");
+    // autoChooser.addOption("1-2-3 Blue", "4 ring close blue");
+    // autoChooser.addOption("8-6 Blue", "3 ring far blue mid");
+    // // autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
 
-    autoChooser.addOption("8-7 Red", "new 3 ring far red");
-    autoChooser.addOption("8-7 Park Red", "new 3 ring far red park");
-    autoChooser.addOption("1-2-3 Red", "new 4 ring close red");
+    // autoChooser.addOption("8-7 Red", "new 3 ring far red");
+    // autoChooser.addOption("8-7 Park Red", "new 3 ring far red park");
+    // autoChooser.addOption("1-2-3 Red", "new 4 ring close red");
+    // autoChooser.addOption("8-6 Red", "new 3 ring far red mid");
+
+    // autoChooser.addOption("Do Nothing", "Do Nothing");
     // autoChooser.addOption("4-5-3-2 Red", "5 ring close red");
 
     // SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    autoChooser.setDefaultOption("8-7 Blue", drivetrain.getAutoPath("3 ring far blue"));
+    autoChooser.addOption("8-7 Park Blue", drivetrain.getAutoPath("3 ring far blue park"));
+    autoChooser.addOption("1-2-3 Blue", drivetrain.getAutoPath("4 ring close blue"));
+    autoChooser.addOption("8-6 Blue", drivetrain.getAutoPath("3 ring far blue mid"));
+    // autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
+
+    autoChooser.addOption("8-7 Red", drivetrain.getAutoPath("new 3 ring far red"));
+    autoChooser.addOption("8-7 Park Red", drivetrain.getAutoPath("new 3 ring far red park"));
+    autoChooser.addOption("1-2-3 Red", drivetrain.getAutoPath("new 4 ring close red"));
+    // autoChooser.addOption("8-6 Red", drivetrain.getAutoPath("new 3 ring far red mid"));
+
+    autoChooser.addOption("Do Nothing", drivetrain.getAutoPath("Do Nothing"));
   }
 
   /**
@@ -162,13 +180,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 16.5, () -> 50, 34.25));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.25, () -> 65, 34.25));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.25, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 50, 34.0));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.0, () -> 65, 34.0));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.0, () -> 65, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 17.5, () -> 50, 35.25));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 35.25, () -> 65, 35.25));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 35.25, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 50, 33.75));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 65, 33.75));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.5, () -> 65, angleRestingPosition));
   }
 
   /**
@@ -191,11 +209,11 @@ public class RobotContainer {
 
     
     NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
 
     NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(2.0), new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
   }
 
@@ -261,7 +279,11 @@ public class RobotContainer {
 <<<<<<< Updated upstream
     new Trigger(() -> currentChainShotState.equals(chainShotState.PREPARED)).onTrue(
       new ParallelCommandGroup(
-        new PrepareForShoot(180.0, chainShotAngle, chainShotSpeed),
+        new PrepareForShoot(
+            180.0, 
+            () -> chainShotAngle, 
+            () -> chainShotSpeed
+        ),
         new InShootingRange()
       )
 =======
@@ -324,7 +346,11 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.PREPARED))
       .and(() -> isSubwooferShot).onTrue(
         new ParallelCommandGroup(
-          new PrepareForShoot(Double.NaN, subwooferShotAngle, subwooferShotSpeed)
+          new PrepareForShoot(
+              Double.NaN, 
+              () -> subwooferShotAngle, 
+              () -> subwooferShotSpeed
+          )
         )
     );
 
@@ -345,7 +371,11 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.PREPARED))
       .and(() -> !isSubwooferShot).onTrue(
         new ParallelCommandGroup(
-          new PrepareForShoot(Double.NaN, podiumShotAngle, podiumShotSpeed)
+          new PrepareForShoot(
+              Double.NaN, 
+              () -> podiumShotAngle, 
+              () -> podiumShotSpeed
+            )
         )
     );
 
@@ -378,7 +408,7 @@ public class RobotContainer {
           new AutoTurn(90), 
           () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
         ),
-        angleController.setPositionCommand(0)
+        angleController.setPositionCommand(ampAngle)
       )
 =======
     new Trigger(() -> currentShootingType.equals(shootingType.AMP))
@@ -416,6 +446,7 @@ public class RobotContainer {
     );
 
     new Trigger(() -> currentPassState.equals(passState.PREPARED)).onTrue(
+<<<<<<< HEAD
       new PrepareForShoot(180.0, passShotAngle, passShotSpeed)
 =======
       new ConditionalCommand(
@@ -438,6 +469,13 @@ public class RobotContainer {
             () -> passShotSpeed
         )
 >>>>>>> Stashed changes
+=======
+      new PrepareForShoot(
+          180.0, 
+          () -> passShotAngle, 
+          () -> passShotSpeed
+      )
+>>>>>>> 200cc962a6af272414ce912c1b359dc6c3c90229
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
@@ -487,12 +525,7 @@ public class RobotContainer {
     controller.a().whileTrue(climber.runVoltageCommand(-3));
 
     // Reset angle
-    controller.back().onTrue(new SequentialCommandGroup(
-      new InstantCommand(angleController::runDown),
-      angleController.waitUntilPressed(),
-      new InstantCommand(angleController::zeroOnSensor),
-      angleController.setPositionCommand(angleRestingPosition)
-    ));
+    controller.back().onTrue(new ZeroAngle());
 
     new Trigger(() -> angleController.getZeroSensor()).onTrue(new InstantCommand(angleController::zeroOnSensor));
   }
@@ -613,6 +646,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drivetrain.getAutoPath(autoChooser.getSelected());
+    // return drivetrain.getAutoPath(autoChooser.getSelected());
+    return autoChooser.getSelected();
   }
 }
