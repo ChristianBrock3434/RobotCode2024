@@ -276,17 +276,6 @@ public class RobotContainer {
       )
     );
 
-<<<<<<< Updated upstream
-    new Trigger(() -> currentChainShotState.equals(chainShotState.PREPARED)).onTrue(
-      new ParallelCommandGroup(
-        new PrepareForShoot(
-            180.0, 
-            () -> chainShotAngle, 
-            () -> chainShotSpeed
-        ),
-        new InShootingRange()
-      )
-=======
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
         new ParallelCommandGroup(
@@ -305,7 +294,6 @@ public class RobotContainer {
           ),
           new InShootingRange()
         )
->>>>>>> Stashed changes
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
@@ -400,17 +388,6 @@ public class RobotContainer {
       )
     );
 
-<<<<<<< Updated upstream
-    new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
-      new ParallelCommandGroup(
-        new ConditionalCommand(
-          new AutoTurn(-90), 
-          new AutoTurn(90), 
-          () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
-        ),
-        angleController.setPositionCommand(ampAngle)
-      )
-=======
     new Trigger(() -> currentShootingType.equals(shootingType.AMP))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new ParallelCommandGroup(
@@ -421,7 +398,6 @@ public class RobotContainer {
           ),
           angleController.setPositionCommand(ampAngle)
         )
->>>>>>> Stashed changes
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
     new Trigger(() -> currentShootingType.equals(shootingType.AMP))
@@ -437,18 +413,6 @@ public class RobotContainer {
 
     // Pass Shot
     controller.leftBumper().onTrue(
-<<<<<<< Updated upstream
-      new InstantCommand(this::incrementPassMode)
-    );
-
-    new Trigger(() -> currentPassState.equals(passState.IDLE)).onTrue(
-      new StopShoot(angleRestingPosition)
-    );
-
-    new Trigger(() -> currentPassState.equals(passState.PREPARED)).onTrue(
-<<<<<<< HEAD
-      new PrepareForShoot(180.0, passShotAngle, passShotSpeed)
-=======
       new ConditionalCommand(
         new InstantCommand(this::incrementShootingMode), 
         setShootingTypeCommand(shootingType.PASS), 
@@ -468,14 +432,6 @@ public class RobotContainer {
             () -> passShotAngle, 
             () -> passShotSpeed
         )
->>>>>>> Stashed changes
-=======
-      new PrepareForShoot(
-          180.0, 
-          () -> passShotAngle, 
-          () -> passShotSpeed
-      )
->>>>>>> 200cc962a6af272414ce912c1b359dc6c3c90229
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
