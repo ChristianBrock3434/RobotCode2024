@@ -66,47 +66,22 @@ public class RobotContainer {
   private static boolean isSubwooferShot = true;
   private static boolean isPositionTurning = true;
 
-  // TODO: combine into a state and type enum
-  private static enum manualState {
-    IDLE,
-    PREPARED,
-    SHOOTING;
-  };
-
-  private static manualState currentManualState = manualState.IDLE;
-
-  private static enum chainShotState {
-    IDLE,
-    PREPARED,
-    SHOOTING;
-  };
-
-  private static chainShotState currentChainShotState = chainShotState.IDLE;
-
-  
-  private static enum ampState {
-    IDLE,
-    PREPARED,
-    SHOOTING;
-  };
-
-  private static ampState currentAmpState = ampState.IDLE;
-
-  // private static enum trapState {
-  //   IDLE,
-  //   PREPARED,
-  //   SHOOTING;
-  // };
-  
-  // private static trapState currentTrapState = trapState.IDLE;
-
-  private static enum passState {
+  private static enum shootingState {
     IDLE,
     PREPARED,
     SHOOTING;
   };
   
-  private static passState currentPassState = passState.IDLE;
+  private static shootingState currentShootingState = shootingState.IDLE;
+
+  private static enum shootingType {
+    MANUAL,
+    CHAIN,
+    AMP,
+    PASS;
+  };
+
+  private static shootingType currentShootingType = shootingType.MANUAL;
 
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -276,30 +251,50 @@ public class RobotContainer {
 
     // Chain Shot
     controller.rightTrigger(0.1).onTrue(
-      new InstantCommand(this::incrementChainShotMode)
-    );
-
-    new Trigger(() -> currentChainShotState.equals(chainShotState.IDLE)).onTrue(new ParallelCommandGroup(
-        new StopShoot(angleRestingPosition),
-        new InstantCommand(InShootingRange::stopCommand)
+      new ConditionalCommand(
+        new InstantCommand(this::incrementShootingMode), 
+        setShootingTypeCommand(shootingType.CHAIN), 
+        () -> currentShootingType.equals(shootingType.CHAIN)
       )
     );
 
+<<<<<<< Updated upstream
     new Trigger(() -> currentChainShotState.equals(chainShotState.PREPARED)).onTrue(
       new ParallelCommandGroup(
         new PrepareForShoot(180.0, chainShotAngle, chainShotSpeed),
         new InShootingRange()
       )
+=======
+    new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
+      .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
+        new ParallelCommandGroup(
+          new StopShoot(angleRestingPosition),
+          new InstantCommand(InShootingRange::stopCommand)
+        )
+    );
+
+    new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
+        new ParallelCommandGroup(
+          new PrepareForShoot(
+              180.0, 
+              () -> chainShotAngle, 
+              () -> chainShotSpeed
+          ),
+          new InShootingRange()
+        )
+>>>>>>> Stashed changes
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
-    new Trigger(() -> currentChainShotState.equals(chainShotState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> chainShotAngle, 
-          () -> chainShotSpeed, 
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelChainShotMode))
-      )
+    new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
+        new ParallelCommandGroup(
+          new AutoShootSequence(
+            () -> chainShotAngle, 
+            () -> chainShotSpeed, 
+            angleRestingPosition
+          ).andThen(new InstantCommand(this::stopShooting))
+        )
     );
 
     // Change Manual Shot Mode between podium and subwoofer
@@ -311,55 +306,71 @@ public class RobotContainer {
     );
 
     // Manual Shoot
-    controller.leftTrigger().onTrue(new InstantCommand(this::incrementManualMode));
+    controller.leftTrigger(0.1).onTrue(
+      new ConditionalCommand(
+        new InstantCommand(this::incrementShootingMode), 
+        setShootingTypeCommand(shootingType.MANUAL), 
+        () -> currentShootingType.equals(shootingType.MANUAL)
+      )
+    );
 
-    new Trigger(() -> currentManualState.equals(manualState.IDLE)).onTrue(
-      new StopShoot(angleRestingPosition)
+    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
+      .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
+        new StopShoot(angleRestingPosition)
     );
 
     // Subwoofer Shot
-    new Trigger(() -> currentManualState.equals(manualState.PREPARED))
+    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED))
       .and(() -> isSubwooferShot).onTrue(
         new ParallelCommandGroup(
           new PrepareForShoot(Double.NaN, subwooferShotAngle, subwooferShotSpeed)
         )
     );
 
-    new Trigger(() -> currentManualState.equals(manualState.SHOOTING))
+    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING))
       .and(() -> isSubwooferShot).onTrue(
         new ParallelCommandGroup(
           new AutoShootSequence(
             () -> subwooferShotAngle, 
             () -> subwooferShotSpeed, 
             angleRestingPosition
-          ).andThen(new InstantCommand(this::cancelManualMode))
+          ).andThen(new InstantCommand(this::stopShooting))
         )
     );
 
     // Podium Shot
-    new Trigger(() -> currentManualState.equals(manualState.PREPARED))
+    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED))
       .and(() -> !isSubwooferShot).onTrue(
         new ParallelCommandGroup(
           new PrepareForShoot(Double.NaN, podiumShotAngle, podiumShotSpeed)
         )
     );
 
-    new Trigger(() -> currentManualState.equals(manualState.SHOOTING))
+    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING))
       .and(() -> !isSubwooferShot).onTrue(
         new ParallelCommandGroup(
           new AutoShootSequence(
             () -> podiumShotAngle, 
             () -> podiumShotSpeed, 
             angleRestingPosition
-          ).andThen(new InstantCommand(this::cancelManualMode))
+          ).andThen(new InstantCommand(this::stopShooting))
         )
     );
 
     // Amp Shot
     controller.pov(270).onTrue(
-      new InstantCommand(this::incrementAmpMode)
+      new ConditionalCommand(
+        new InstantCommand(this::incrementShootingMode), 
+        setShootingTypeCommand(shootingType.AMP), 
+        () -> currentShootingType.equals(shootingType.AMP)
+      )
     );
 
+<<<<<<< Updated upstream
     new Trigger(() -> currentAmpState.equals(ampState.PREPARED)).onTrue(
       new ParallelCommandGroup(
         new ConditionalCommand(
@@ -369,20 +380,34 @@ public class RobotContainer {
         ),
         angleController.setPositionCommand(0)
       )
+=======
+    new Trigger(() -> currentShootingType.equals(shootingType.AMP))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
+        new ParallelCommandGroup(
+          new ConditionalCommand(
+            new AutoTurn(-90), 
+            new AutoTurn(90), 
+            () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
+          ),
+          angleController.setPositionCommand(ampAngle)
+        )
+>>>>>>> Stashed changes
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
-    new Trigger(() -> currentAmpState.equals(ampState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> ampAngle, 
-          () -> ampSpeed, 
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelAmpMode))
-      )
+    new Trigger(() -> currentShootingType.equals(shootingType.AMP))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
+        new ParallelCommandGroup(
+          new AutoShootSequence(
+            () -> ampAngle, 
+            () -> ampSpeed, 
+            angleRestingPosition
+          ).andThen(new InstantCommand(this::stopShooting))
+        )
     );
 
     // Pass Shot
     controller.leftBumper().onTrue(
+<<<<<<< Updated upstream
       new InstantCommand(this::incrementPassMode)
     );
 
@@ -392,25 +417,44 @@ public class RobotContainer {
 
     new Trigger(() -> currentPassState.equals(passState.PREPARED)).onTrue(
       new PrepareForShoot(180.0, passShotAngle, passShotSpeed)
+=======
+      new ConditionalCommand(
+        new InstantCommand(this::incrementShootingMode), 
+        setShootingTypeCommand(shootingType.PASS), 
+        () -> currentShootingType.equals(shootingType.PASS)
+      )
+    );
+
+    new Trigger(() -> currentShootingType.equals(shootingType.PASS))
+      .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
+        new StopShoot(angleRestingPosition)
+    );
+
+    new Trigger(() -> currentShootingType.equals(shootingType.PASS))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
+        new PrepareForShoot(
+            180.0, 
+            () -> passShotAngle, 
+            () -> passShotSpeed
+        )
+>>>>>>> Stashed changes
     ).onFalse(new InstantCommand(AutoTurn::stopCommand));
 
-    new Trigger(() -> currentPassState.equals(passState.SHOOTING)).onTrue(
-      new ParallelCommandGroup(
-        new AutoShootSequence(
-          () -> passShotAngle, 
-          () -> passShotSpeed, 
-          angleRestingPosition
-        ).andThen(new InstantCommand(this::cancelPassMode))
-      )
+    new Trigger(() -> currentShootingType.equals(shootingType.PASS))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
+        new ParallelCommandGroup(
+          new AutoShootSequence(
+            () -> passShotAngle, 
+            () -> passShotSpeed, 
+            angleRestingPosition
+          ).andThen(new InstantCommand(this::stopShooting))
+        )
     );
 
     // Cancel all current Modes
     controller.pov(90).onTrue(
       new ParallelCommandGroup(
-        new InstantCommand(this::cancelAmpMode),
-        new InstantCommand(this::cancelPassMode),
-        new InstantCommand(this::cancelChainShotMode),
-        new InstantCommand(this::cancelManualMode)
+        new InstantCommand(this::stopShooting)
       )
     );
 
@@ -531,118 +575,37 @@ public class RobotContainer {
     isSubwooferShot = !isSubwooferShot;
   }
 
-  /**
-   * Increment the manual shot mode
-   */
-  public void incrementManualMode() {
-    currentManualState = switch (currentManualState) {
-      case IDLE -> manualState.PREPARED;
-      case PREPARED -> manualState.SHOOTING;
-      case SHOOTING -> manualState.IDLE;
-      default -> manualState.IDLE;
+  public void incrementShootingMode() {
+    currentShootingState = switch (currentShootingState) {
+      case IDLE -> shootingState.PREPARED;
+      case PREPARED -> shootingState.SHOOTING;
+      case SHOOTING -> shootingState.IDLE;
+      default -> shootingState.IDLE;
     };
-    if (currentManualState.equals(manualState.IDLE)) {
-      cancelChainShotMode();
-      cancelAmpMode();
-      cancelPassMode();
-    }
   }
 
-  /**
-   * Cancel the manual shot mode
-   */
-  public void cancelManualMode() {
-    currentManualState = manualState.IDLE;
+  public void stopShooting() {
+    currentShootingState = shootingState.IDLE;
   }
 
-  /**
-   * Increment the chain shot mode
-   */
-  public void incrementChainShotMode() {
-    currentChainShotState = switch (currentChainShotState) {
-      case IDLE -> chainShotState.PREPARED;
-      case PREPARED -> chainShotState.SHOOTING;
-      case SHOOTING -> chainShotState.IDLE;
-      default -> chainShotState.IDLE;
+  public void setShootingType(shootingType type) {
+    currentShootingType = type;
+    currentShootingState = shootingState.PREPARED;
+  }
+
+  public Command setShootingTypeCommand(shootingType type) {
+    return new Command() {
+      @Override
+      public void execute() {
+        setShootingType(type);
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
     };
-    if (currentChainShotState.equals(chainShotState.IDLE)) {
-      cancelManualMode();
-      cancelAmpMode();
-      cancelPassMode();
-    }
   }
-
-  /**
-   * Cancel the chain shot mode
-   */
-  public void cancelChainShotMode() {
-    currentChainShotState = chainShotState.IDLE;
-  }
-
-  /**
-   * Increment the amp mode
-   */
-  public void incrementAmpMode() {
-    currentAmpState = switch (currentAmpState) {
-      case IDLE -> ampState.PREPARED;
-      case PREPARED -> ampState.SHOOTING;
-      case SHOOTING -> ampState.IDLE;
-      default -> ampState.IDLE;
-    };
-    if (currentAmpState.equals(ampState.IDLE)) {
-      cancelManualMode();
-      cancelChainShotMode();
-      cancelPassMode();
-    }
-  }
-
-  /**
-   * Cancel the amp mode
-   */
-  public void cancelAmpMode() {
-    currentAmpState = ampState.IDLE;
-  }
-
-  /**
-   * Increment the pass mode
-   */
-  public void incrementPassMode() {
-    currentPassState = switch (currentPassState) {
-      case IDLE -> passState.PREPARED;
-      case PREPARED -> passState.SHOOTING;
-      case SHOOTING -> passState.IDLE;
-      default -> passState.IDLE;
-    };
-    if (currentPassState.equals(passState.IDLE)) {
-      cancelManualMode();
-      cancelChainShotMode();
-      cancelAmpMode();
-    }
-  }
-
-  /**
-   * Cancel the pass mode
-   */
-  public void cancelPassMode() {
-    currentPassState = passState.IDLE;
-  }
-
-  // public void incrementTrapMode() {
-  //   currentTrapState = switch (currentTrapState) {
-  //     case IDLE -> trapState.PREPARED;
-  //     case PREPARED -> trapState.SHOOTING;
-  //     case SHOOTING -> trapState.IDLE;
-  //     default -> trapState.IDLE;
-  //   };
-  //   if (currentTrapState.equals(trapState.IDLE)) {
-  //     cancelChainShotMode();
-  //     cancelAmpMode();
-  //   }
-  // }
-
-  // public void cancelTrapMode() {
-  //   currentTrapState = trapState.IDLE;
-  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
