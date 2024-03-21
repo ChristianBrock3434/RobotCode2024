@@ -80,7 +80,7 @@ public class LineUpToTrap extends Command {
     public void initialize() {
         isFinished = false;
 
-        System.out.println("Start Line Up");
+        // System.out.println("Start Line Up");
         limelightShooter.turnOnLimelight();
         // limelightShooter.setLimelightPipeline(LimelightShooter.Pipeline.Trap);
 
@@ -153,7 +153,7 @@ public class LineUpToTrap extends Command {
     public void end(boolean interrupted) {
         controller.getHID().setRumble(RumbleType.kRightRumble, 0);
         drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
-        System.out.println("End Line up");
+        // System.out.println("End Line up");
     }
 
     @Override

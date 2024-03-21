@@ -39,9 +39,12 @@ import frc.robot.commands.automation.AutoShootSequenceNoStop;
 import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.automation.ZeroAngle;
 import frc.robot.commands.drivetrain.AutoTurn;
+import frc.robot.commands.drivetrain.AutoTurnToGoal;
 import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.InShootingRange;
+import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
+import frc.robot.commands.limelight.SeedPoseEstimation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -284,20 +287,24 @@ public class RobotContainer {
         new ParallelCommandGroup(
           new StopShoot(angleRestingPosition),
           new InstantCommand(InShootingRange::stopCommand)
+          // new InstantCommand(AutoTurnToGoal::stopCommand)
         )
     );
 
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new ParallelCommandGroup(
-          new PrepareForShoot(
-              180.0, 
-              () -> chainShotAngle, 
-              () -> chainShotSpeed
-          ),
-          new InShootingRange()
+          // new PrepareForShoot(
+          //     180.0, 
+          //     () -> chainShotAngle, 
+          //     () -> chainShotSpeed
+          // ),
+          // new InShootingRange()
+          new SeedPoseEstimation()
+          // new AutoTurnToGoal(drivetrain.getPose()::getX, drivetrain.getPose()::getY)
         )
-    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+    // ).onFalse(new InstantCommand(AutoTurnToGoal::stopCommand));
+    ).onFalse(new DrivePosTurning());
 
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(

@@ -62,8 +62,8 @@ public class LineUpWithNotePath extends Command {
     xGoal = state.positionMeters.getX();
     yGoal = state.positionMeters.getY();
 
-    System.out.println("xGoal: " + xGoal);
-    System.out.println("yGoal: " + yGoal);
+    // System.out.println("xGoal: " + xGoal);
+    // System.out.println("yGoal: " + yGoal);
 
     m_xPIDController.setTolerance(0.1);
     m_xPIDController.setSetpoint(xGoal);

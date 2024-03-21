@@ -142,6 +142,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this); // Subsystem for requirements
     }
 
+    public void setPose(Pose2d newPose) {
+        this.m_odometry.resetPosition(this.getRotation(), m_modulePositions, newPose);
+    }
+
+    public void setPose(Pose2d newPose, double timestampSeconds) {
+        this.m_odometry.addVisionMeasurement(newPose, timestampSeconds);
+    }
+
     /**
      * Sets the rotation of the robot to zero
      */
@@ -311,7 +319,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      * @return the current y position of the robot
      */
     public double getY() {
-        return getPose().getX();
+        return getPose().getY();
     }
 
     @Deprecated

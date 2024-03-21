@@ -52,7 +52,7 @@ public class AutoTurn extends Command{
     public void execute() {
 
         output = rotController.calculate(drivetrain.getRotation().getDegrees());
-        System.out.println("Output before modify: " + output);
+        // System.out.println("Output before modify: " + output);
         if (output > maxAngularRate) {
             output = maxAngularRate;
         } else if (output < -maxAngularRate) {

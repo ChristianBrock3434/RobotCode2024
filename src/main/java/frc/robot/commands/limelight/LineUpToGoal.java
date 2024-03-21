@@ -24,7 +24,7 @@ public class LineUpToGoal extends Command {
     private double output;
 
     public LineUpToGoal() {
-        addRequirements(limelightShooter);
+        // addRequirements(limelightShooter);
     }
 
     @Override
@@ -59,9 +59,9 @@ public class LineUpToGoal extends Command {
             output = 0;
         }
 
-        System.out.println("Current Angle: " + drivetrain.getRotation().getDegrees());
-        System.out.println("Speed: " + output);
-        System.out.println("Setpoint: " + rotController.getSetpoint());
+        // System.out.println("Current Angle: " + drivetrain.getRotation().getDegrees());
+        // System.out.println("Speed: " + output);
+        // System.out.println("Setpoint: " + rotController.getSetpoint());
 
         drivetrain.applyRequest(() -> drive.withRotationalRate(output)).execute();
     }

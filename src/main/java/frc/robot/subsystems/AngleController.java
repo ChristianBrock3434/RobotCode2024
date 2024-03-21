@@ -258,7 +258,7 @@ public class AngleController extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println(getAngle());
+    // System.out.println(getAngle());
     // SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
     // SmartDashboard.putNumber("Angle Current", getCurrentDraw());
   }
