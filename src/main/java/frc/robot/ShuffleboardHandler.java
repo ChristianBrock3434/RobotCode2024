@@ -89,7 +89,7 @@ public class ShuffleboardHandler {
         sensorTab.addNumber("Intake TY", limelightIntake::getTY)
                         .withPosition(9, 1);
 
-        sensorTab.addNumber("Distance from goal", limelightShooter::getDistanceFromGoal)
+        sensorTab.addNumber("Distance from goal", drivetrain::getDistanceFromGoal)
                         .withPosition(8, 2)
                         .withSize(2, 1);
     }

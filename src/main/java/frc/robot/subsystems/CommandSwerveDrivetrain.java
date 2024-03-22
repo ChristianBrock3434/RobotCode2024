@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.FieldConstants.*;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.StatusCode;
@@ -20,7 +22,10 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -143,7 +148,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void setPose(Pose2d newPose) {
-        this.m_odometry.resetPosition(this.getRotation(), m_modulePositions, newPose);
+        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getRotation());
+        this.m_odometry.resetPosition(this.getRotation(), m_modulePositions, pose);
     }
 
     public void setPose(Pose2d newPose, double timestampSeconds) {
@@ -321,6 +327,70 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public double getY() {
         return getPose().getY();
     }
+
+    /**
+   * Calculates the distance in the X-axis between the robot's pose and the target speaker.
+   * 
+   * @return The distance in the X-axis between the robot's pose and the target speaker. If the robot's pose is not available, returns Double.NaN.
+   */
+  public Double getXDistance() {
+    double xPose = getPose().getX();
+
+    var alliance = DriverStation.getAlliance();
+    double xDistance = Double.NaN;
+    if (alliance.isEmpty()) {
+      DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
+    } else if (alliance.get().equals(Alliance.Red)) {
+      xDistance = Math.abs(redSpeakerX - xPose);
+    } else if (alliance.get().equals(Alliance.Blue)) {
+      xDistance = Math.abs(blueSpeakerX - xPose);
+    }
+    return xDistance;
+  }
+
+  /**
+   * Calculates the distance in the Y-axis from the robot's current position to the target speaker.
+   * 
+   * @return The distance in the Y-axis from the robot's current position to the target speaker. If the robot's pose is not available, returns Double.NaN.
+   */
+  public Double getYDistance() {
+    double yPose = getPose().getY();
+
+    var alliance = DriverStation.getAlliance();
+    double yDistance = Double.NaN;
+    if (alliance.isEmpty()) {
+      DriverStation.reportWarning("ALLIANCE IS EMPTY, SELECT AN ALLIANCE", true);
+    } else if (alliance.get().equals(Alliance.Red)) {
+      yDistance = Math.abs(redSpeakerY - yPose);
+    } else if (alliance.get().equals(Alliance.Blue)) {
+      yDistance = Math.abs(blueSpeakerY - yPose);
+    }
+    return yDistance;
+  }
+
+  /**
+   * Calculates the distance from the goal using the x and y distances.
+   * 
+   * @return The distance from the goal.
+   */
+  public Double getDistanceFromGoal() {
+    Double xDistance = getXDistance();
+    Double yDistance = getYDistance();
+
+    return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+  }
+
+  /**
+   * Calculates the angle from the robot to the goal using the x and y distances.
+   * 
+   * @return The angle from the robot to the goal in radians.
+   */
+  public Double getAngleFromGoal() {
+    Double xDistance = getXDistance();
+    Double yDistance = getYDistance();
+
+    return Math.atan2(xDistance, yDistance);
+  }
 
     @Deprecated
     private void startSimThread() {

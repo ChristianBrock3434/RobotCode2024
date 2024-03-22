@@ -1,5 +1,6 @@
 package frc.robot.commands.limelight;
 
+import static frc.robot.Subsystems.drivetrain;
 import static frc.robot.Subsystems.limelightShooter;
 import static frc.robot.Constants.*;
 
@@ -18,7 +19,7 @@ public class InShootingRange extends Command {
     private static final double deadzone = 0.15;
 
     public InShootingRange() {
-        addRequirements(limelightShooter);
+        // addRequirements(limelightShooter);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class InShootingRange extends Command {
 
     @Override
     public void execute() {
-        double distanceFromGoal = limelightShooter.getDistanceFromGoal();
+        double distanceFromGoal = drivetrain.getDistanceFromGoal();
         if (distanceFromGoal >= farShotDistance - deadzone && distanceFromGoal <= farShotDistance + deadzone) {
             controller.getHID().setRumble(RumbleType.kBothRumble, 1.0);
         } else {

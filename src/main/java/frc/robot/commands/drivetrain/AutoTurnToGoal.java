@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,12 +24,16 @@ import frc.robot.Constants.FieldConstants;
 public class AutoTurnToGoal extends Command {
     private static boolean isFinished = false;
 
+    private boolean wasAtSetpoint;
+
+    double thetaVelocity;
+
     protected final ProfiledPIDController thetaController =
       new ProfiledPIDController(
-          6.0,
+          20.0,
           0.0,
-          0.1,
-          new TrapezoidProfile.Constraints(8, 100));
+          2.0,
+          new TrapezoidProfile.Constraints(8, Double.MAX_VALUE));
 
     private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
     private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
@@ -37,16 +42,12 @@ public class AutoTurnToGoal extends Command {
         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    protected DoubleSupplier xSupplier;
-    protected DoubleSupplier ySupplier;
     protected Supplier<Rotation2d> angleSupplier;
 
     protected double xSpeaker = 0;
     protected double ySpeaker = 0;
 
-    public AutoTurnToGoal(DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
-        this.xSupplier = xSupplier;
-        this.ySupplier = ySupplier;
+    public AutoTurnToGoal(double offset) {
 
         var alliance = DriverStation.getAlliance();
         if (alliance.isEmpty()) {
@@ -65,7 +66,7 @@ public class AutoTurnToGoal extends Command {
                   xSpeaker - drivetrain.getPose().getX(),
                   ySpeaker - drivetrain.getPose().getY(),
                   new Rotation2d());
-          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()));
+          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset));
         };
 
         addRequirements(drivetrain);
@@ -77,28 +78,30 @@ public class AutoTurnToGoal extends Command {
 
         thetaController.reset(drivetrain.getRotation().getRadians());
         thetaController.enableContinuousInput(-Math.PI, + Math.PI);
+        thetaController.setTolerance(Units.degreesToRadians(2));
     }
     
     @Override
     public void execute() {
-        Transform2d translation =
-              new Transform2d(
-                  xSpeaker - drivetrain.getPose().getX(),
-                  ySpeaker - drivetrain.getPose().getY(),
-                  new Rotation2d());
-        double targetDirection = new Rotation2d(Math.atan2(translation.getY(), translation.getX())).getRadians();
+        double targetDirection = angleSupplier.get().getRadians();
 
-        System.out.println("x: " + translation.getX());
-        System.out.println("y: " + translation.getY());
-        System.out.println("Rot: " + Units.radiansToDegrees(targetDirection));
-        System.out.println("RealRot: " + drivetrain.getDegrees());
+        // System.out.println("x: " + translation.getX());
+        // System.out.println("y: " + translation.getY());
+        // System.out.println("Rot: " + Units.radiansToDegrees(targetDirection));
+        // System.out.println("RealRot: " + drivetrain.getDegrees());
 
         
         // double targetDirection = angleSupplier.get().getRadians();
 
-        double thetaVelocity =
+        wasAtSetpoint = thetaController.atSetpoint();
+
+        thetaVelocity =
             thetaController.calculate(
                 drivetrain.getRotation().getRadians(), targetDirection);
+
+        if (thetaController.atSetpoint()) {
+            thetaVelocity = 0;
+        }
 
         System.out.println(thetaVelocity);
 
@@ -116,7 +119,7 @@ public class AutoTurnToGoal extends Command {
     
     @Override
     public boolean isFinished() {
-        return isFinished;
+        return thetaController.atSetpoint() && wasAtSetpoint;
     }
 
     /*

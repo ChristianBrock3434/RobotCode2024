@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
@@ -42,7 +43,6 @@ import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.drivetrain.AutoTurnToGoal;
 import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.InShootingRange;
-import frc.robot.commands.limelight.LineUpToGoal;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 import frc.robot.commands.limelight.SeedPoseEstimation;
 
@@ -237,6 +237,8 @@ public class RobotContainer {
       new DrivePosTurning()
     );
 
+    limelightShooter.setDefaultCommand(new SeedPoseEstimation());
+
     // Manual Turning Mode
     new Trigger(() -> !isPositionTurning).whileTrue(
       drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
@@ -294,28 +296,26 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new ParallelCommandGroup(
-          // new PrepareForShoot(
-          //     180.0, 
-          //     () -> chainShotAngle, 
-          //     () -> chainShotSpeed
-          // ),
-          // new InShootingRange()
-          new SeedPoseEstimation()
-          // new AutoTurnToGoal(drivetrain.getPose()::getX, drivetrain.getPose()::getY)
+          new PrepareForShoot(
+              () -> chainShotAngle, 
+              () -> chainShotSpeed
+          ),
+          new InShootingRange()
         )
     // ).onFalse(new InstantCommand(AutoTurnToGoal::stopCommand));
-    ).onFalse(new DrivePosTurning());
+    );
 
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
-        new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new AutoTurnToGoal(10),
           new AutoShootSequence(
             () -> chainShotAngle, 
             () -> chainShotSpeed, 
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    );
+    ).onFalse(new DrivePosTurning());
 
     // Change Manual Shot Mode between podium and subwoofer
     controller.leftStick().onTrue(
@@ -345,7 +345,6 @@ public class RobotContainer {
       .and(() -> isSubwooferShot).onTrue(
         new ParallelCommandGroup(
           new PrepareForShoot(
-              Double.NaN, 
               () -> subwooferShotAngle, 
               () -> subwooferShotSpeed
           )
@@ -355,14 +354,15 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING))
       .and(() -> isSubwooferShot).onTrue(
-        new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          // new AutoTurnToGoal(),
           new AutoShootSequence(
             () -> subwooferShotAngle, 
             () -> subwooferShotSpeed, 
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    );
+    ).onFalse(new DrivePosTurning());
 
     // Podium Shot
     new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
@@ -370,7 +370,6 @@ public class RobotContainer {
       .and(() -> !isSubwooferShot).onTrue(
         new ParallelCommandGroup(
           new PrepareForShoot(
-              Double.NaN, 
               () -> podiumShotAngle, 
               () -> podiumShotSpeed
             )
@@ -380,14 +379,15 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING))
       .and(() -> !isSubwooferShot).onTrue(
-        new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new AutoTurnToGoal(15),
           new AutoShootSequence(
             () -> podiumShotAngle, 
             () -> podiumShotSpeed, 
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    );
+    ).onFalse(new DrivePosTurning());
 
     // Amp Shot
     controller.pov(270).onTrue(
@@ -408,7 +408,7 @@ public class RobotContainer {
           ),
           angleController.setPositionCommand(ampAngle)
         )
-    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+    ).onFalse(new DrivePosTurning());
 
     new Trigger(() -> currentShootingType.equals(shootingType.AMP))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
@@ -438,22 +438,22 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new PrepareForShoot(
-            180.0, 
             () -> passShotAngle, 
             () -> passShotSpeed
         )
-    ).onFalse(new InstantCommand(AutoTurn::stopCommand));
+    );
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
-        new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new AutoTurnToGoal(15),
           new AutoShootSequence(
             () -> passShotAngle, 
             () -> passShotSpeed, 
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    );
+    ).onFalse(new DrivePosTurning());
 
     // Cancel all current Modes
     controller.pov(90).onTrue(
@@ -512,7 +512,7 @@ public class RobotContainer {
     long startingTime = System.currentTimeMillis();
     List<Double> distanceList = new ArrayList<>();
     while (System.currentTimeMillis() - startingTime < 250) {
-      Double distance = limelightShooter.getDistanceFromGoal();
+      Double distance = drivetrain.getDistanceFromGoal();
       if (!distance.equals(Double.NaN)) {
         try {
           if (!distance.equals(distanceList.get(distanceList.size()-1))) {

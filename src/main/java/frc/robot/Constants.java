@@ -87,11 +87,11 @@ public final class Constants {
   }
 
   public final class FieldConstants {
-    public static final double blueSpeakerX = -8.3;
-    public static final double blueSpeakerY = 1.5;
+    public static final double blueSpeakerX = 0;
+    public static final double blueSpeakerY = 5.5696358;
 
-    public static final double redSpeakerX = 8.3;
-    public static final double redSpeakerY = 1.5;
+    public static final double redSpeakerX = 0;
+    public static final double redSpeakerY = 5.5696358;
   }
   
 }
