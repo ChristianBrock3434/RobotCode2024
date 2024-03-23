@@ -4,11 +4,8 @@ import static frc.robot.Subsystems.drivetrain;
 import static frc.robot.Subsystems.limelightShooter;
 import static frc.robot.Constants.*;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LimelightShooter;
 
 /**
  * A command that checks if the robot is in the shooting range based on the distance from the goal.

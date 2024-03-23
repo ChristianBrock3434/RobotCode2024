@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,7 +30,7 @@ public class AutoTurnToGoalChain extends Command {
 
     protected final ProfiledPIDController thetaController =
       new ProfiledPIDController(
-          21.0,
+          28.0,
           0.15,
           2.0,
           new TrapezoidProfile.Constraints(8, Double.MAX_VALUE));
@@ -130,9 +129,10 @@ public class AutoTurnToGoalChain extends Command {
             if (!isWaiting) {
                 startingTime = System.currentTimeMillis();
                 isWaiting = true;
-                if (System.currentTimeMillis() > 250) {
-                    return true;
-                }
+            }
+            
+            if (System.currentTimeMillis() - startingTime > 128) {
+                return true;
             }
         } else {
             isWaiting = false;

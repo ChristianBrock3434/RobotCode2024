@@ -3,13 +3,11 @@ package frc.robot.commands.drivetrain;
 import static frc.robot.Subsystems.*;
 import static frc.robot.Constants.*;
 
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 
 public class AutoTurnToGoal extends Command {
-    private long startingTime = 0;
+    private long startingTime;
     private boolean isWaiting = false;
 
     double thetaVelocity;
@@ -119,9 +117,9 @@ public class AutoTurnToGoal extends Command {
             if (!isWaiting) {
                 startingTime = System.currentTimeMillis();
                 isWaiting = true;
-                if (System.currentTimeMillis() > 128) {
-                    return true;
-                }
+            }
+            if (System.currentTimeMillis() - startingTime > 128) {
+                return true;
             }
         } else {
             isWaiting = false;

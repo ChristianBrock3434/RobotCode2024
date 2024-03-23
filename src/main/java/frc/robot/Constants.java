@@ -53,11 +53,11 @@ public final class Constants {
     public static final double shooterSequenceAcceleration = 100;
 
     public static final double trapSpeed = 36;
-    public static double ampSpeed = 7.15;
+    public static double ampSpeed = 7.2;
 
-    public static final double subwooferShotSpeed = 40;
-    public static final double podiumShotSpeed = 55; //55 Half Line Shot 62
-    public static final double chainShotSpeed = 60;
+    public static double subwooferShotSpeed = 40;
+    public static double podiumShotSpeed = 50; //55 Half Line Shot 62
+    public static double chainShotSpeed = 46.5;
     public static final double passShotSpeed = 40;
   }
 
@@ -73,11 +73,11 @@ public final class Constants {
     public static final double angleRestingPosition = 25.75;
 
     public static final double trapAngle = 0;
-    public static double ampAngle = 0;
+    public static double ampAngle = -6;
     
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 24.25; //23 Half Line Shot 34.75
-    public static double chainShotAngle = 36.0;
+    public static double chainShotAngle = 35.25;
     public static double passShotAngle = 15;
   }
 

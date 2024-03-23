@@ -153,7 +153,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void setPose(Pose2d newPose, double timestampSeconds) {
-        this.m_odometry.addVisionMeasurement(newPose, timestampSeconds);
+        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getRotation());
+        this.m_odometry.addVisionMeasurement(pose, timestampSeconds);
     }
 
     /**
@@ -202,7 +203,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      * @return the end state of the path
      */
     public State getEndPath(String autoName, int index){
-        var pathGroup = new PathPlannerAuto(autoName).getPathGroupFromAutoFile(autoName);
+        var pathGroup = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
         var path = pathGroup.get(index);
 
         ChassisSpeeds startingChassisSpeed = new ChassisSpeeds(0, 0, 0);

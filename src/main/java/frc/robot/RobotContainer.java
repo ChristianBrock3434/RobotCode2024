@@ -85,7 +85,8 @@ public class RobotContainer {
     PASS;
   };
 
-  private static shootingType currentShootingType = shootingType.MANUAL;
+  private static shootingType 
+  currentShootingType = shootingType.MANUAL;
 
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -463,6 +464,12 @@ public class RobotContainer {
       )
     );
 
+    // Change the angle of the recent shot to shoot higher
+    controller.y().onTrue(new InstantCommand(() -> changeRecentShotAngle(-0.25)));
+
+    // Change the angle of the recent shot to shoot lower
+    controller.a().onTrue(new InstantCommand(() -> changeRecentShotAngle(0.25)));
+
     // Trap Shot
     // controller.leftBumper().whileTrue(
     //   new ShootSequence(() -> 0 * angleTicksPerDegree, () -> 34)
@@ -488,8 +495,8 @@ public class RobotContainer {
     controller.pov(0).whileTrue(climber.runLimitedVoltageCommand(12));
     controller.pov(180).whileTrue(climber.runLimitedVoltageCommand(-12));
 
-    controller.y().whileTrue(climber.runVoltageCommand(3));
-    controller.a().whileTrue(climber.runVoltageCommand(-3));
+    // controller.y().whileTrue(climber.runVoltageCommand(3));
+    // controller.a().whileTrue(climber.runVoltageCommand(-3));
 
     // Reset angle
     controller.back().onTrue(new ZeroAngle());
@@ -623,6 +630,36 @@ public class RobotContainer {
         return true;
       }
     };
+  }
+
+  /**
+   * Changes the angle of the recent shot based on the current shooting type.
+   * The amount parameter specifies the amount by which the angle should be changed.
+   *
+   * @param amount the amount by which the angle should be changed
+   */
+  public void changeRecentShotAngle(double amount) {
+    switch (currentShootingType) {
+      case AMP:
+        ampAngle += amount;
+        break;
+      
+      case MANUAL:
+        if (isSubwooferShot) {
+          subwooferShotAngle += amount;
+        } else {
+          podiumShotAngle += amount;
+        }
+        break;
+
+      case CHAIN:
+        chainShotAngle += amount;
+        break;
+
+      case PASS:
+        passShotAngle += amount;
+        break;
+    }
   }
 
   /**

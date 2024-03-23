@@ -5,11 +5,7 @@ import static frc.robot.Subsystems.*;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.drivetrain.AutoTurn;
-import frc.robot.commands.drivetrain.AutoTurnToGoal;
 
 /**
  * A command that prepares the robot for shooting by controlling the rotation, shooter speed, and angle.
