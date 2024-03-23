@@ -68,7 +68,7 @@ public class RobotContainer {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
   private static boolean isSubwooferShot = true;
-  private static boolean isPositionTurning = true;
+  private static boolean isPositionTurning = false;
 
   private static enum shootingState {
     IDLE,
@@ -236,17 +236,17 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drivetrain.setDefaultCommand(
-      new DrivePosTurning()
+      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
+          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
+          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate)
+      )
     );
 
     limelightShooter.setDefaultCommand(new SeedPoseEstimation());
 
     // Manual Turning Mode
-    new Trigger(() -> !isPositionTurning).whileTrue(
-      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
-          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
-          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate)
-      )
+    new Trigger(() -> isPositionTurning).whileTrue(
+      new DrivePosTurning()
     );
 
     // Change Turning Mode
@@ -260,7 +260,7 @@ public class RobotContainer {
     // reset the field-centric heading on start button    
     controller.start().onTrue(
       new ParallelCommandGroup(
-        new InstantCommand(this::turnOnPositionTurning),
+        new InstantCommand(this::turnOffPositionTurning),
         drivetrain.runOnce(() -> drivetrain.resetOrientation()),
         new ShakeController(0.5, 0.25)
       )
@@ -573,6 +573,13 @@ public class RobotContainer {
    */
   public void turnOnPositionTurning() {
     isPositionTurning = true;
+  }
+
+  /**
+   * Turn off position turning mode
+   */
+  public void turnOffPositionTurning() {
+    isPositionTurning = false;
   }
 
   /**
