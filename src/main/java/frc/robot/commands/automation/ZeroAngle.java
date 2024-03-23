@@ -16,6 +16,7 @@ public class ZeroAngle extends SequentialCommandGroup {
         addCommands(
             new InstantCommand(angleController::runDown),
             angleController.waitUntilPressed().withTimeout(4),
+            new InstantCommand(angleController::stopMotor),
             new InstantCommand(angleController::zeroOnSensor),
             angleController.setPositionCommand(angleRestingPosition)  
         );

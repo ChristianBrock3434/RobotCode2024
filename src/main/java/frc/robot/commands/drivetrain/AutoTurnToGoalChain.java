@@ -21,16 +21,18 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 
-public class AutoTurnToGoal extends Command {
+public class AutoTurnToGoalChain extends Command {
     private long startingTime = 0;
     private boolean isWaiting = false;
 
     double thetaVelocity;
 
+    protected DoubleSupplier offset;
+
     protected final ProfiledPIDController thetaController =
       new ProfiledPIDController(
-          20.0,
-          0.0,
+          21.0,
+          0.15,
           2.0,
           new TrapezoidProfile.Constraints(8, Double.MAX_VALUE));
 
@@ -46,7 +48,7 @@ public class AutoTurnToGoal extends Command {
     protected double xSpeaker = 0;
     protected double ySpeaker = 0;
 
-    public AutoTurnToGoal(double offset) {
+    public AutoTurnToGoalChain() {
 
         var alliance = DriverStation.getAlliance();
         if (alliance.isEmpty()) {
@@ -59,13 +61,20 @@ public class AutoTurnToGoal extends Command {
             ySpeaker = FieldConstants.blueSpeakerY;
         }
 
+        offset = () -> {
+            if (drivetrain.getY() < 4) {
+                return 13;
+            } 
+            return -2;
+        };
+
         this.angleSupplier = () -> {
           Transform2d translation =
               new Transform2d(
                   xSpeaker - drivetrain.getPose().getX(),
                   ySpeaker - drivetrain.getPose().getY(),
                   new Rotation2d());
-          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset));
+          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset.getAsDouble()));
         };
 
         addRequirements(drivetrain);
@@ -81,6 +90,8 @@ public class AutoTurnToGoal extends Command {
     @Override
     public void execute() {
         double targetDirection = angleSupplier.get().getRadians();
+
+        System.out.println("Offset: " + offset.getAsDouble());
 
         // System.out.println("x: " + translation.getX());
         // System.out.println("y: " + translation.getY());
@@ -119,7 +130,7 @@ public class AutoTurnToGoal extends Command {
             if (!isWaiting) {
                 startingTime = System.currentTimeMillis();
                 isWaiting = true;
-                if (System.currentTimeMillis() > 128) {
+                if (System.currentTimeMillis() > 250) {
                     return true;
                 }
             }

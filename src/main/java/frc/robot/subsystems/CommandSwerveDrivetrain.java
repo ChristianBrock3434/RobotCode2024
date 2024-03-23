@@ -242,7 +242,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         double frSpeed = this.getModule(1).getDriveMotor().getVelocity().getValueAsDouble();
         double blSpeed = this.getModule(2).getDriveMotor().getVelocity().getValueAsDouble();
         double brSpeed = this.getModule(3).getDriveMotor().getVelocity().getValueAsDouble();
-        return (flSpeed > 1) || (frSpeed > 1) || (blSpeed > 1) || (brSpeed > 1);
+        return (flSpeed > 0.1) || (frSpeed > 0.1) || (blSpeed > 0.1) || (brSpeed > 0.1);
     }
 
     /**

@@ -211,6 +211,13 @@ public class AngleController extends SubsystemBase{
   }
 
   /**
+   * Stops the Angle Controller motor's movement
+   */
+  public void stopMotor() {
+    angleMotor.setControl(stopMode);
+  }
+
+  /**
    * reset the Angle Controller motor encoder to it's starting position
    */
   public void resetEncoder() {

@@ -41,6 +41,7 @@ import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.automation.ZeroAngle;
 import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.drivetrain.AutoTurnToGoal;
+import frc.robot.commands.drivetrain.AutoTurnToGoalChain;
 import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.InShootingRange;
 import frc.robot.commands.limelight.LineUpWithNotePath;
@@ -308,7 +309,7 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new AutoTurnToGoal(10),
+          new AutoTurnToGoalChain(),
           new AutoShootSequence(
             () -> chainShotAngle, 
             () -> chainShotSpeed, 
