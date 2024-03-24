@@ -153,7 +153,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void setPose(Pose2d newPose, double timestampSeconds) {
-        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getRotation());
+        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getPose().getRotation());
         this.m_odometry.addVisionMeasurement(pose, timestampSeconds);
     }
 
