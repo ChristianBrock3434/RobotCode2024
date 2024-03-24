@@ -58,6 +58,7 @@ public final class Constants {
     public static double subwooferShotSpeed = 40;
     public static double podiumShotSpeed = 50; //55 Half Line Shot 62
     public static double chainShotSpeed = 46.5;
+    public static double championshipShotSpeed = 47;
     public static final double passShotSpeed = 40;
   }
 
@@ -78,6 +79,7 @@ public final class Constants {
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 24.25; //23 Half Line Shot 34.75
     public static double chainShotAngle = 35.25;
+    public static double championshipShotAngle = 35.75;
     public static double passShotAngle = 15;
   }
 

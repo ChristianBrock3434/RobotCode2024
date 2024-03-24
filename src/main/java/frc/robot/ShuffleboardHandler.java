@@ -95,12 +95,13 @@ public class ShuffleboardHandler {
     }
 
     private static ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
-    private static GenericEntry FarShotRange;
+    // private static GenericEntry FarShotRange;
 
     private static GenericEntry ampShotSpeed;
     private static GenericEntry FarShotSpeed;
     private static GenericEntry SubwooferSpeed;
     private static GenericEntry PodiumSpeed;
+    private static GenericEntry championshipSpeed;
 
     private static GenericEntry IntakeAngle;
 
@@ -111,33 +112,44 @@ public class ShuffleboardHandler {
      */
     public static void initDriverTab (SendableChooser<Command> autoChooser, BooleanSupplier manualMode) {
         
-        driverTab.addDouble("Far Shot Angle", () -> chainShotAngle)
+        driverTab.addDouble("Chain Shot", () -> chainShotAngle)
                         .withPosition(4, 0)
                         .withSize(1, 1);
-
-        driverTab.addDouble("Amp Shot Angle", () -> ampAngle)
+        
+        driverTab.addDouble("Champion Shot", () -> championshipShotAngle)
                         .withPosition(4, 1)
                         .withSize(1, 1);
 
-        driverTab.addDouble("Subwoofer Shot Angle", () -> subwooferShotAngle)
+        driverTab.addDouble("Amp Shot", () -> ampAngle)
                         .withPosition(4, 2)
                         .withSize(1, 1);
 
-        driverTab.addDouble("Podium Shot Angle", () -> podiumShotAngle)
+        driverTab.addDouble("Subwoofer Shot", () -> subwooferShotAngle)
                         .withPosition(4, 3)
                         .withSize(1, 1);
 
-        driverTab.addDouble("Pass Shot Angle", () -> passShotAngle)
+        driverTab.addDouble("Podium Shot", () -> podiumShotAngle)
+                        .withPosition(5, 3)
+                        .withSize(1, 1);
+
+        driverTab.addDouble("Pass Shot", () -> passShotAngle)
                         .withPosition(3, 3)
                         .withSize(1, 1);
 
 
 
-        FarShotRange = driverTab.add("Far Shot Distance", farShotDistance)
-                        .withPosition(0, 0)
+        // FarShotRange = driverTab.add("Far Shot Distance", farShotDistance)
+        //                 .withPosition(0, 0)
+        //                 .withSize(2, 1)
+        //                 .withWidget(BuiltInWidgets.kNumberSlider)
+        //                 .withProperties(Map.of("min", farShotDistance-3, "max", farShotDistance+3))
+        //                 .getEntry();
+
+        championshipSpeed = driverTab.add("Champion Shot Speed", championshipShotSpeed)
+                        .withPosition(0, 1)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", farShotDistance-3, "max", farShotDistance+3))
+                        .withProperties(Map.of("min", championshipShotSpeed-10, "max", championshipShotSpeed+10))
                         .getEntry();
 
         ampShotSpeed = driverTab.add("Amp Shot Speed", ampSpeed)
@@ -148,13 +160,13 @@ public class ShuffleboardHandler {
                         .getEntry();
 
         IntakeAngle = driverTab.add("Intake Angle", actuationPickUpPosition)
-                        .withPosition(0, 1)
+                        .withPosition(0, 0)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", actuationPickUpPosition-5, "max", actuationPickUpPosition+5))
                         .getEntry();
 
-        FarShotSpeed = driverTab.add("Far Shot Speed", chainShotSpeed)
+        FarShotSpeed = driverTab.add("Chain Shot Speed", chainShotSpeed)
                         .withPosition(2, 1)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
@@ -177,7 +189,7 @@ public class ShuffleboardHandler {
 
         driverTab.addBoolean("Manual Shot", manualMode)
                         .withPosition(5, 0)
-                        .withSize(1, 4);
+                        .withSize(1, 3);
 
         driverTab.add("Auto Chooser", autoChooser)
                         .withPosition(0, 3)
@@ -193,12 +205,13 @@ public class ShuffleboardHandler {
      * Updates the code with the current values in shuffleboard
      */
     public static void updateDriverTab () {
-        farShotDistance = FarShotRange.getDouble(farShotDistance);
+        // farShotDistance = FarShotRange.getDouble(farShotDistance);
         actuationPickUpPosition = IntakeAngle.getDouble(actuationPickUpPosition);
 
         ampSpeed = ampShotSpeed.getDouble(ampSpeed);
         chainShotSpeed = FarShotSpeed.getDouble(chainShotSpeed);
         subwooferShotSpeed = SubwooferSpeed.getDouble(subwooferShotSpeed);
         podiumShotSpeed = PodiumSpeed.getDouble(podiumShotSpeed);
+        championshipShotSpeed = championshipSpeed.getDouble(championshipShotSpeed); 
     }
 }

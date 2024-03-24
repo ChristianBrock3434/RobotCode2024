@@ -41,7 +41,6 @@ import frc.robot.commands.automation.StopShoot;
 import frc.robot.commands.automation.ZeroAngle;
 import frc.robot.commands.drivetrain.AutoTurn;
 import frc.robot.commands.drivetrain.AutoTurnToGoal;
-import frc.robot.commands.drivetrain.AutoTurnToGoalChain;
 import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.InShootingRange;
 import frc.robot.commands.limelight.LineUpWithNotePath;
@@ -79,14 +78,15 @@ public class RobotContainer {
   private static shootingState currentShootingState = shootingState.IDLE;
 
   private static enum shootingType {
-    MANUAL,
+    SUBWOOFER,
+    PODIUM,
     CHAIN,
+    CHAMPIONSHIP,
     AMP,
     PASS;
   };
 
-  private static shootingType 
-  currentShootingType = shootingType.MANUAL;
+  private static shootingType currentShootingType = shootingType.SUBWOOFER;
 
   // Lock wheels
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -236,10 +236,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drivetrain.setDefaultCommand(
-      drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
-          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
-          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate)
-      )
+      driveCommand()
     );
 
     limelightShooter.setDefaultCommand(new SeedPoseEstimation());
@@ -277,24 +274,22 @@ public class RobotContainer {
       indexer.runIndexerCommand(indexerVelocity, indexerAcceleration)
     ));
 
-    // Chain Shot
-    controller.rightTrigger(0.1).onTrue(
-      new ConditionalCommand(
-        new InstantCommand(this::incrementShootingMode), 
-        setShootingTypeCommand(shootingType.CHAIN), 
-        () -> currentShootingType.equals(shootingType.CHAIN)
+    // On Stop Shooting
+    new Trigger(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
+      new ParallelCommandGroup(
+        new StopShoot(angleRestingPosition),
+        new InstantCommand(InShootingRange::stopCommand),
+        driveCommand()
       )
     );
 
-    new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
-      .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
-        new ParallelCommandGroup(
-          new StopShoot(angleRestingPosition),
-          new InstantCommand(InShootingRange::stopCommand)
-          // new InstantCommand(AutoTurnToGoal::stopCommand)
-        )
-    );
+    // new Trigger(() -> true).whileTrue(this.shootRightTriggerCommand());
+    // shootRightTriggerCommand().schedule();
 
+    // new Trigger(() -> true).whileTrue(this.shootLeftTriggerCommand());
+    // shootLeftTriggerCommand().schedule();
+
+    // Chain Shot
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new ParallelCommandGroup(
@@ -310,14 +305,39 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new AutoTurnToGoalChain(),
+          new AutoTurnToGoal(-2),
           new AutoShootSequence(
             () -> chainShotAngle, 
             () -> chainShotSpeed, 
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    ).onFalse(new DrivePosTurning());
+    ).onFalse(driveCommand());
+
+    // Championship Shot
+    new Trigger(() -> currentShootingType.equals(shootingType.CHAMPIONSHIP))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
+        new ParallelCommandGroup(
+          new PrepareForShoot(
+              () -> championshipShotAngle, 
+              () -> championshipShotSpeed
+          ),
+          new InShootingRange()
+        )
+    // ).onFalse(new InstantCommand(AutoTurnToGoal::stopCommand));
+    );
+
+    new Trigger(() -> currentShootingType.equals(shootingType.CHAMPIONSHIP))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
+        new SequentialCommandGroup(
+          new AutoTurnToGoal(11.5),
+          new AutoShootSequence(
+            () -> championshipShotAngle, 
+            () -> championshipShotSpeed, 
+            angleRestingPosition
+          ).andThen(new InstantCommand(this::stopShooting))
+        )
+    ).onFalse(driveCommand());
 
     // Change Manual Shot Mode between podium and subwoofer
     controller.leftStick().onTrue(
@@ -327,24 +347,9 @@ public class RobotContainer {
       )
     );
 
-    // Manual Shoot
-    controller.leftTrigger(0.1).onTrue(
-      new ConditionalCommand(
-        new InstantCommand(this::incrementShootingMode), 
-        setShootingTypeCommand(shootingType.MANUAL), 
-        () -> currentShootingType.equals(shootingType.MANUAL)
-      )
-    );
-
-    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
-      .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
-        new StopShoot(angleRestingPosition)
-    );
-
     // Subwoofer Shot
-    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
-      .and(() -> currentShootingState.equals(shootingState.PREPARED))
-      .and(() -> isSubwooferShot).onTrue(
+    new Trigger(() -> currentShootingType.equals(shootingType.SUBWOOFER))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new ParallelCommandGroup(
           new PrepareForShoot(
               () -> subwooferShotAngle, 
@@ -353,9 +358,8 @@ public class RobotContainer {
         )
     );
 
-    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
-      .and(() -> currentShootingState.equals(shootingState.SHOOTING))
-      .and(() -> isSubwooferShot).onTrue(
+    new Trigger(() -> currentShootingType.equals(shootingType.SUBWOOFER))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           // new AutoTurnToGoal(),
           new AutoShootSequence(
@@ -364,12 +368,11 @@ public class RobotContainer {
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    ).onFalse(new DrivePosTurning());
+    ).onFalse(driveCommand());
 
     // Podium Shot
-    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
-      .and(() -> currentShootingState.equals(shootingState.PREPARED))
-      .and(() -> !isSubwooferShot).onTrue(
+    new Trigger(() -> currentShootingType.equals(shootingType.PODIUM))
+      .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new ParallelCommandGroup(
           new PrepareForShoot(
               () -> podiumShotAngle, 
@@ -378,9 +381,8 @@ public class RobotContainer {
         )
     );
 
-    new Trigger(() -> currentShootingType.equals(shootingType.MANUAL))
-      .and(() -> currentShootingState.equals(shootingState.SHOOTING))
-      .and(() -> !isSubwooferShot).onTrue(
+    new Trigger(() -> currentShootingType.equals(shootingType.PODIUM))
+      .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new AutoTurnToGoal(15),
           new AutoShootSequence(
@@ -389,7 +391,7 @@ public class RobotContainer {
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    ).onFalse(new DrivePosTurning());
+    ).onFalse(driveCommand());
 
     // Amp Shot
     controller.pov(270).onTrue(
@@ -410,7 +412,7 @@ public class RobotContainer {
           ),
           angleController.setPositionCommand(ampAngle)
         )
-    ).onFalse(new DrivePosTurning());
+    ).onFalse(driveCommand());
 
     new Trigger(() -> currentShootingType.equals(shootingType.AMP))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
@@ -433,11 +435,6 @@ public class RobotContainer {
     );
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
-      .and(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
-        new StopShoot(angleRestingPosition)
-    );
-
-    new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
         new PrepareForShoot(
             () -> passShotAngle, 
@@ -455,7 +452,7 @@ public class RobotContainer {
             angleRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
-    ).onFalse(new DrivePosTurning());
+    ).onFalse(driveCommand());
 
     // Cancel all current Modes
     controller.pov(90).onTrue(
@@ -502,6 +499,12 @@ public class RobotContainer {
     controller.back().onTrue(new ZeroAngle());
 
     new Trigger(() -> angleController.getZeroSensor()).onTrue(new InstantCommand(angleController::zeroOnSensor));
+  }
+
+  public Command driveCommand() {
+    return drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
+          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
+          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate));
   }
 
   private long timeOfLastAccess = 0;
@@ -651,21 +654,77 @@ public class RobotContainer {
         ampAngle += amount;
         break;
       
-      case MANUAL:
-        if (isSubwooferShot) {
-          subwooferShotAngle += amount;
-        } else {
-          podiumShotAngle += amount;
-        }
+      case SUBWOOFER:
+        subwooferShotAngle += amount;  
+        break;
+
+      case PODIUM:
+        podiumShotAngle += amount;
         break;
 
       case CHAIN:
         chainShotAngle += amount;
         break;
 
+      case CHAMPIONSHIP:
+        championshipShotAngle += amount;
+        break;
+
       case PASS:
         passShotAngle += amount;
         break;
+    }
+  }
+
+  private double maxRightPressedDown = 0;
+  /**
+   * Handles the shooting action when the right trigger is pressed.
+   */
+  public void shootRightTrigger() {
+    double rightTrigger = controller.getHID().getRightTriggerAxis();
+
+    if (currentShootingState == shootingState.IDLE) {
+      maxRightPressedDown = Math.max(maxRightPressedDown, rightTrigger);
+
+      if (maxRightPressedDown > 0.1 && rightTrigger < 0.1) {
+        if (maxRightPressedDown < 0.9) {
+          setShootingType(shootingType.CHAMPIONSHIP);
+        } else {
+          setShootingType(shootingType.SUBWOOFER);
+        }
+        maxRightPressedDown = 0;
+      }
+    } 
+    else if (currentShootingState == shootingState.PREPARED) {
+      if (rightTrigger > 0.1) {
+        currentShootingState = shootingState.SHOOTING;
+      }
+    }
+  }
+
+  private double maxLeftPressedDown = 0;
+  /**
+   * Handles the shooting action when the left trigger is pressed.
+   */
+  public void shootLeftTrigger() {
+    double leftTrigger = controller.getHID().getLeftTriggerAxis();
+
+    if (currentShootingState == shootingState.IDLE) {
+      maxLeftPressedDown = Math.max(maxLeftPressedDown, leftTrigger);
+
+      if (maxLeftPressedDown > 0.1 && leftTrigger < 0.1) {
+        if (maxLeftPressedDown < 0.9) {
+          setShootingType(shootingType.CHAIN);
+        } else {
+          setShootingType(shootingType.PODIUM);
+        }
+        maxLeftPressedDown = 0;
+      }
+    } 
+    else if (currentShootingState == shootingState.PREPARED) {
+      if (leftTrigger > 0.1) {
+        currentShootingState = shootingState.SHOOTING;
+      }
     }
   }
 
