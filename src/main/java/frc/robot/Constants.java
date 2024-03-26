@@ -29,7 +29,7 @@ public final class Constants {
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
     public static final double actuationStartPosition = -65;
-    public static double actuationPickUpPosition = 100;
+    public static double actuationPickUpPosition = 100; //100
     public static final double actuationTuckPosition = -65;
   }
 
@@ -78,7 +78,7 @@ public final class Constants {
     
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 24.25; //23 Half Line Shot 34.75
-    public static double chainShotAngle = 35.25;
+    public static double chainShotAngle = 33;
     public static double championshipShotAngle = 35.75;
     public static double passShotAngle = 15;
   }

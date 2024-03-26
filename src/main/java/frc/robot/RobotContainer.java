@@ -21,6 +21,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,7 +67,7 @@ public class RobotContainer {
       .withDeadband(MaxSpeed * 0.13).withRotationalDeadband(MaxAngularRate * 0.1) // Add a deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
-  private static boolean isSubwooferShot = true;
+  private static boolean isAutoLineUp = true;
   private static boolean isPositionTurning = false;
 
   private static enum shootingState {
@@ -100,7 +101,7 @@ public class RobotContainer {
     configureBindings();
     autoSelect();
     ShuffleboardHandler.initSensorTab();
-    ShuffleboardHandler.initDriverTab(autoChooser, () -> isSubwooferShot);
+    ShuffleboardHandler.initDriverTab(autoChooser, () -> isAutoLineUp);
   }
 
   /**
@@ -201,28 +202,28 @@ public class RobotContainer {
    * link line up commands to pathplanner
    */
   private static void linkLineUpCommands() {
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(1.25), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
 
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
 
     
-    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
 
-    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(2.0), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(2.0), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
   }
 
   /**
@@ -305,7 +306,11 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.CHAIN))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new AutoTurnToGoal(-2),
+          new ConditionalCommand(
+            new AutoTurnToGoal(0), 
+            new AutoTurn(-174).withTimeout(0.75), 
+            () -> isAutoLineUp
+          ),
           new AutoShootSequence(
             () -> chainShotAngle, 
             () -> chainShotSpeed, 
@@ -330,7 +335,11 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.CHAMPIONSHIP))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new AutoTurnToGoal(11.5),
+          new ConditionalCommand(
+            new AutoTurnToGoal(8.5), 
+            new AutoTurn(-155).withTimeout(0.75), 
+            () -> isAutoLineUp
+          ),
           new AutoShootSequence(
             () -> championshipShotAngle, 
             () -> championshipShotSpeed, 
@@ -342,7 +351,7 @@ public class RobotContainer {
     // Change Manual Shot Mode between podium and subwoofer
     controller.leftStick().onTrue(
       new ParallelCommandGroup(
-        new InstantCommand(this::changeManualShootMode),
+        new InstantCommand(this::changeAutoLineUpMode),
         new ShakeController(0.5, 0.25)
       )
     );
@@ -384,7 +393,11 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.PODIUM))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new AutoTurnToGoal(15),
+          new ConditionalCommand(
+            new AutoTurnToGoal(15), 
+            new AutoTurn(170).withTimeout(0.75), 
+            () -> isAutoLineUp
+          ),
           new AutoShootSequence(
             () -> podiumShotAngle, 
             () -> podiumShotSpeed, 
@@ -445,7 +458,11 @@ public class RobotContainer {
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new AutoTurnToGoal(15),
+          new ConditionalCommand(
+            new AutoTurnToGoal(15), 
+            new AutoTurn(180).withTimeout(0.75), 
+            () -> isAutoLineUp
+          ),
           new AutoShootSequence(
             () -> passShotAngle, 
             () -> passShotSpeed, 
@@ -462,10 +479,13 @@ public class RobotContainer {
     );
 
     // Change the angle of the recent shot to shoot higher
-    controller.y().onTrue(new InstantCommand(() -> changeRecentShotAngle(-0.25)));
+    // controller.y().onTrue(new InstantCommand(() -> changeRecentShotAngle(-0.25)));
 
     // Change the angle of the recent shot to shoot lower
-    controller.a().onTrue(new InstantCommand(() -> changeRecentShotAngle(0.25)));
+    // controller.a().onTrue(new InstantCommand(() -> changeRecentShotAngle(0.25)));
+
+    controller.y().whileTrue(actuation.runActuatorPercent(0.5));
+    controller.a().whileTrue(actuation.runActuatorPercent(-0.5));
 
     // Trap Shot
     // controller.leftBumper().whileTrue(
@@ -586,10 +606,10 @@ public class RobotContainer {
   }
 
   /**
-   * Change the manual shot mode between subwoofer and podium
+   * Change from auto line up to auto turn
    */
-  public void changeManualShootMode() {
-    isSubwooferShot = !isSubwooferShot;
+  public void changeAutoLineUpMode() {
+    isAutoLineUp = !isAutoLineUp;
   }
 
   /**

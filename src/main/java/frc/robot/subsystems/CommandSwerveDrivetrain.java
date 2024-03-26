@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
@@ -48,6 +49,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
+        setBrakeMode();
         // this.getPigeon2().reset();
         // applyCurrentLimiting();
         configurePathPlanner();
@@ -57,6 +59,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+        setBrakeMode();
         // this.getPigeon2().reset();
         // applyCurrentLimiting();
         configurePathPlanner();
@@ -147,9 +150,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this); // Subsystem for requirements
     }
 
+    public void setBrakeMode() {
+        configNeutralMode(NeutralModeValue.Brake);
+    }
+
+    public void setCoastMode() {
+        configNeutralMode(NeutralModeValue.Coast);
+    }
+
     public void setPose(Pose2d newPose) {
-        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getRotation());
-        this.m_odometry.resetPosition(this.getRotation(), m_modulePositions, pose);
+        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getPose().getRotation());
+        // this.m_odometry.resetPosition(this.getRotation(), m_modulePositions, pose);
+        seedFieldRelative(pose);
     }
 
     public void setPose(Pose2d newPose, double timestampSeconds) {

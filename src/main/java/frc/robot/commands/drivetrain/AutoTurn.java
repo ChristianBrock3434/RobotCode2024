@@ -39,6 +39,7 @@ public class AutoTurn extends Command{
 
     @Override
     public void initialize() {
+        // drivetrain.setBrakeMode();
         // limelightIntake.turnOnLimelight();
         // limelightIntake.setLimelightPipeline(LimelightIntake.Pipeline.Note);
         isFinished = false;
@@ -76,6 +77,7 @@ public class AutoTurn extends Command{
     @Override
     public void end(boolean interrupted) {
         // drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
+        // drivetrain.setCoastMode();
     }
 
     @Override

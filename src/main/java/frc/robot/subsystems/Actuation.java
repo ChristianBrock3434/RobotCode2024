@@ -11,12 +11,15 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -27,7 +30,14 @@ public class Actuation extends SubsystemBase {
   private TalonFX actuationMotor = new TalonFX(14);
 
   MotionMagicVoltage motionMagicControl;
+  VoltageOut voltageOut;
   NeutralOut stopMode;
+
+  private boolean isPositionControl;
+  private double desiredPos;
+
+  private PIDController posPID = new PIDController(1, 0, 0.01);
+  private PIDController paddingPID = new PIDController(0.75, 0, 0.0);
   
   /**
    * Creates a new Actuation.
@@ -37,12 +47,22 @@ public class Actuation extends SubsystemBase {
 
     motionMagicControl = new MotionMagicVoltage(0, 
                                                 true, 
-                                                -0.35,
+                                                -0.25,
                                                 0,
                                                 false,
                                                 false,
                                                 false
                                               );
+
+    voltageOut = new VoltageOut(0, 
+                                true, 
+                                false, 
+                                false, 
+                                false);
+
+    desiredPos = actuationTuckPosition;
+    posPID.disableContinuousInput();
+    // posPID.setTolerance(1.5);
 
     stopMode = new NeutralOut();
   }
@@ -73,7 +93,7 @@ public class Actuation extends SubsystemBase {
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     configs.Slot0.kP = 20; // An error of 1 rotation per second results in 2V output
     configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kD = 0.1; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
     configs.Voltage.PeakForwardVoltage = 8;
@@ -118,9 +138,12 @@ public class Actuation extends SubsystemBase {
   public void setPosition(double position) {
     // System.out.println("Actuator Up");
 
-    actuationMotor.setControl(motionMagicControl
-                              .withPosition(position * actuationTicksPerDegree)
-                            );
+    isPositionControl = true;
+    // posPID.setGoal(position);
+    desiredPos = position * actuationTicksPerDegree;
+    // actuationMotor.setControl(motionMagicControl
+    //                           .withPosition(position * actuationTicksPerDegree)
+    //                         );
   }
 
   /**
@@ -131,6 +154,7 @@ public class Actuation extends SubsystemBase {
     return new Command() {
       @Override
       public void execute() {
+        isPositionControl = false;
         actuationMotor.set(speed);
       }
 
@@ -174,6 +198,38 @@ public class Actuation extends SubsystemBase {
     };
   }
 
+  private void runMotorToPosition() {
+    boolean isVoltage = true;
+
+    if (desiredPos < 0) {
+      posPID.setTolerance(1);
+      paddingPID.setTolerance(0.5);
+    } else {
+      posPID.setTolerance(2);
+      paddingPID.setTolerance(1.0);
+    }
+
+    double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
+    power = MathUtil.clamp(power, -3, 3);
+    if (posPID.atSetpoint()) {
+      power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
+      power = MathUtil.clamp(power, -1.5, 1.0);
+
+      isVoltage = !paddingPID.atSetpoint();
+      // power = 0;
+    }
+
+    // System.out.println("Power" + actuationMotor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putNumber("Power", actuationMotor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putNumber("Desired Pos", desiredPos);
+    
+    if (isVoltage) {
+      actuationMotor.setControl(voltageOut.withOutput(power));
+    } else {
+      actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
+    }
+  } 
+
   /**
    * Reset the actuation motor encoder to it's starting position
    */
@@ -188,10 +244,20 @@ public class Actuation extends SubsystemBase {
   public double getAngle() {
     return actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree;
   }
+
+  public void stopMotor() {
+    isPositionControl = false;
+    actuationMotor.setControl(stopMode);
+  }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("isPosControl", isPositionControl);
+    if (isPositionControl) {
+      runMotorToPosition();
+    }
+
     // System.out.println(getLimitSwitch());
     // System.out.println(actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
     // System.out.println(actuationMotor.getMotorVoltage());

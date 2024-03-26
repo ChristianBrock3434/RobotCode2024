@@ -71,9 +71,11 @@ public class AutoTurnToGoal extends Command {
 
     @Override
     public void initialize() {
+        // drivetrain.setBrakeMode();
+
         thetaController.reset(drivetrain.getRotation().getRadians());
         thetaController.enableContinuousInput(-Math.PI, + Math.PI);
-        thetaController.setTolerance(Units.degreesToRadians(2));
+        thetaController.setTolerance(Units.degreesToRadians(1.5));
     }
     
     @Override
@@ -108,6 +110,7 @@ public class AutoTurnToGoal extends Command {
     @Override
     public void end(boolean interrupted) {
         // drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
+        // drivetrain.setCoastMode();
     }
     
     @Override

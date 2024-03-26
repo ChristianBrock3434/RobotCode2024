@@ -1,6 +1,5 @@
 package frc.robot;
 
-import static frc.robot.Constants.*;
 import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
 import static frc.robot.Constants.ShooterConstants.*;
