@@ -7,18 +7,17 @@
     "4 Ring Close Red",
     "5 Ring Close Blue",
     "Far Blue",
-    "Far Red",
     "New 4 Ring Close Red",
-    "New Far Red"
+    "New Far Red",
+    "7-8-6 far blue"
   ],
   "autoFolders": [
     "Blue",
-    "New Red",
-    "Red"
+    "New Red"
   ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "maxModuleSpeed": 4.75
+  "maxModuleSpeed": 5.0
 }

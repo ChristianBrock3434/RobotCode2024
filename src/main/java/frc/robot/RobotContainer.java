@@ -6,6 +6,7 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
+import static frc.robot.Constants.DrivetrainConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
 import static frc.robot.Constants.IndexerConstants.*;
 import static frc.robot.Constants.ShooterConstants.*;
@@ -46,6 +47,7 @@ import frc.robot.commands.drivetrain.DrivePosTurning;
 import frc.robot.commands.limelight.InShootingRange;
 import frc.robot.commands.limelight.LineUpWithNotePath;
 import frc.robot.commands.limelight.SeedPoseEstimation;
+import frc.robot.commands.limelight.SeedPoseOnce;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -102,6 +104,7 @@ public class RobotContainer {
     autoSelect();
     ShuffleboardHandler.initSensorTab();
     ShuffleboardHandler.initDriverTab(autoChooser, () -> isAutoLineUp);
+    ShuffleboardHandler.initTuningTab();
   }
 
   /**
@@ -151,6 +154,7 @@ public class RobotContainer {
     // NamedCommands.registerCommand("tuckActuator", actuation.setPositionCommand(actuationTuckPosition));
     
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
+    NamedCommands.registerCommand("Seed Pose", new SeedPoseOnce());
 
     NamedCommands.registerCommand("waitForPathInterrupt", AutoTracker.waitForSignal(AutoTracker.tracked.PATH));
     NamedCommands.registerCommand("interruptPath", AutoTracker.sendSignal(AutoTracker.tracked.PATH));
@@ -202,28 +206,28 @@ public class RobotContainer {
    * link line up commands to pathplanner
    */
   private static void linkLineUpCommands() {
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
 
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(4.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(4.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
 
     
-    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
 
-    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(4.0), new Constraints(8, Double.MAX_VALUE), new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
   }
 
   /**
@@ -239,8 +243,6 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
       driveCommand()
     );
-
-    limelightShooter.setDefaultCommand(new SeedPoseEstimation());
 
     // Manual Turning Mode
     new Trigger(() -> isPositionTurning).whileTrue(
@@ -307,8 +309,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(0), 
-            new AutoTurn(-174).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> chainShotOffset), 
+            new AutoTurn(() -> chainShotManualRot).withTimeout(0.75), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -336,8 +338,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(8.5), 
-            new AutoTurn(-155).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> championshipShotOffset), 
+            new AutoTurn(() -> championshipShotManualRot).withTimeout(0.75), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -394,8 +396,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(15), 
-            new AutoTurn(170).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> podiumShotOffset), 
+            new AutoTurn(() -> podiumShotManualRot).withTimeout(0.75), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -459,8 +461,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(15), 
-            new AutoTurn(180).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> passShotOffset), 
+            new AutoTurn(() -> passShotManualRot).withTimeout(0.75), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -479,13 +481,13 @@ public class RobotContainer {
     );
 
     // Change the angle of the recent shot to shoot higher
-    // controller.y().onTrue(new InstantCommand(() -> changeRecentShotAngle(-0.25)));
+    controller.y().onTrue(new InstantCommand(() -> changeRecentShotAngle(-0.25)));
 
     // Change the angle of the recent shot to shoot lower
-    // controller.a().onTrue(new InstantCommand(() -> changeRecentShotAngle(0.25)));
+    controller.a().onTrue(new InstantCommand(() -> changeRecentShotAngle(0.25)));
 
-    controller.y().whileTrue(actuation.runActuatorPercent(0.5));
-    controller.a().whileTrue(actuation.runActuatorPercent(-0.5));
+    // controller.y().whileTrue(actuation.runActuatorPercent(0.5));
+    // controller.a().whileTrue(actuation.runActuatorPercent(-0.5));
 
     // Trap Shot
     // controller.leftBumper().whileTrue(

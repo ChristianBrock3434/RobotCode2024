@@ -74,18 +74,30 @@ public final class Constants {
     public static final double angleRestingPosition = 25.75;
 
     public static final double trapAngle = 0;
-    public static double ampAngle = -6;
+    public static double ampAngle = -2;
     
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 24.25; //23 Half Line Shot 34.75
     public static double chainShotAngle = 33;
-    public static double championshipShotAngle = 35.75;
+    public static double championshipShotAngle = 34;
     public static double passShotAngle = 15;
   }
 
   public final class ClimberConstants {
     public static final double minClimberHeight = 0;
     public static final double maxClimberHeight = 240;
+  }
+
+  public final class DrivetrainConstants {
+    public static double championshipShotOffset = 10;
+    public static double chainShotOffset = 8;
+    public static double podiumShotOffset = 15;
+    public static double passShotOffset = 15;
+
+    public static double championshipShotManualRot = -155;
+    public static double chainShotManualRot = -174;
+    public static double podiumShotManualRot = 170;
+    public static double passShotManualRot = 180;
   }
 
   public final class FieldConstants {

@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.55,
+      "y": 3.16
+    },
+    "rotation": 132.7
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Seed Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "prepareForNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Grab 7 far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot 7 far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Grab 8 far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot 8 far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Grab 6 far blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot 6 far blue"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Blue",
+  "choreoAuto": false
+}

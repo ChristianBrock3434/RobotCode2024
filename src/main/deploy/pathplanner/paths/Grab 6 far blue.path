@@ -3,43 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 11.780000000000001,
-        "y": 5.32
+        "x": 4.36,
+        "y": 1.83
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.010393715495585,
-        "y": 5.0436831096427515
+        "x": 6.115462616089283,
+        "y": 1.8034688280503517
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "shoot8blue"
     },
     {
       "anchor": {
-        "x": 8.914352550531063,
-        "y": 4.836575493407763
+        "x": 8.375654069425114,
+        "y": 4.2978770123018135
       },
       "prevControl": {
-        "x": 10.354787586966275,
-        "y": 4.883352948098763
+        "x": 7.321716492379215,
+        "y": 2.1196431674113905
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ring6blue"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7,
-      "rotationDegrees": 4.240000000000009,
-      "rotateFast": true
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -120.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.65,
       "command": {
         "type": "parallel",
         "data": {
@@ -56,9 +56,9 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 0.05,
+      "waypointRelativePos": 0.5,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -73,21 +73,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 4.240000000000009,
+    "rotation": -120.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Far Red",
+  "folder": "7-8-6 far blue",
   "previewStartingState": {
-    "rotation": -1.4300000000000068,
+    "rotation": 155.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

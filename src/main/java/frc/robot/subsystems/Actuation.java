@@ -37,7 +37,7 @@ public class Actuation extends SubsystemBase {
   private double desiredPos;
 
   private PIDController posPID = new PIDController(1, 0, 0.01);
-  private PIDController paddingPID = new PIDController(0.75, 0, 0.0);
+  private PIDController paddingPID = new PIDController(0.9, 0, 0.0);
   
   /**
    * Creates a new Actuation.
@@ -203,7 +203,7 @@ public class Actuation extends SubsystemBase {
 
     if (desiredPos < 0) {
       posPID.setTolerance(1);
-      paddingPID.setTolerance(0.5);
+      paddingPID.setTolerance(0.75);
     } else {
       posPID.setTolerance(2);
       paddingPID.setTolerance(1.0);
@@ -213,7 +213,7 @@ public class Actuation extends SubsystemBase {
     power = MathUtil.clamp(power, -3, 3);
     if (posPID.atSetpoint()) {
       power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-      power = MathUtil.clamp(power, -1.5, 1.0);
+      power = MathUtil.clamp(power, -1.5, 0.5);
 
       isVoltage = !paddingPID.atSetpoint();
       // power = 0;

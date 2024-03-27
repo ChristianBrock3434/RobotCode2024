@@ -3,6 +3,7 @@ package frc.robot.commands.drivetrain;
 import static frc.robot.Subsystems.*;
 import static frc.robot.Constants.*;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldConstants;
 
@@ -27,7 +29,7 @@ public class AutoTurnToGoal extends Command {
 
     protected final ProfiledPIDController thetaController =
       new ProfiledPIDController(
-          20.0,
+          22.0,
           0.0,
           2.0,
           new TrapezoidProfile.Constraints(8, Double.MAX_VALUE));
@@ -44,7 +46,7 @@ public class AutoTurnToGoal extends Command {
     protected double xSpeaker = 0;
     protected double ySpeaker = 0;
 
-    public AutoTurnToGoal(double offset) {
+    public AutoTurnToGoal(DoubleSupplier offset) {
 
         var alliance = DriverStation.getAlliance();
         if (alliance.isEmpty()) {
@@ -63,7 +65,7 @@ public class AutoTurnToGoal extends Command {
                   xSpeaker - drivetrain.getPose().getX(),
                   ySpeaker - drivetrain.getPose().getY(),
                   new Rotation2d());
-          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset));
+          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset.getAsDouble()));
         };
 
         addRequirements(drivetrain);
@@ -89,6 +91,9 @@ public class AutoTurnToGoal extends Command {
 
         
         // double targetDirection = angleSupplier.get().getRadians();
+        SmartDashboard.putNumber("x: ", xSpeaker - drivetrain.getPose().getX());
+        SmartDashboard.putNumber("y: ", ySpeaker - drivetrain.getPose().getY());
+        SmartDashboard.putNumber("Target Rot:", Units.radiansToDegrees(targetDirection));
 
         thetaVelocity =
             thetaController.calculate(
@@ -98,7 +103,7 @@ public class AutoTurnToGoal extends Command {
             thetaVelocity = 0;
         }
 
-        System.out.println(thetaVelocity);
+        // System.out.println(thetaVelocity);
 
         drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)

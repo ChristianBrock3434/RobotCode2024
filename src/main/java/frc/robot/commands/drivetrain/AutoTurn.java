@@ -5,6 +5,9 @@ import static frc.robot.Constants.MaxSpeed;
 import static frc.robot.Constants.controller;
 import static frc.robot.Subsystems.*;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
@@ -30,10 +33,15 @@ public class AutoTurn extends Command{
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private double output;
-    private Rotation2d angle;
+    private Supplier<Rotation2d> angle;
+
+    public AutoTurn(DoubleSupplier angle) {
+        this.angle = () -> Rotation2d.fromDegrees(angle.getAsDouble());
+        addRequirements(drivetrain);
+    }
 
     public AutoTurn(double angle) {
-        this.angle = Rotation2d.fromDegrees(angle);
+        this.angle = () -> Rotation2d.fromDegrees(angle);
         addRequirements(drivetrain);
     }
 
@@ -44,7 +52,7 @@ public class AutoTurn extends Command{
         // limelightIntake.setLimelightPipeline(LimelightIntake.Pipeline.Note);
         isFinished = false;
 
-        rotController.setSetpoint(angle.getDegrees());
+        rotController.setSetpoint(angle.get().getDegrees());
         rotController.setTolerance(0.1);
         rotController.enableContinuousInput(-180, 180);
     }

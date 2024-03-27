@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.492762434882929,
+        "y": 0.8666019043878308
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.993775357022895,
+        "y": 1.1710836545781504
+      },
+      "isLocked": false,
+      "linkedName": "ring8blue"
+    },
+    {
+      "anchor": {
+        "x": 4.36,
+        "y": 1.83
+      },
+      "prevControl": {
+        "x": 5.670450827349585,
+        "y": 1.475565404768469
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "shoot8blue"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 155.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "7-8-6 far blue",
+  "previewStartingState": {
+    "rotation": 160.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

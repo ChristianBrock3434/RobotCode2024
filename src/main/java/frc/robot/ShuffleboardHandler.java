@@ -2,6 +2,7 @@ package frc.robot;
 
 import static frc.robot.Constants.ActuationConstants.*;
 import static frc.robot.Constants.AngleControllerConstants.*;
+import static frc.robot.Constants.DrivetrainConstants.*;
 import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Subsystems.*;
 
@@ -212,5 +213,93 @@ public class ShuffleboardHandler {
         subwooferShotSpeed = SubwooferSpeed.getDouble(subwooferShotSpeed);
         podiumShotSpeed = PodiumSpeed.getDouble(podiumShotSpeed);
         championshipShotSpeed = championshipSpeed.getDouble(championshipShotSpeed); 
+    }
+
+    private static ShuffleboardTab tuningTab = Shuffleboard.getTab("Tuning");
+
+    private static GenericEntry ChamiponShotOffset;
+    private static GenericEntry ChainShotOffset;
+    private static GenericEntry PodiumShotOffset;
+    private static GenericEntry PassShotOffset;
+
+    private static GenericEntry ChamiponShotManualShot;
+    private static GenericEntry ChainShotManualShot;
+    private static GenericEntry PodiumShotManualShot;
+    private static GenericEntry PassShotManualShot;
+
+    /**
+     * Initializes the Shuffleboard tab for tuning the robot
+     */
+    public static void initTuningTab () {
+        ChamiponShotOffset = tuningTab.add("Champion Shot Offset", championshipShotOffset)
+                        .withPosition(0, 0)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", championshipShotOffset-10, "max", championshipShotOffset+10))
+                        .getEntry();
+
+        ChainShotOffset = tuningTab.add("Chain Shot Offset", chainShotOffset)
+                        .withPosition(0, 1)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", chainShotOffset-10, "max", chainShotOffset+10))
+                        .getEntry();
+
+        PodiumShotOffset = tuningTab.add("Podium Shot Offset", podiumShotOffset)
+                        .withPosition(0, 2)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", podiumShotOffset-10, "max", podiumShotOffset+10))
+                        .getEntry();
+            
+        PassShotOffset = tuningTab.add("Pass Shot Offset", passShotOffset)
+                        .withPosition(0, 3)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", passShotOffset-10, "max", passShotOffset+10))
+                        .getEntry();
+
+        ChamiponShotManualShot = tuningTab.add("Champion Shot Manual Rotation", championshipShotManualRot)
+                        .withPosition(2, 0)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", championshipShotManualRot-10, "max", championshipShotManualRot+10))
+                        .getEntry();
+
+        ChainShotManualShot = tuningTab.add("Chain Shot Manual Rotation", chainShotManualRot)
+                        .withPosition(2, 1)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", chainShotManualRot-10, "max", chainShotManualRot+10))
+                        .getEntry();
+
+        PodiumShotManualShot = tuningTab.add("Podium Shot Manual Rotation", podiumShotManualRot)
+                        .withPosition(2, 2)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", podiumShotManualRot-10, "max", podiumShotManualRot+10))
+                        .getEntry();
+
+        PassShotManualShot = tuningTab.add("Pass Shot Manual", passShotManualRot)
+                        .withPosition(2, 3)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", passShotManualRot-10, "max", passShotManualRot+10))
+                        .getEntry();
+    }
+
+    /**
+     * Updates the code with the current values in shuffleboard
+     */
+    public static void updateTuningTab () {
+        championshipShotOffset = ChamiponShotOffset.getDouble(championshipShotOffset);
+        chainShotOffset = ChainShotOffset.getDouble(chainShotOffset);
+        podiumShotOffset = PodiumShotOffset.getDouble(podiumShotOffset);
+        passShotOffset = PassShotOffset.getDouble(passShotOffset);
+
+        championshipShotManualRot = ChamiponShotManualShot.getDouble(championshipShotManualRot);
+        chainShotManualRot = ChainShotManualShot.getDouble(chainShotManualRot);
+        podiumShotManualRot = PodiumShotManualShot.getDouble(podiumShotManualRot);
+        passShotManualRot = PassShotManualShot.getDouble(passShotManualRot);
     }
 }

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.util.PIDConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.Command;
  * It utilizes PID controllers for driving to the end state and correcting the alignment.
  */
 public class LineUpWithNotePath extends Command {
-    private ProfiledPIDController m_xPIDController; //1.0
-    private ProfiledPIDController m_yPIDController; //1.0
+    private PIDController m_xPIDController; //1.0
+    private PIDController m_yPIDController; //1.0
     private PIDController m_lineUpPIDController; //0.04
 
     private final String autoPath;
@@ -36,6 +37,8 @@ public class LineUpWithNotePath extends Command {
     private double ySpeed;
     private double lineUpCorrection;
 
+    private final double maxVelocity;
+
     ChassisSpeeds speed;
 
 
@@ -47,12 +50,13 @@ public class LineUpWithNotePath extends Command {
    * @param drivePIDConstants the PID of driving to your end state
    * @param correctPIDConstants the PID of correction to the piece
    */
-  public LineUpWithNotePath(String autoPath, int index, PIDConstants drivePidConstants, Constraints driveConstraints, PIDConstants correctPidConstants) {
+  public LineUpWithNotePath(String autoPath, int index, PIDConstants drivePidConstants, double maxVelocity, PIDConstants correctPidConstants) {
     this.autoPath = autoPath;
     this.index = index;
+    this.maxVelocity = maxVelocity;
 
-    this.m_xPIDController = new ProfiledPIDController(drivePidConstants.kP, drivePidConstants.kI, drivePidConstants.kD, driveConstraints);
-    this.m_yPIDController = new ProfiledPIDController(drivePidConstants.kP, drivePidConstants.kI, drivePidConstants.kD, driveConstraints);
+    this.m_xPIDController = new PIDController(drivePidConstants.kP, drivePidConstants.kI, drivePidConstants.kD);
+    this.m_yPIDController = new PIDController(drivePidConstants.kP, drivePidConstants.kI, drivePidConstants.kD);
     this.m_lineUpPIDController = new PIDController(correctPidConstants.kP, correctPidConstants.kI, correctPidConstants.kD);
     addRequirements(drivetrain, limelightIntake);
   }
@@ -68,10 +72,10 @@ public class LineUpWithNotePath extends Command {
     // System.out.println("yGoal: " + yGoal);
 
     m_xPIDController.setTolerance(0.1);
-    m_xPIDController.setGoal(xGoal);
+    m_xPIDController.setSetpoint(xGoal);
 
     m_yPIDController.setTolerance(0.1);
-    m_yPIDController.setGoal(yGoal);
+    m_yPIDController.setSetpoint(yGoal);
 
     m_lineUpPIDController.setTolerance(1.5);
     m_lineUpPIDController.setSetpoint(0);
@@ -83,6 +87,7 @@ public class LineUpWithNotePath extends Command {
     currentRot = drivetrain.getRotation().getRadians();
 
     xSpeed = m_xPIDController.calculate(drivetrain.getPose().getX());
+    xSpeed = MathUtil.clamp(xSpeed, -maxVelocity, maxVelocity);
 
     if (m_xPIDController.atSetpoint()) {
       xSpeed = 0;
@@ -90,11 +95,15 @@ public class LineUpWithNotePath extends Command {
 
     ySpeed = m_yPIDController.calculate(drivetrain.getPose().getY());
 
+    ySpeed = MathUtil.clamp(ySpeed, -maxVelocity, maxVelocity);
+
     if (m_yPIDController.atSetpoint()) {
       ySpeed = 0;
     }
 
     lineUpCorrection = -m_lineUpPIDController.calculate(limelightIntake.getTX());
+
+    lineUpCorrection = MathUtil.clamp(lineUpCorrection, -maxVelocity, maxVelocity);
 
     if (m_lineUpPIDController.atSetpoint() || limelightIntake.getTX().equals(Double.NaN)) {
       lineUpCorrection = 0;
