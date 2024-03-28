@@ -134,6 +134,28 @@ public class Actuation extends SubsystemBase {
   }
 
   /**
+   * Run the actuation motor to a given position Slower but more stably
+   * @param position in encoder value
+   * @return a command that will run the actuation motor
+   */
+  public Command setPositionStableCommand(double position) {
+    return new Command() {
+      @Override
+      public void execute() {
+        isPositionControl = false;
+        actuationMotor.setControl(motionMagicControl
+                              .withPosition(position * actuationTicksPerDegree)
+                            );
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
+  /**
    * Run the actuation motor to a given position
    * @param position in encoder value
    */
@@ -211,7 +233,7 @@ public class Actuation extends SubsystemBase {
     }
 
     double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-    power = MathUtil.clamp(power, -3, 3);
+    power = MathUtil.clamp(power, -4, 3);
     if (posPID.atSetpoint()) {
       power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
       power = MathUtil.clamp(power, -1.5, 0.5);

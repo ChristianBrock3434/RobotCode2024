@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.36,
-        "y": 1.83
+        "x": 4.979511471148476,
+        "y": 1.9322880300539491
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.365969077159265,
-        "y": 1.616095443317848
+        "x": 5.985480548307741,
+        "y": 1.718383473371797
       },
       "isLocked": false,
       "linkedName": "shoot7blue"
     },
     {
       "anchor": {
-        "x": 8.492762434882929,
-        "y": 0.8666019043878308
+        "x": 8.340521559787769,
+        "y": 1.0071319429372099
       },
       "prevControl": {
-        "x": 7.391943799579468,
-        "y": 1.1008186353034606
+        "x": 7.239702924484308,
+        "y": 1.24134867385284
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 160.0,
+      "rotationDegrees": 165.0,
       "rotateFast": false
     }
   ],
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 160.0,
+    "rotation": 165.0,
     "rotateFast": false
   },
   "reversed": false,

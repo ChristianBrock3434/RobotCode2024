@@ -132,6 +132,7 @@ public class RobotContainer {
     autoChooser.addOption("8-7 Park Blue", drivetrain.getAutoPath("3 ring far blue park"));
     autoChooser.addOption("1-2-3 Blue", drivetrain.getAutoPath("4 ring close blue"));
     autoChooser.addOption("8-6 Blue", drivetrain.getAutoPath("3 ring far blue mid"));
+    autoChooser.addOption("7-8-6 Blue", drivetrain.getAutoPath("7-8-6 far blue"));
     // autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
 
     autoChooser.addOption("8-7 Red", drivetrain.getAutoPath("new 3 ring far red"));
@@ -155,6 +156,7 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("prepareForNote", limelightIntake.prepareForNote());
     NamedCommands.registerCommand("Seed Pose", new SeedPoseOnce());
+    NamedCommands.registerCommand("Seed Pose Continous", new SeedPoseEstimation());
 
     NamedCommands.registerCommand("waitForPathInterrupt", AutoTracker.waitForSignal(AutoTracker.tracked.PATH));
     NamedCommands.registerCommand("interruptPath", AutoTracker.sendSignal(AutoTracker.tracked.PATH));
@@ -165,7 +167,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("waitForShootSignal", AutoTracker.waitForSignal(AutoTracker.tracked.SHOOTER));
     NamedCommands.registerCommand("sendShooterSignal", AutoTracker.sendSignal(AutoTracker.tracked.SHOOTER));
     
-    NamedCommands.registerCommand("speedUpShooter", shooter.speedUpShooter(65, 100));
+    NamedCommands.registerCommand("speedUpShooter", shooter.speedUpShooter(50, 100));
+    NamedCommands.registerCommand("Auto Aim Champion", new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.25));
 
     linkShootCommands();
     linkLineUpCommands();
@@ -175,59 +178,67 @@ public class RobotContainer {
    * link shoot commands to pathplanner
    */
   private static void linkShootCommands() {
-    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 50, 20.5));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 21.5, () -> 50, 23.5));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 23.5, () -> 50, 24.5));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 24.5, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 40, 20.5));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 21.5, () -> 40, 23.5));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 23.5, () -> 40, 24.5));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 24.5, () -> 40, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 50, 20));
-    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 21.5, () -> 50, 23.5));
-    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 23.5, () -> 50, 24.5));
-    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 24.5, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 40, 20));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 21.5, () -> 40, 23.5));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 23.5, () -> 40, 24.5));
+    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 24.5, () -> 40, angleRestingPosition));
 
     
-    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 65, 35));
-    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 65, 15));
-    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 65, 22));
-    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 65, 20));
-    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 50, 35));
+    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 50, 15));
+    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 50, 22));
+    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 50, 20));
+    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 50, 34.0));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.0, () -> 65, 34.0));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.0, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 40, 34.0));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.0, () -> 50, 34.0));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.0, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 50, 33.75));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 65, 33.75));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.5, () -> 65, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 40, 33.75));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 50, 33.75));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.5, () -> 50, angleRestingPosition));
+
+    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33.5));
+    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 55, 33.5));
+    NamedCommands.registerCommand("shoot6blue", new AutoShootSequence(() -> 33.5, () -> 50, 33.5));
   }
 
   /**
    * link line up commands to pathplanner
    */
   private static void linkLineUpCommands() {
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue", new LineUpWithNotePath("4 ring close blue", 0, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
 
 
-    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(4.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(4.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), 8, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseBlue5", new LineUpWithNotePath("5 ring close blue", 2, new PIDConstants(4.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseBlue5", new LineUpWithNotePath("5 ring close blue", 4, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote4CloseBlue5", new LineUpWithNotePath("5 ring close blue", 6, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
 
     
-    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarBlue", new LineUpWithNotePath("3 ring far blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarBlue", new LineUpWithNotePath("3 ring far blue", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote3FarBlue", new LineUpWithNotePath("3 ring far blue", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
 
-    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
-    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(4.0), 8, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote1FarRed", new LineUpWithNotePath("new 3 ring far red", 0, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+
+    NamedCommands.registerCommand("lineUpToNote7Blue", new LineUpWithNotePath("7-8-6 far blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote8Blue", new LineUpWithNotePath("7-8-6 far blue", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote6Blue", new LineUpWithNotePath("7-8-6 far blue", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
   }
 
   /**
