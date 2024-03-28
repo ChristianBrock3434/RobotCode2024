@@ -35,6 +35,8 @@ public class Actuation extends SubsystemBase {
 
   private boolean isPositionControl;
   private double desiredPos;
+  private double prevDesiredPos;
+  private boolean isVoltage;
 
   private PIDController posPID = new PIDController(1, 0, 0.01);
   private PIDController paddingPID = new PIDController(0.9, 0, 0.0);
@@ -139,6 +141,7 @@ public class Actuation extends SubsystemBase {
     // System.out.println("Actuator Up");
 
     isPositionControl = true;
+    isVoltage = true;
     // posPID.setGoal(position);
     desiredPos = position * actuationTicksPerDegree;
     // actuationMotor.setControl(motionMagicControl
@@ -199,8 +202,6 @@ public class Actuation extends SubsystemBase {
   }
 
   private void runMotorToPosition() {
-    boolean isVoltage = true;
-
     if (desiredPos < 0) {
       posPID.setTolerance(1);
       paddingPID.setTolerance(0.75);
@@ -215,7 +216,10 @@ public class Actuation extends SubsystemBase {
       power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
       power = MathUtil.clamp(power, -1.5, 0.5);
 
-      isVoltage = !paddingPID.atSetpoint();
+      if (Math.copySign(1, actuationMotor.getVelocity().getValueAsDouble()) != Math.copySign(1, desiredPos - actuationMotor.getPosition().getValueAsDouble())) {
+        isVoltage = false;
+      }
+      isVoltage = !paddingPID.atSetpoint() && isVoltage;
       // power = 0;
     }
 
@@ -228,6 +232,7 @@ public class Actuation extends SubsystemBase {
     } else {
       actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
     }
+    prevDesiredPos = desiredPos;
   } 
 
   /**

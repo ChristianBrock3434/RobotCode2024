@@ -92,7 +92,7 @@ public final class Constants {
     public static double championshipShotOffset = 10;
     public static double chainShotOffset = 8;
     public static double podiumShotOffset = 15;
-    public static double passShotOffset = 15;
+    public static double passShotOffset = 5;
 
     public static double championshipShotManualRot = -155;
     public static double chainShotManualRot = -174;
