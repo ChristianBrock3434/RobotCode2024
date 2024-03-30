@@ -29,7 +29,7 @@ public final class Constants {
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
     public static final double actuationStartPosition = -65;
-    public static double actuationPickUpPosition = 100; //100
+    public static double actuationPickUpPosition = 98; //100
     public static final double actuationTuckPosition = -65;
   }
 
@@ -57,8 +57,8 @@ public final class Constants {
 
     public static double subwooferShotSpeed = 40;
     public static double podiumShotSpeed = 50; //55 Half Line Shot 62
-    public static double chainShotSpeed = 46.5;
-    public static double championshipShotSpeed = 47;
+    public static double chainShotSpeed = 52;
+    public static double championshipShotSpeed = 52;
     public static final double passShotSpeed = 40;
   }
 
@@ -79,7 +79,7 @@ public final class Constants {
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 24.25; //23 Half Line Shot 34.75
     public static double chainShotAngle = 33;
-    public static double championshipShotAngle = 34;
+    public static double championshipShotAngle = 33.75;
     public static double passShotAngle = 15;
   }
 
@@ -89,9 +89,9 @@ public final class Constants {
   }
 
   public final class DrivetrainConstants {
-    public static double championshipShotOffset = 10;
-    public static double chainShotOffset = 8;
-    public static double podiumShotOffset = 15;
+    public static double championshipShotOffset = 6;
+    public static double chainShotOffset = 5;
+    public static double podiumShotOffset = 10;
     public static double passShotOffset = 5;
 
     public static double championshipShotManualRot = -155;

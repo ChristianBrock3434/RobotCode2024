@@ -168,6 +168,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("sendShooterSignal", AutoTracker.sendSignal(AutoTracker.tracked.SHOOTER));
     
     NamedCommands.registerCommand("speedUpShooter", shooter.speedUpShooter(50, 100));
+    NamedCommands.registerCommand("SetAngleRest", angleController.setPositionCommand(angleRestingPosition));
+
     NamedCommands.registerCommand("Auto Aim Champion", new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.25));
 
     linkShootCommands();
@@ -204,6 +206,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 50, 33.75));
     NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.5, () -> 50, angleRestingPosition));
 
+    NamedCommands.registerCommand("shoot0Blue", new AutoShootSequence(() -> 24, () -> 50, 33.5));
     NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33.5));
     NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 55, 33.5));
     NamedCommands.registerCommand("shoot6blue", new AutoShootSequence(() -> 33.5, () -> 50, 33.5));
@@ -292,8 +295,7 @@ public class RobotContainer {
     new Trigger(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
       new ParallelCommandGroup(
         new StopShoot(angleRestingPosition),
-        new InstantCommand(InShootingRange::stopCommand),
-        driveCommand()
+        new InstantCommand(InShootingRange::stopCommand)
       )
     );
 
@@ -486,9 +488,7 @@ public class RobotContainer {
 
     // Cancel all current Modes
     controller.pov(90).onTrue(
-      new ParallelCommandGroup(
-        new InstantCommand(this::stopShooting)
-      )
+      new InstantCommand(this::stopShooting)
     );
 
     // Change the angle of the recent shot to shoot higher

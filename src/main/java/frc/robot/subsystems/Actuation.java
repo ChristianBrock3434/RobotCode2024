@@ -241,6 +241,11 @@ public class Actuation extends SubsystemBase {
       if (Math.copySign(1, actuationMotor.getVelocity().getValueAsDouble()) != Math.copySign(1, desiredPos - actuationMotor.getPosition().getValueAsDouble())) {
         isVoltage = false;
       }
+
+      if (Math.abs(actuationMotor.getVelocity().getValueAsDouble()) < 0.75) {
+        isVoltage = false;
+      }
+
       isVoltage = !paddingPID.atSetpoint() && isVoltage;
       // power = 0;
     }
@@ -248,6 +253,7 @@ public class Actuation extends SubsystemBase {
     // System.out.println("Power" + actuationMotor.getMotorVoltage().getValueAsDouble());
     SmartDashboard.putNumber("Power", actuationMotor.getMotorVoltage().getValueAsDouble());
     SmartDashboard.putNumber("Desired Pos", desiredPos);
+    SmartDashboard.putNumber("Velocity", actuationMotor.getVelocity().getValueAsDouble());
     
     if (isVoltage) {
       actuationMotor.setControl(voltageOut.withOutput(power));

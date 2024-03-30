@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.979511471148476,
-        "y": 1.9322880300539491
+        "x": 5.143463182789417,
+        "y": 1.9674205396912936
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.985480548307741,
-        "y": 1.718383473371797
+        "x": 6.149432259948682,
+        "y": 1.7535159830091416
       },
       "isLocked": false,
       "linkedName": "shoot7blue"
@@ -38,7 +38,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "Path",
       "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
@@ -48,6 +48,23 @@
               "type": "named",
               "data": {
                 "name": "interruptPath"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shooter",
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "sendShooterSignal"
               }
             }
           ]

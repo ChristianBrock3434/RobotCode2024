@@ -74,6 +74,16 @@ public class AutoTurnToGoal extends Command {
     @Override
     public void initialize() {
         // drivetrain.setBrakeMode();
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isEmpty()) {
+            System.out.println("The Alliance is empty, Please Select an Alliance");
+        } else if (alliance.get().equals(Alliance.Red)) {
+            xSpeaker = FieldConstants.redSpeakerX;
+            ySpeaker = FieldConstants.redSpeakerY;
+        } else if (alliance.get().equals(Alliance.Blue)) {
+            xSpeaker = FieldConstants.blueSpeakerX;
+            ySpeaker = FieldConstants.blueSpeakerY;
+        }
 
         thetaController.reset(drivetrain.getRotation().getRadians());
         thetaController.enableContinuousInput(-Math.PI, + Math.PI);

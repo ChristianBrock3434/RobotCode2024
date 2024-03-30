@@ -32,7 +32,19 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot1FarBlue"
+            "name": "speedUpShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetAngleRest"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
           }
         },
         {
@@ -43,6 +55,12 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shoot0Blue"
+                      }
+                    },
                     {
                       "type": "named",
                       "data": {
@@ -184,6 +202,31 @@
                     }
                   ]
                 }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "waitForShootSignal"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "speedUpShooter"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -208,12 +251,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Shoot 8 far blue"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "speedUpShooter"
                 }
               }
             ]

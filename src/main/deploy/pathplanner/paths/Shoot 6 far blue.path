@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.598159963794963,
-        "y": 4.157346973752435
+        "x": 7.950000000000001,
+        "y": 4.29
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.736136953015703,
-        "y": 3.911419406291023
+        "x": 6.087976989220741,
+        "y": 4.044072432538589
       },
       "isLocked": false,
       "linkedName": "ring6blue"
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 172.58571488993633,
+    "rotation": -170.0,
     "rotateFast": false
   },
   "reversed": false,
