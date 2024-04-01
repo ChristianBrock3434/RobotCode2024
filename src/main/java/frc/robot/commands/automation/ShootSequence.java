@@ -30,7 +30,7 @@ public class ShootSequence extends ConditionalCommand {
         super(
             new SequentialCommandGroup(
                 angleController.setPositionCommandSupplier(angle),
-                shooter.speedUpShooterSupplier(velocity, shooterSequenceAcceleration),
+                shooter.speedUpShooter(velocity, shooterSequenceAcceleration),
                 angleController.waitUntilAtPositionSupplier(angle),
                 shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
                 indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),

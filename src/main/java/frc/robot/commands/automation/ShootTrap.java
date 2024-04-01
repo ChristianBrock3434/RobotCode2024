@@ -21,7 +21,7 @@ public class ShootTrap extends SequentialCommandGroup {
             // new PrintCommand("Angle: " + angle.getAsDouble()),
             // new PrintCommand("Speed: " + velocity.getAsDouble())
             angleController.setPositionCommandSupplier(() -> trapAngle),
-            shooter.speedUpShooterSupplier(() -> trapSpeed, shooterSequenceAcceleration),
+            shooter.speedUpShooter(() -> trapSpeed, shooterSequenceAcceleration),
             angleController.waitUntilAtPositionSupplier(() -> trapAngle),
             shooter.checkIfAtSpeedSupplier(() -> trapSpeed * 0.8),
             indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),

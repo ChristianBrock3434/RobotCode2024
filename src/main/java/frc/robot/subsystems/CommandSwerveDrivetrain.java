@@ -21,6 +21,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -131,24 +132,35 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
      * Configure the path planner for the swerve drivetrain
      */
     private void configurePathPlanner() {
-        double driveBaseRadius = 0;
-        for (var moduleLocation : m_moduleLocations) {
-            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-        }
-
         AutoBuilder.configureHolonomic(
             ()->this.getState().Pose, // Supplier of current robot pose
             this::resetOrientation,  // Consumer for seeding pose against auto
             this::getCurrentRobotChassisSpeeds,
             (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            TunerConstants.kSpeedAt12VoltsMps,
-                                            driveBaseRadius,
-                                            new ReplanningConfig()),
+            getPathFollowerConfig(),
             this::shouldFlipPath, 
             this); // Subsystem for requirements
     }
+
+    public HolonomicPathFollowerConfig getPathFollowerConfig() {
+        return new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                                            new PIDConstants(10, 0, 0),
+                                            TunerConstants.kSpeedAt12VoltsMps,
+                                            getDriveBaseRadius(),
+                                            new ReplanningConfig());
+    }
+
+    public double getDriveBaseRadius() {
+        double driveBaseRadius = 0;
+        for (var moduleLocation : m_moduleLocations) {
+            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+        }
+        return driveBaseRadius;
+    }
+
+    // public ChassisSpeeds getRobotRelativeSpeeds() {
+    //     return this.getCurrentRobotChassisSpeeds();
+    // }
 
     public void setBrakeMode() {
         configNeutralMode(NeutralModeValue.Brake);
@@ -159,14 +171,29 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void setPose(Pose2d newPose) {
-        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getPose().getRotation());
-        // this.m_odometry.resetPosition(this.getRotation(), m_modulePositions, pose);
-        seedFieldRelative(pose);
+        try {
+            m_stateLock.writeLock().lock();
+
+            Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getPose().getRotation());
+            m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, pose);
+            /* We need to update our cached pose immediately so that race conditions don't happen */
+            m_cachedState.Pose = pose;
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
     }
 
     public void setPose(Pose2d newPose, double timestampSeconds) {
-        Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getPose().getRotation());
-        this.m_odometry.addVisionMeasurement(pose, timestampSeconds);
+        try {
+            m_stateLock.writeLock().lock();
+
+            Pose2d pose = new Pose2d(new Translation2d(newPose.getX(), newPose.getY()), this.getPose().getRotation());
+            m_odometry.addVisionMeasurement(pose, timestampSeconds, VecBuilder.fill(0.01,0.01,9999999));
+            /* We need to update our cached pose immediately so that race conditions don't happen */
+            m_cachedState.Pose = pose;
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
     }
 
     /**

@@ -21,7 +21,7 @@ public class PrepareForShoot extends ParallelCommandGroup {
     public PrepareForShoot(DoubleSupplier angle, DoubleSupplier speed){
         super(
             // new AutoTurnToGoal()
-            shooter.speedUpShooterSupplier(speed, shooterSequenceAcceleration),
+            shooter.speedUpShooter(speed, shooterSequenceAcceleration),
             angleController.setPositionCommandSupplier(angle)
         );
     }

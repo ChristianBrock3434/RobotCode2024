@@ -38,8 +38,8 @@ public class Actuation extends SubsystemBase {
   private double prevDesiredPos;
   private boolean isVoltage;
 
-  private PIDController posPID = new PIDController(1, 0, 0.01);
-  private PIDController paddingPID = new PIDController(0.9, 0, 0.0);
+  private PIDController posPID = new PIDController(1.5, 0, 0.01);
+  private PIDController paddingPID = new PIDController(1.5, 0, 0.0);
   
   /**
    * Creates a new Actuation.
@@ -233,10 +233,10 @@ public class Actuation extends SubsystemBase {
     }
 
     double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-    power = MathUtil.clamp(power, -4, 3);
+    power = MathUtil.clamp(power, -5, 2.5);
     if (posPID.atSetpoint()) {
       power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-      power = MathUtil.clamp(power, -1.5, 0.5);
+      power = MathUtil.clamp(power, -1.25, 0.25);
 
       if (Math.copySign(1, actuationMotor.getVelocity().getValueAsDouble()) != Math.copySign(1, desiredPos - actuationMotor.getPosition().getValueAsDouble())) {
         isVoltage = false;

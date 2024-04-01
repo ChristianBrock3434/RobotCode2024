@@ -62,6 +62,7 @@ public class Shooter extends SubsystemBase {
   private DigitalInput noteExitSensor = new DigitalInput(2);
 
   VelocityVoltage velocityControl;
+  VelocityVoltage slowVelocityControl;
   VoltageOut sitControl;
   NeutralOut stopMode;
   
@@ -74,12 +75,21 @@ public class Shooter extends SubsystemBase {
     velocityControl = new VelocityVoltage(0, 
                                           0, 
                                           true, 
-                                          0.2,
+                                          0.85,
                                           0, 
                                           false, 
                                           false, 
                                           true
                                           );
+
+    slowVelocityControl = new VelocityVoltage(0, 
+                                              0, 
+                                              true, 
+                                              0.5, 
+                                              1, 
+                                              false, 
+                                              false, 
+                                              true);
 
     sitControl = new VoltageOut(2,
                                 false, 
@@ -105,10 +115,15 @@ public class Shooter extends SubsystemBase {
     // configs.CurrentLimits.SupplyCurrentLimit = 45;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
-    configs.Slot0.kP = 0.5; //0.5 // An error of 1 rotation per second results in 2V output
-    configs.Slot0.kI = 1.0; //1.0 // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kP = 0.4; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kI = 0.35; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
+
+    configs.Slot1.kP = 0.278; // An error of 1 rotation per second results in 2V output
+    configs.Slot1.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
+    configs.Slot1.kD = 0.0005; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot1.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
 
     // Peak output of 8 volts
     configs.Voltage.PeakForwardVoltage = 12;
@@ -164,6 +179,31 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
+   * Run the intake motor at a given velocity and acceleration
+   * @param velocity in rotations per second
+   * @param acceleration in rotations per second squared
+   * @return a command that will run the intake motor
+   */
+  public Command runShooterSlowCommand(double velocity, double acceleration){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Shooter.this);
+      }
+
+      @Override
+      public void execute() {
+        runShooterSlow(velocity, acceleration);
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+        stopShooter();
+      }
+    };
+  }
+
+  /**
    * Run the shooter at a given velocity and acceleration
    * @param velocity in rotations per second
    * @param acceleration in rotations per second squared
@@ -190,7 +230,7 @@ public class Shooter extends SubsystemBase {
    * @param acceleration in rotations per second squared
    * @return a command that will run the shooter
    */
-  public Command speedUpShooterSupplier(DoubleSupplier velocity, double acceleration){
+  public Command speedUpShooter(DoubleSupplier velocity, double acceleration){
     return new Command() {
       @Override
       public void initialize() {
@@ -199,6 +239,31 @@ public class Shooter extends SubsystemBase {
           stopShooter();
         } else {
           runShooter(velocity.getAsDouble(), acceleration);
+        }
+      }
+
+      @Override
+      public boolean isFinished() {
+        return true;
+      }
+    };
+  }
+
+  /**
+   * Run the shooter at a given velocity and acceleration
+   * @param velocity in rotations per second
+   * @param acceleration in rotations per second squared
+   * @return a command that will run the shooter
+   */
+  public Command speedUpShooterSlow(DoubleSupplier velocity, double acceleration){
+    return new Command() {
+      @Override
+      public void initialize() {
+        addRequirements(Shooter.this);
+        if (((Double) velocity.getAsDouble()).equals(Double.NaN)) {
+          stopShooter();
+        } else {
+          runShooterSlow(velocity.getAsDouble(), acceleration);
         }
       }
 
@@ -221,6 +286,23 @@ public class Shooter extends SubsystemBase {
                           );
 
     rightShooterMotor.setControl(velocityControl
+                            .withVelocity(velocity)
+                            .withAcceleration(acceleration)
+                          );
+  }
+
+  /**
+   * Run the intake motor at a given velocity and acceleration
+   * @param velocity in rotations per second
+   * @param acceleration in rotations per second squared
+   */
+  public void runShooterSlow(double velocity, double acceleration) {
+    leftShooterMotor.setControl(slowVelocityControl
+                            .withVelocity(velocity)
+                            .withAcceleration(acceleration)
+                          );
+
+    rightShooterMotor.setControl(slowVelocityControl
                             .withVelocity(velocity)
                             .withAcceleration(acceleration)
                           );

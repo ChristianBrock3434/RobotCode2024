@@ -448,7 +448,8 @@ public class RobotContainer {
           new AutoShootSequence(
             () -> ampAngle, 
             () -> ampSpeed, 
-            angleRestingPosition
+            angleRestingPosition,
+            30
           ).andThen(new InstantCommand(this::stopShooting))
         )
     );
@@ -532,6 +533,8 @@ public class RobotContainer {
     controller.back().onTrue(new ZeroAngle());
 
     new Trigger(() -> angleController.getZeroSensor()).onTrue(new InstantCommand(angleController::zeroOnSensor));
+
+    // controller.rightTrigger(0.1).whileTrue(indexer.runIndexerCommand(30, 100));
   }
 
   public Command driveCommand() {

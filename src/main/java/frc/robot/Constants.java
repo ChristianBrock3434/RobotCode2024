@@ -53,11 +53,11 @@ public final class Constants {
     public static final double shooterSequenceAcceleration = 100;
 
     public static final double trapSpeed = 36;
-    public static double ampSpeed = 7.2;
+    public static double ampSpeed = 6.6;
 
     public static double subwooferShotSpeed = 40;
-    public static double podiumShotSpeed = 50; //55 Half Line Shot 62
-    public static double chainShotSpeed = 52;
+    public static double podiumShotSpeed = 44; //55 Half Line Shot 62
+    public static double chainShotSpeed = 54;
     public static double championshipShotSpeed = 52;
     public static final double passShotSpeed = 40;
   }
@@ -77,9 +77,9 @@ public final class Constants {
     public static double ampAngle = -2;
     
     public static double subwooferShotAngle = 0.5;
-    public static double podiumShotAngle = 24.25; //23 Half Line Shot 34.75
-    public static double chainShotAngle = 33;
-    public static double championshipShotAngle = 33.75;
+    public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75
+    public static double chainShotAngle = 32.5;
+    public static double championshipShotAngle = 33;
     public static double passShotAngle = 15;
   }
 
@@ -89,9 +89,9 @@ public final class Constants {
   }
 
   public final class DrivetrainConstants {
-    public static double championshipShotOffset = 6;
-    public static double chainShotOffset = 5;
-    public static double podiumShotOffset = 10;
+    public static double championshipShotOffset = 4.5;
+    public static double chainShotOffset = 3;
+    public static double podiumShotOffset = 8;
     public static double passShotOffset = 5;
 
     public static double championshipShotManualRot = -155;

@@ -37,7 +37,7 @@ public class SeedPoseEstimation extends Command {
 
         try {
             if (!rejectFrontLLUpdate && !(poseEstimate_FrontLL.pose.getX() == 0) && !(poseEstimate_FrontLL.pose.getY() == 0) && poseEstimate_FrontLL.timestampSeconds - previousSeedTime > 0.25) {
-                drivetrain.setPose(poseEstimate_FrontLL.pose);
+                drivetrain.setPose(poseEstimate_FrontLL.pose, poseEstimate_FrontLL.timestampSeconds);
                 previousSeedTime = poseEstimate_FrontLL.timestampSeconds;
                 // System.out.println("Seeded at " + previousSeedTime);
                 // drivetrain.resetOrientation(poseEstimate_FrontLL.pose);
