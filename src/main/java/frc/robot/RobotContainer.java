@@ -132,7 +132,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("8-7 Blue", drivetrain.getAutoPath("3 ring far blue"));
     autoChooser.addOption("8-7 Park Blue", drivetrain.getAutoPath("3 ring far blue park"));
     autoChooser.addOption("1-2-3 Blue", drivetrain.getAutoPath("4 ring close blue"));
-    autoChooser.addOption("8-6 Blue", drivetrain.getAutoPath("3 ring far blue mid"));
+    // autoChooser.addOption("8-6 Blue", drivetrain.getAutoPath("3 ring far blue mid"));
     autoChooser.addOption("7-8-6 Blue", drivetrain.getAutoPath("7-8-6 far blue"));
     // autoChooser.addOption("4-5-3-2 Blue", "5 ring close blue");
 
@@ -140,6 +140,7 @@ public class RobotContainer {
     autoChooser.addOption("8-7 Park Red", drivetrain.getAutoPath("new 3 ring far red park"));
     autoChooser.addOption("1-2-3 Red", drivetrain.getAutoPath("new 4 ring close red"));
     // autoChooser.addOption("8-6 Red", drivetrain.getAutoPath("new 3 ring far red mid"));
+    autoChooser.addOption("7-8-6 Red", drivetrain.getAutoPath("7-8-6 far red"));
 
     autoChooser.addOption("Do Nothing", drivetrain.getAutoPath("Do Nothing"));
   }
@@ -172,6 +173,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("speedUpShooter55", shooter.speedUpShooter(55, 100));
     NamedCommands.registerCommand("SetAngleRest", angleController.setPositionCommand(angleRestingPosition));
 
+    NamedCommands.registerCommand("SetAngleShootChain", angleController.setPositionCommand(30));
+
     NamedCommands.registerCommand("zeroAngle", new ZeroAngle());
 
     NamedCommands.registerCommand("Auto Aim Champion", new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.25));
@@ -202,21 +205,21 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 40, 30.0));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, 30.0));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 40, 5));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, 5));
     NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 40, 30.0));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 30.0, () -> 50, 30.0));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 40, 5));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 30.0, () -> 50, 5));
     NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
 
     NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18, () -> 40, 30.75));
     NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
-    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 30.75, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 30.75, () -> 50, 5));
 
     NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18, () -> 40, 30.75));
     NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
-    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 30.75, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 30.75, () -> 50, 5));
   }
 
   /**

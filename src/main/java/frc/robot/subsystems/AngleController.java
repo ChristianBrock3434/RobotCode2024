@@ -15,7 +15,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 /**
  * The AngleController class represents a subsystem that controls the angle of the shooter.
@@ -176,6 +178,7 @@ public class AngleController extends SubsystemBase{
    * @return a command that will wait until the Angle Controller motor is at a given position
    */
   public Command waitUntilAtPosition(double setPosition) {
+    // return new WaitUntilCommand(() -> Math.abs(angleMotor.getPosition().getValueAsDouble() - setPosition  * angleTicksPerDegree) <= 0.5);
     return new Command() {
       @Override
       public boolean isFinished() {

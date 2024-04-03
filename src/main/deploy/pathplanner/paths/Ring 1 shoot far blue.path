@@ -59,6 +59,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "Angle",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "SetAngleShootChain"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
