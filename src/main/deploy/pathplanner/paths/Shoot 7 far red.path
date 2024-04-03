@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.779999999999999,
+        "y": 2.79
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.704226069925049,
+        "y": 2.0150318503492484
+      },
+      "isLocked": false,
+      "linkedName": "ring7red"
+    },
+    {
+      "anchor": {
+        "x": 11.370000000000001,
+        "y": 2.2250589436984876
+      },
+      "prevControl": {
+        "x": 9.520847731074015,
+        "y": 2.151759071947765
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "shoot7red"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 31.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "7-8-6 far red",
+  "previewStartingState": {
+    "rotation": -40.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

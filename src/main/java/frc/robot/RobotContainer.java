@@ -210,10 +210,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 30.0, () -> 50, 30.0));
     NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot0Blue", new AutoShootSequence(() -> 18, () -> 40, 30.75));
+    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18, () -> 40, 30.75));
     NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
     NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 30.75, () -> 50, angleRestingPosition));
-    // NamedCommands.registerCommand("shoot6blue", new AutoShootSequence(() -> 32.0, () -> 55, angleRestingPosition));
+
+    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18, () -> 40, 30.75));
+    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
+    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 30.75, () -> 50, angleRestingPosition));
   }
 
   /**
@@ -246,6 +249,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote7Blue", new LineUpWithNotePath("7-8-6 far blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.05)));
     NamedCommands.registerCommand("lineUpToNote8Blue", new LineUpWithNotePath("7-8-6 far blue", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote6Blue", new LineUpWithNotePath("7-8-6 far blue", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+
+    NamedCommands.registerCommand("lineUpToNote7Red", new LineUpWithNotePath("7-8-6 far red", 0, new PIDConstants(4.0), 4, new PIDConstants(0.05)));
+    NamedCommands.registerCommand("lineUpToNote8Red", new LineUpWithNotePath("7-8-6 far red", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote6Red", new LineUpWithNotePath("7-8-6 far red", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
   }
 
   /**

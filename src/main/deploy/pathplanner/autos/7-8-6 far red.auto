@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.55,
+      "x": 14.95,
       "y": 3.16
     },
-    "rotation": 132.7
+    "rotation": 47.30000000000001
   },
   "command": {
     "type": "sequential",
@@ -33,7 +33,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot0blue"
+            "name": "shoot0red"
           }
         },
         {
@@ -76,7 +76,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Grab 7 far blue"
+                              "pathName": "Grab 7 far red"
                             }
                           }
                         ]
@@ -85,7 +85,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote7Blue"
+                        "name": "lineUpToNote7Red"
                       }
                     }
                   ]
@@ -107,7 +107,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot 7 far blue"
+                  "pathName": "Shoot 7 far red"
                 }
               },
               {
@@ -122,7 +122,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot7blue"
+            "name": "shoot7red"
           }
         },
         {
@@ -159,7 +159,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Grab 8 far blue"
+                              "pathName": "Grab 8 far red"
                             }
                           }
                         ]
@@ -168,7 +168,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote8Blue"
+                        "name": "lineUpToNote8Red"
                       }
                     }
                   ]
@@ -215,7 +215,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot 8 far blue"
+                  "pathName": "Shoot 8 far red"
                 }
               }
             ]
@@ -224,7 +224,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot8blue"
+            "name": "shoot8red"
           }
         },
         {
@@ -267,7 +267,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Grab 6 far blue"
+                              "pathName": "Grab 6 far red"
                             }
                           }
                         ]
@@ -276,7 +276,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote6Blue"
+                        "name": "lineUpToNote6Red"
                       }
                     }
                   ]
@@ -294,12 +294,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot 6 far blue"
+            "pathName": "Shoot 6 far red"
           }
         }
       ]
     }
   },
-  "folder": "Blue",
+  "folder": "New Red",
   "choreoAuto": false
 }
