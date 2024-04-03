@@ -29,8 +29,8 @@ public class AutoTurnToGoal extends Command {
 
     protected final ProfiledPIDController thetaController =
       new ProfiledPIDController(
-          22.0,
-          0.0,
+          22.5,
+          0.1,
           2.0,
           new TrapezoidProfile.Constraints(8, Double.MAX_VALUE));
 
@@ -115,9 +115,9 @@ public class AutoTurnToGoal extends Command {
 
         // System.out.println(thetaVelocity);
 
-        drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getHID().getRightY()) * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) // Drive left with negative X (left)
+            .withVelocityY(yLimiter.calculate(-controller.getHID().getRightX()) * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(thetaVelocity) // Drive counterclockwise with negative X (left)
         ).execute();
     }

@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -367,7 +368,7 @@ public class Shooter extends SubsystemBase {
       public boolean isFinished() {
         boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity;
         boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity;
-        return leftShooterSpeed || rightShooterSpeed;
+        return leftShooterSpeed && rightShooterSpeed;
       }
     };
   }
@@ -400,7 +401,7 @@ public class Shooter extends SubsystemBase {
         }
         boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
         boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= velocity.getAsDouble();
-        return leftShooterSpeed || rightShooterSpeed;
+        return leftShooterSpeed && rightShooterSpeed;
       }
     };
   }
@@ -549,6 +550,13 @@ public class Shooter extends SubsystemBase {
     // SmartDashboard.putBoolean("Shooter line break", getNoteSensor());
     // SmartDashboard.putNumber("Left Shooter Speed", leftShooterMotor.getVelocity().getValueAsDouble());
     // SmartDashboard.putNumber("Right Shooter Speed", rightShooterMotor.getVelocity().getValueAsDouble());
+    // boolean leftShooterSpeed = leftShooterMotor.getVelocity().getValueAsDouble() >= 50;
+    // boolean rightShooterSpeed = rightShooterMotor.getVelocity().getValueAsDouble() >= 50;
+    // SmartDashboard.putBoolean("Is At Speed", leftShooterSpeed && rightShooterSpeed);
+    // SmartDashboard.putBoolean("RSpeed", rightShooterSpeed);
+    // SmartDashboard.putBoolean("LSpeed", leftShooterSpeed);
+    // SmartDashboard.putNumber("RPos", rightShooterMotor.getPosition().getValueAsDouble());
+    // SmartDashboard.putNumber("RVel", rightShooterMotor.getVelocity().getValueAsDouble());
   }
 
   @Override

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.014643980785821,
-        "y": 1.9088663569623863
+        "x": 5.08490900006051,
+        "y": 2.435854001522554
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.770106596875103,
-        "y": 1.8823351850127379
+        "x": 6.79469113574461,
+        "y": 2.143083087878016
       },
       "isLocked": false,
       "linkedName": "shoot8blue"
     },
     {
       "anchor": {
-        "x": 7.950000000000001,
-        "y": 4.29
+        "x": 8.51,
+        "y": 4.637491272129477
       },
       "prevControl": {
-        "x": 6.8960624229541025,
-        "y": 2.111766155109577
+        "x": 7.760506461069983,
+        "y": 2.014263885874419
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": -120.0,
+      "rotationDegrees": -90.0,
       "rotateFast": false
     }
   ],
@@ -73,14 +73,14 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.0,
+    "rotation": -90.0,
     "rotateFast": false
   },
   "reversed": false,
@@ -89,5 +89,5 @@
     "rotation": 155.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

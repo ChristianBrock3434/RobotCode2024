@@ -51,8 +51,8 @@ public class DrivePosTurning extends Command{
 
     @Override
     public void execute() {
-        double rotX = controller.getLeftX();
-        double rotY = controller.getLeftY();
+        double rotX = controller.getHID().getLeftX();
+        double rotY = controller.getHID().getLeftY();
 
         double currentHeading = -drivetrain.getRotation().getDegrees();
 
@@ -90,9 +90,9 @@ public class DrivePosTurning extends Command{
         // System.out.println("Speed: " + output);
         // System.out.println("Setpoint: " + desiredHeading);
 
-        drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getHID().getRightY()) * MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) // Drive left with negative X (left)
+            .withVelocityY(yLimiter.calculate(-controller.getHID().getRightX()) * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(output) // Drive counterclockwise with negative X (left)
         ).execute();
     }

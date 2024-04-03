@@ -12,39 +12,28 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Seed Pose"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "prepareForNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "stopIntake"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "prepareForNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "speedUpShooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SetAngleRest"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
+            "name": "shoot0Blue"
           }
         },
         {
@@ -55,12 +44,6 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "shoot0Blue"
-                      }
-                    },
                     {
                       "type": "named",
                       "data": {
@@ -134,18 +117,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Seed Pose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Aim Champion"
           }
         },
         {
@@ -238,12 +209,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Seed Pose"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -254,18 +219,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Seed Pose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Aim Champion"
           }
         },
         {
@@ -339,40 +292,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Seed Pose"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Shoot 6 far blue"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "speedUpShooter"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot6blue"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Seed Pose"
+            "pathName": "Shoot 6 far blue"
           }
         }
       ]

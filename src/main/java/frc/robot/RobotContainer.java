@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.core.sym.Name;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PIDConstants;
@@ -168,7 +169,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("sendShooterSignal", AutoTracker.sendSignal(AutoTracker.tracked.SHOOTER));
     
     NamedCommands.registerCommand("speedUpShooter", shooter.speedUpShooter(50, 100));
+    NamedCommands.registerCommand("speedUpShooter55", shooter.speedUpShooter(55, 100));
     NamedCommands.registerCommand("SetAngleRest", angleController.setPositionCommand(angleRestingPosition));
+
+    NamedCommands.registerCommand("zeroAngle", new ZeroAngle());
 
     NamedCommands.registerCommand("Auto Aim Champion", new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.25));
 
@@ -198,18 +202,18 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 40, 34.0));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 34.0, () -> 50, 34.0));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 34.0, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 40, 30.0));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, 30.0));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 40, 33.75));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 34.25, () -> 50, 33.75));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 34.5, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 40, 30.0));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 30.0, () -> 50, 30.0));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot0Blue", new AutoShootSequence(() -> 24, () -> 50, 33.5));
-    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33.5));
-    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 55, 33.5));
-    NamedCommands.registerCommand("shoot6blue", new AutoShootSequence(() -> 33.5, () -> 50, 33.5));
+    NamedCommands.registerCommand("shoot0Blue", new AutoShootSequence(() -> 18, () -> 40, 30.75));
+    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
+    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 30.75, () -> 50, angleRestingPosition));
+    // NamedCommands.registerCommand("shoot6blue", new AutoShootSequence(() -> 32.0, () -> 55, angleRestingPosition));
   }
 
   /**
@@ -239,7 +243,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2FarRed", new LineUpWithNotePath("new 3 ring far red", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote3FarRed", new LineUpWithNotePath("new 3 ring far red", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
 
-    NamedCommands.registerCommand("lineUpToNote7Blue", new LineUpWithNotePath("7-8-6 far blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
+    NamedCommands.registerCommand("lineUpToNote7Blue", new LineUpWithNotePath("7-8-6 far blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.05)));
     NamedCommands.registerCommand("lineUpToNote8Blue", new LineUpWithNotePath("7-8-6 far blue", 2, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
     NamedCommands.registerCommand("lineUpToNote6Blue", new LineUpWithNotePath("7-8-6 far blue", 4, new PIDConstants(4.0), 4, new PIDConstants(0.1)));
   }
@@ -322,8 +326,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> chainShotOffset), 
-            new AutoTurn(() -> chainShotManualRot).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> chainShotOffset).withTimeout(0.5), 
+            new AutoTurn(() -> chainShotManualRot).withTimeout(0.5), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -351,8 +355,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> championshipShotOffset), 
-            new AutoTurn(() -> championshipShotManualRot).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.5), 
+            new AutoTurn(() -> championshipShotManualRot).withTimeout(0.5), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -409,8 +413,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> podiumShotOffset), 
-            new AutoTurn(() -> podiumShotManualRot).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> podiumShotOffset).withTimeout(0.5), 
+            new AutoTurn(() -> podiumShotManualRot).withTimeout(0.55), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -475,8 +479,8 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> passShotOffset), 
-            new AutoTurn(() -> passShotManualRot).withTimeout(0.75), 
+            new AutoTurnToGoal(() -> passShotOffset).withTimeout(0.5), 
+            new AutoTurn(() -> passShotManualRot).withTimeout(0.5), 
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -534,13 +538,13 @@ public class RobotContainer {
 
     new Trigger(() -> angleController.getZeroSensor()).onTrue(new InstantCommand(angleController::zeroOnSensor));
 
-    // controller.rightTrigger(0.1).whileTrue(indexer.runIndexerCommand(30, 100));
+    // controller.rightTrigger(0.1).whileTrue(shooter.runShooterCommand(50, 100));
   }
 
   public Command driveCommand() {
-    return drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getRightY()) * MaxSpeed) 
-          .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed) 
-          .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate));
+    return drivetrain.applyRequest(() -> drive.withVelocityX(xLimiter.calculate(-controller.getHID().getRightY()) * MaxSpeed) 
+          .withVelocityY(yLimiter.calculate(-controller.getHID().getRightX()) * MaxSpeed) 
+          .withRotationalRate(rotLimiter.calculate(-controller.getHID().getLeftX()) * MaxAngularRate));
   }
 
   private long timeOfLastAccess = 0;

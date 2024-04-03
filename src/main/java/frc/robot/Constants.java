@@ -37,7 +37,7 @@ public final class Constants {
     public static final double intakeGearRatio = 1.3333333333333333333;
     
     public static final double intakeVoltage = 7;
-    public static final double autoIntakeVoltage = 5;
+    public static final double autoIntakeVoltage = 7;
 
     public static final double feedVelocity = 60;
     public static final double feedAcceleration = 102;
@@ -94,10 +94,10 @@ public final class Constants {
     public static double podiumShotOffset = 8;
     public static double passShotOffset = 5;
 
-    public static double championshipShotManualRot = -155;
+    public static double championshipShotManualRot = 151;
     public static double chainShotManualRot = -174;
-    public static double podiumShotManualRot = 170;
-    public static double passShotManualRot = 180;
+    public static double podiumShotManualRot = 165;
+    public static double passShotManualRot = 160;
   }
 
   public final class FieldConstants {

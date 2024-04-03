@@ -118,8 +118,8 @@ public class LineUpToTrap extends Command {
             // }
 
             // Move to x and y via limelight
-            xSpeed = -xLimiter.calculate(controller.getRightX());
-            ySpeed = -yLimiter.calculate(controller.getRightY());
+            xSpeed = -xLimiter.calculate(controller.getHID().getRightX());
+            ySpeed = -yLimiter.calculate(controller.getHID().getRightY());
 
             xController.setSetpoint(tag.x);
             xController.calculate(limelightShooter.getTX());

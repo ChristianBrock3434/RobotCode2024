@@ -71,10 +71,10 @@ public class LineUpWithNotePath extends Command {
     // System.out.println("xGoal: " + xGoal);
     // System.out.println("yGoal: " + yGoal);
 
-    m_xPIDController.setTolerance(0.1);
+    m_xPIDController.setTolerance(0.125);
     m_xPIDController.setSetpoint(xGoal);
 
-    m_yPIDController.setTolerance(0.1);
+    m_yPIDController.setTolerance(0.125);
     m_yPIDController.setSetpoint(yGoal);
 
     m_lineUpPIDController.setTolerance(1.5);
