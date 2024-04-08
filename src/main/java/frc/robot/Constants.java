@@ -53,7 +53,7 @@ public final class Constants {
     public static final double shooterSequenceAcceleration = 100;
 
     public static final double trapSpeed = 36;
-    public static double ampSpeed = 6.6;
+    public static double ampSpeed = 15;
 
     public static double subwooferShotSpeed = 40;
     public static double podiumShotSpeed = 44; //55 Half Line Shot 62
@@ -71,10 +71,10 @@ public final class Constants {
     public static final double angleTicksPerDegree = (11.78 * 1.75 / 360 * 4) / 1.5; //Estimate given by Adam, ask him how to do it if you need
 
     public static final double angleStartingPosition = 0;
-    public static final double angleRestingPosition = 25.75;
+    public static final double angleRestingPosition = 15;
 
     public static final double trapAngle = 0;
-    public static double ampAngle = -3.0;
+    public static double ampAngle = 4;
     
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75

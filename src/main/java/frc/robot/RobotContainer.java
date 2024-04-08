@@ -464,7 +464,7 @@ public class RobotContainer {
             new AutoTurn(90), 
             () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
           ),
-          angleController.setPositionCommand(ampAngle)
+          angleController.setPositionCommandSupplier(() -> ampAngle)
         )
     ).onFalse(driveCommand());
 
