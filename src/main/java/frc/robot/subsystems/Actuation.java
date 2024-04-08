@@ -35,11 +35,11 @@ public class Actuation extends SubsystemBase {
 
   private boolean isPositionControl;
   private double desiredPos;
-  // private double prevDesiredPos;
+  private double prevDesiredPos;
   private boolean isVoltage;
 
   private PIDController posPID = new PIDController(1.5, 0, 0.01);
-  private PIDController paddingPID = new PIDController(1.5, 0, 0.0);
+  // private PIDController paddingPID = new PIDController(1.5, 0, 0.0);
   
   /**
    * Creates a new Actuation.
@@ -226,40 +226,44 @@ public class Actuation extends SubsystemBase {
   private void runMotorToPosition() {
     if (desiredPos < 0) {
       posPID.setTolerance(1);
-      paddingPID.setTolerance(0.75);
+      // paddingPID.setTolerance(0.75);
     } else {
       posPID.setTolerance(2);
-      paddingPID.setTolerance(1.0);
+      // paddingPID.setTolerance(1.0);
     }
 
     double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-    power = MathUtil.clamp(power, -5, 2.5);
+    power = MathUtil.clamp(power, -3, 2.75);
     if (posPID.atSetpoint()) {
-      power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-      power = MathUtil.clamp(power, -1.25, 0.25);
+      actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
+      // isVoltage = false;
+      // power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
+      // power = MathUtil.clamp(power, -1.25, 0.25);
 
-      if (Math.copySign(1, actuationMotor.getVelocity().getValueAsDouble()) != Math.copySign(1, desiredPos - actuationMotor.getPosition().getValueAsDouble())) {
-        isVoltage = false;
-      }
+      // if (Math.copySign(1, actuationMotor.getVelocity().getValueAsDouble()) != Math.copySign(1, desiredPos - actuationMotor.getPosition().getValueAsDouble())) {
+      //   isVoltage = false;
+      // }
 
-      if (Math.abs(actuationMotor.getVelocity().getValueAsDouble()) < 0.75) {
-        isVoltage = false;
-      }
+      // if (Math.abs(actuationMotor.getVelocity().getValueAsDouble()) < 0.75) {
+      //   isVoltage = false;
+      // }
 
-      isVoltage = !paddingPID.atSetpoint() && isVoltage;
+      // isVoltage = !paddingPID.atSetpoint() && isVoltage;
       // power = 0;
+    } else {
+      actuationMotor.setControl(voltageOut.withOutput(power));
     }
 
     // System.out.println("Power" + actuationMotor.getMotorVoltage().getValueAsDouble());
-    SmartDashboard.putNumber("Power", actuationMotor.getMotorVoltage().getValueAsDouble());
-    SmartDashboard.putNumber("Desired Pos", desiredPos);
-    SmartDashboard.putNumber("Velocity", actuationMotor.getVelocity().getValueAsDouble());
+    // SmartDashboard.putNumber("Power", actuationMotor.getMotorVoltage().getValueAsDouble());
+    // SmartDashboard.putNumber("Desired Pos", desiredPos);
+    // SmartDashboard.putNumber("Velocity", actuationMotor.getVelocity().getValueAsDouble());
     
-    if (isVoltage) {
-      actuationMotor.setControl(voltageOut.withOutput(power));
-    } else {
-      actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
-    }
+    // if (isVoltage) {
+    //   actuationMotor.setControl(voltageOut.withOutput(power));
+    // } else {
+    //   actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
+    // }
     // prevDesiredPos = desiredPos;
   } 
 
