@@ -35,7 +35,7 @@ public class Actuation extends SubsystemBase {
 
   private boolean isPositionControl;
   private double desiredPos;
-  private double prevDesiredPos;
+  // private double prevDesiredPos;
   private boolean isVoltage;
 
   private PIDController posPID = new PIDController(1.5, 0, 0.01);
@@ -260,7 +260,7 @@ public class Actuation extends SubsystemBase {
     } else {
       actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
     }
-    prevDesiredPos = desiredPos;
+    // prevDesiredPos = desiredPos;
   } 
 
   /**

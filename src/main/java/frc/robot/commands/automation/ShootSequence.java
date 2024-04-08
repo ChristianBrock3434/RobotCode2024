@@ -7,9 +7,11 @@ import java.util.function.DoubleSupplier;
 import static frc.robot.Constants.ShooterConstants.*;
 import static frc.robot.Constants.IndexerConstants.*;
 import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.ActuationConstants.*;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ShakeController;
 
 /**
@@ -39,7 +41,53 @@ public class ShootSequence extends ConditionalCommand {
                 intake.feedCommand(feedVelocity, feedAcceleration)
             ),
             new ShakeController(1.0, 1.0),
-            // I was held against my will by the compiler
+            () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))
+        );
+    }
+
+    /**
+     * Constructs a new ShootSequence command.
+     * 
+     * @param angle    a supplier for the desired angle of the shooter
+     * @param velocity a supplier for the desired velocity of the shooter
+     */
+    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {
+        super(
+            new SequentialCommandGroup(
+                angleController.setPositionCommandSupplier(angle),
+                shooter.speedUpShooter(velocity, shooterSequenceAcceleration),
+                angleController.waitUntilAtPositionSupplier(angle),
+                shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.75),
+                indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
+                shooter.checkIfAtSpeedSupplier(velocity),
+                indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
+                actuation.waitUntilAtPosition(actuationTuckPosition),
+                intake.startFeedingCommand(feedVelocity, feedAcceleration),
+                new WaitCommand(1.0),
+                new StopShoot(restingAngle)
+            ),
+            new ShakeController(1.0, 1.0),
+            () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))
+        );
+    }
+
+    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity) {
+        super(
+            new SequentialCommandGroup(
+                angleController.setPositionCommandSupplier(angle),
+                shooter.speedUpShooterSlow(velocity, shooterSequenceAcceleration),
+                angleController.waitUntilAtPositionSupplier(angle),
+                shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.75),
+                indexer.speedUpIndexer(indexerVelocity, indexerAcceleration),
+                shooter.checkIfAtSpeedSupplier(velocity),
+                indexer.checkIfAtSpeedSupplier(() -> indexerVelocity),
+                actuation.waitUntilAtPosition(actuationTuckPosition),
+                intake.startFeedingCommand(feedVelocity, feedAcceleration),
+                new WaitCommand(1.0),
+                // shooter.waitUntilRingLeft(),
+                new StopShoot(restingAngle)
+            ),
+            new ShakeController(1.0, 1.0),
             () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))
         );
     }

@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,7 +68,7 @@ public class AngleController extends SubsystemBase{
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    configs.Slot0.kP = 40; //25 // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kP = 60; //25 // An error of 1 rotation per second results in 2V output
     configs.Slot0.kI = 0.5; //4 // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
@@ -269,7 +270,7 @@ public class AngleController extends SubsystemBase{
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(getAngle());
-    // SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
+    SmartDashboard.putNumber("Angle Controller", angleMotor.getPosition().getValueAsDouble() / angleTicksPerDegree);
     // SmartDashboard.putNumber("Angle Current", getCurrentDraw());
   }
 }

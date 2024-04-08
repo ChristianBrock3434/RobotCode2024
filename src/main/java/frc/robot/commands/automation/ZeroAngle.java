@@ -15,24 +15,24 @@ public class ZeroAngle extends SequentialCommandGroup {
  
     public ZeroAngle() {
         addCommands(
-            new InstantCommand(actuation::stopMotor),
+            // new InstantCommand(actuation::stopMotor),
             new InstantCommand(angleController::runDown),
             angleController.waitUntilPressed().withTimeout(4),
             new InstantCommand(angleController::stopMotor),
             new InstantCommand(angleController::zeroOnSensor),
-            actuation.resetEncoderCommand(),
+            // actuation.resetEncoderCommand(),
             angleController.setPositionCommand(angleRestingPosition)  
         );
     }
 
     public ZeroAngle(double angleRestingPosition) {
         addCommands(
-            new InstantCommand(actuation::stopMotor),
+            // new InstantCommand(actuation::stopMotor),
             new InstantCommand(angleController::runDown),
             angleController.waitUntilPressed().withTimeout(4),
             new InstantCommand(angleController::stopMotor),
             new InstantCommand(angleController::zeroOnSensor),
-            actuation.resetEncoderCommand(),
+            // actuation.resetEncoderCommand(),
             angleController.setPositionCommand(angleRestingPosition)  
         );
     }

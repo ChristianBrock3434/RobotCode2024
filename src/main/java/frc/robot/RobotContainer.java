@@ -25,6 +25,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -36,7 +37,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.PickUpPieceAuto;
 import frc.robot.commands.automation.PrepareForShoot;
+import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopIntake;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.AutoShootSequenceNoStop;
@@ -67,7 +70,7 @@ public class RobotContainer {
   private static SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric() // I want field-centric
-      .withDeadband(MaxSpeed * 0.13).withRotationalDeadband(MaxAngularRate * 0.1) // Add a deadband
+      .withDeadband(MaxSpeed * 0.13).withRotationalDeadband(MaxAngularRate * 0.13) // Add a deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // driving in open loop
 
   private static boolean isAutoLineUp = true;
@@ -173,7 +176,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("speedUpShooter55", shooter.speedUpShooter(55, 100));
     NamedCommands.registerCommand("SetAngleRest", angleController.setPositionCommand(angleRestingPosition));
 
-    NamedCommands.registerCommand("SetAngleShootChain", angleController.setPositionCommand(30));
+    NamedCommands.registerCommand("SetAngleShootChain", angleController.setPositionCommand(31.5));
 
     NamedCommands.registerCommand("zeroAngle", new ZeroAngle());
 
@@ -205,21 +208,21 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 18, () -> 40, 5));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, 5));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 19.5, () -> 40, 5));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, 5));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 19.5, () -> 40, 5));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 30.0, () -> 50, 5));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 30.0, () -> 50, angleRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 40, 5));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 31.75, () -> 50, 5));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 31.5, () -> 50, angleRestingPosition));
 
-    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18, () -> 40, 30.75));
-    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
-    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 30.75, () -> 50, 5));
+    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18.5, () -> 40, 33));
+    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33));
+    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 50, 5));
 
-    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18, () -> 40, 30.75));
-    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 30.75, () -> 50, 30.75));
-    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 30.75, () -> 50, 5));
+    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18.5, () -> 40, 33));
+    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 33.5, () -> 50, 33));
+    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 33.5, () -> 50, 5));
   }
 
   /**
@@ -337,7 +340,10 @@ public class RobotContainer {
         new SequentialCommandGroup(
           new ConditionalCommand(
             new AutoTurnToGoal(() -> chainShotOffset).withTimeout(0.5), 
-            new AutoTurn(() -> chainShotManualRot).withTimeout(0.5), 
+            new ConditionalCommand(
+              new AutoTurn(() -> chainShotManualRot).withTimeout(0.5), 
+              new AutoTurn(() -> -chainShotManualRot).withTimeout(0.5), 
+              this::isBlueSide),
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -366,7 +372,10 @@ public class RobotContainer {
         new SequentialCommandGroup(
           new ConditionalCommand(
             new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.5), 
-            new AutoTurn(() -> championshipShotManualRot).withTimeout(0.5), 
+            new ConditionalCommand(
+              new AutoTurn(() -> championshipShotManualRot).withTimeout(0.5), 
+              new AutoTurn(() -> -championshipShotManualRot).withTimeout(0.5), 
+              this::isBlueSide),
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -424,7 +433,10 @@ public class RobotContainer {
         new SequentialCommandGroup(
           new ConditionalCommand(
             new AutoTurnToGoal(() -> podiumShotOffset).withTimeout(0.5), 
-            new AutoTurn(() -> podiumShotManualRot).withTimeout(0.55), 
+            new ConditionalCommand(
+              new AutoTurn(() -> podiumShotManualRot).withTimeout(0.5), 
+              new AutoTurn(() -> -podiumShotManualRot).withTimeout(0.5), 
+              this::isBlueSide),
             () -> isAutoLineUp
           ),
           new AutoShootSequence(
@@ -479,20 +491,26 @@ public class RobotContainer {
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
-        new PrepareForShoot(
+        new ParallelCommandGroup(
+          new PrepareForShoot(
             () -> passShotAngle, 
             () -> passShotSpeed
+          ),
+          new ConditionalCommand(
+            new ConditionalCommand(
+              new AutoTurn(() -> passShotManualRot), 
+              new AutoTurn(() -> -passShotManualRot), 
+              this::isBlueSide
+            ),
+            driveCommand(),
+            () -> isAutoLineUp
+          )
         )
     );
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
-          new ConditionalCommand(
-            new AutoTurnToGoal(() -> passShotOffset).withTimeout(0.5), 
-            new AutoTurn(() -> passShotManualRot).withTimeout(0.5), 
-            () -> isAutoLineUp
-          ),
           new AutoShootSequence(
             () -> passShotAngle, 
             () -> passShotSpeed, 
@@ -776,6 +794,18 @@ public class RobotContainer {
         currentShootingState = shootingState.SHOOTING;
       }
     }
+  }
+
+  public Boolean isBlueSide() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isEmpty()) {
+      System.out.println("The Alliance is empty, Please Select an Alliance");
+    } else if (alliance.get().equals(Alliance.Red)) {
+      return false;
+    } else if (alliance.get().equals(Alliance.Blue)) {
+      return true;
+    }
+    return null;
   }
 
   /**

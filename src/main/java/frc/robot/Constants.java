@@ -74,11 +74,11 @@ public final class Constants {
     public static final double angleRestingPosition = 25.75;
 
     public static final double trapAngle = 0;
-    public static double ampAngle = -2;
+    public static double ampAngle = -3.0;
     
     public static double subwooferShotAngle = 0.5;
     public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75
-    public static double chainShotAngle = 32.5;
+    public static double chainShotAngle = 33.25;
     public static double championshipShotAngle = 33;
     public static double passShotAngle = 15;
   }
@@ -91,7 +91,7 @@ public final class Constants {
   public final class DrivetrainConstants {
     public static double championshipShotOffset = 4.5;
     public static double chainShotOffset = 3;
-    public static double podiumShotOffset = 8;
+    public static double podiumShotOffset = 5;
     public static double passShotOffset = 5;
 
     public static double championshipShotManualRot = 151;
@@ -104,7 +104,7 @@ public final class Constants {
     public static final double blueSpeakerX = 0;
     public static final double blueSpeakerY = 5.5696358;
 
-    public static final double redSpeakerX = 0;
+    public static final double redSpeakerX = 16.5;
     public static final double redSpeakerY = 5.5696358;
   }
   

@@ -24,6 +24,8 @@ import frc.robot.Constants.FieldConstants;
 public class AutoTurnToGoal extends Command {
     private long startingTime;
     private boolean isWaiting = false;
+    private boolean shouldFlip = false;
+    private DoubleSupplier multiplier = () -> 1;
 
     double thetaVelocity;
 
@@ -54,9 +56,13 @@ public class AutoTurnToGoal extends Command {
         } else if (alliance.get().equals(Alliance.Red)) {
             xSpeaker = FieldConstants.redSpeakerX;
             ySpeaker = FieldConstants.redSpeakerY;
+            multiplier = () -> -1;
+            shouldFlip = true;
         } else if (alliance.get().equals(Alliance.Blue)) {
             xSpeaker = FieldConstants.blueSpeakerX;
             ySpeaker = FieldConstants.blueSpeakerY;
+            multiplier = () -> 1;
+            shouldFlip = false;
         }
 
         this.angleSupplier = () -> {
@@ -65,7 +71,7 @@ public class AutoTurnToGoal extends Command {
                   xSpeaker - drivetrain.getPose().getX(),
                   ySpeaker - drivetrain.getPose().getY(),
                   new Rotation2d());
-          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset.getAsDouble()));
+          return new Rotation2d(Math.atan2(translation.getY(), translation.getX()) + Units.degreesToRadians(offset.getAsDouble() * multiplier.getAsDouble()));
         };
 
         addRequirements(drivetrain);
@@ -80,9 +86,13 @@ public class AutoTurnToGoal extends Command {
         } else if (alliance.get().equals(Alliance.Red)) {
             xSpeaker = FieldConstants.redSpeakerX;
             ySpeaker = FieldConstants.redSpeakerY;
+            multiplier = () -> -1;
+            shouldFlip = true;
         } else if (alliance.get().equals(Alliance.Blue)) {
             xSpeaker = FieldConstants.blueSpeakerX;
             ySpeaker = FieldConstants.blueSpeakerY;
+            multiplier = () -> 1;
+            shouldFlip = false;
         }
 
         thetaController.reset(drivetrain.getRotation().getRadians());
@@ -92,12 +102,19 @@ public class AutoTurnToGoal extends Command {
     
     @Override
     public void execute() {
-        double targetDirection = angleSupplier.get().getRadians();
-
+        double targetDirection;
+        if (shouldFlip) {
+            targetDirection = Rotation2d.fromDegrees(180).minus(angleSupplier.get()).times(-1).getRadians();
+        } else {
+            targetDirection = angleSupplier.get().getRadians();
+        }
         // System.out.println("x: " + translation.getX());
         // System.out.println("y: " + translation.getY());
         // System.out.println("Rot: " + Units.radiansToDegrees(targetDirection));
         // System.out.println("RealRot: " + drivetrain.getDegrees());
+
+        // System.out.println("Offset: " + offset.getAsDouble() * multiplier.getAsDouble());
+        // System.out.println("Multi: " + multiplier.getAsDouble());
 
         
         // double targetDirection = angleSupplier.get().getRadians();
