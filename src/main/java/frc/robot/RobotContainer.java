@@ -335,7 +335,7 @@ public class RobotContainer {
             //     .withVelocityY(yLimiter.calculate(-controller.getRightX()) * MaxSpeed)
             //     .withRotationalRate(rotLimiter.calculate(-controller.getLeftX()) * MaxAngularRate * 0.5)
             // ),
-            new ShootSequence(() -> subwooferShotAngle, () -> 10) 
+            new ShootSequence(() -> subwooferShotAngle, () -> 25) 
           )
         ).onFalse(new StopShoot(angleRestingPosition));
 
