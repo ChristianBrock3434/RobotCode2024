@@ -55,11 +55,11 @@ public final class Constants {
     public static final double trapSpeed = 36;
     public static double ampSpeed = 15;
 
-    public static double subwooferShotSpeed = 40;
+    public static double subwooferShotSpeed = 27;
     public static double podiumShotSpeed = 44; //55 Half Line Shot 62
-    public static double chainShotSpeed = 54;
+    public static double chainShotSpeed = 44;
     public static double championshipShotSpeed = 52;
-    public static final double passShotSpeed = 50;
+    public static final double passShotSpeed = 30;
   }
 
   public final class IndexerConstants {
@@ -76,7 +76,7 @@ public final class Constants {
     public static final double trapAngle = 0;
     public static double ampAngle = 4;
     
-    public static double subwooferShotAngle = 0.5;
+    public static double subwooferShotAngle = 0.0;
     public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75
     public static double chainShotAngle = 33.25;
     public static double championshipShotAngle = 33;
@@ -95,7 +95,7 @@ public final class Constants {
     public static double passShotOffset = 5;
 
     public static double championshipShotManualRot = 151;
-    public static double chainShotManualRot = -174;
+    public static double chainShotManualRot = -180;
     public static double podiumShotManualRot = 165;
     public static double passShotManualRot = 160;
   }

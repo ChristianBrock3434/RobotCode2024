@@ -41,7 +41,7 @@ public class Intake extends SubsystemBase {
     velocityControlFeed = new VelocityVoltage(0, 
                                           0, 
                                           true, 
-                                          0, 
+                                          0.5, 
                                           1, 
                                           false, 
                                           false, 

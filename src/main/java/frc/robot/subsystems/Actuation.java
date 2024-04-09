@@ -228,12 +228,12 @@ public class Actuation extends SubsystemBase {
       posPID.setTolerance(1);
       // paddingPID.setTolerance(0.75);
     } else {
-      posPID.setTolerance(2);
+      posPID.setTolerance(2.5);
       // paddingPID.setTolerance(1.0);
     }
 
     double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-    power = MathUtil.clamp(power, -3, 2.75);
+    power = MathUtil.clamp(power, -3, 2.5);
     if (posPID.atSetpoint()) {
       actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
       // isVoltage = false;
