@@ -100,6 +100,21 @@ public final class Constants {
     public static double passShotManualRot = 160;
   }
 
+  public final class SlapperConstants {
+    public static final double slapperGearRatio = 1.0 / 1.0;
+    public static final double slapperTicksPerDegree = (1.0 / 360.0) * slapperGearRatio;
+
+    public static final double slapperStartingPosition = 0;
+    public static final double slapperRestingPosition = 15;
+    public static final double slapperAmpPosition = 70;
+    public static final double slapperSubwooferPosition = 15;
+    public static final double slapperPodiumPosition = 15;
+    public static final double slapperChainPosition = 15;
+    public static final double slapperChampionshipPosition = 15;
+    public static final double slapperPassPosition = 15;
+    public static final double slapperTrapPosition = 15;
+  }
+
   public final class FieldConstants {
     public static final double blueSpeakerX = 0;
     public static final double blueSpeakerY = 5.5696358;

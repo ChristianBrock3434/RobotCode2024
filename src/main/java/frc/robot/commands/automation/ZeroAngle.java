@@ -21,7 +21,7 @@ public class ZeroAngle extends SequentialCommandGroup {
             new InstantCommand(angleController::stopMotor),
             new InstantCommand(angleController::zeroOnSensor),
             // actuation.resetEncoderCommand(),
-            angleController.setPositionCommand(angleRestingPosition)  
+            angleController.setPositionCommand(angleRestingPosition)
         );
     }
 

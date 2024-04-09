@@ -28,10 +28,11 @@ public class ShootSequence extends ConditionalCommand {
      * @param angle    a supplier for the desired angle of the shooter
      * @param velocity a supplier for the desired velocity of the shooter
      */
-    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity) {
+    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, DoubleSupplier slapperAngle) {
         super(
             new SequentialCommandGroup(
                 angleController.setPositionCommandSupplier(angle),
+                slapper.setPositionCommand(slapperAngle),
                 shooter.speedUpShooter(velocity, shooterSequenceAcceleration),
                 angleController.waitUntilAtPositionSupplier(angle),
                 shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
@@ -51,10 +52,11 @@ public class ShootSequence extends ConditionalCommand {
      * @param angle    a supplier for the desired angle of the shooter
      * @param velocity a supplier for the desired velocity of the shooter
      */
-    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {
+    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, DoubleSupplier slapperAngle, double slapperRestingPosition) {
         super(
             new SequentialCommandGroup(
                 angleController.setPositionCommandSupplier(angle),
+                slapper.setPositionCommand(slapperAngle),
                 shooter.speedUpShooter(velocity, shooterSequenceAcceleration),
                 angleController.waitUntilAtPositionSupplier(angle),
                 shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.75),
@@ -64,17 +66,18 @@ public class ShootSequence extends ConditionalCommand {
                 actuation.waitUntilAtPosition(actuationTuckPosition),
                 intake.startFeedingCommand(feedVelocity, feedAcceleration),
                 new WaitCommand(1.0),
-                new StopShoot(restingAngle)
+                new StopShoot(restingAngle, slapperRestingPosition)
             ),
             new ShakeController(1.0, 1.0),
             () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))
         );
     }
 
-    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity) {
+    public ShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity, DoubleSupplier slapperAngle, double slapperRestingPosition) {
         super(
             new SequentialCommandGroup(
                 angleController.setPositionCommandSupplier(angle),
+                slapper.setPositionCommand(slapperAngle),
                 shooter.speedUpShooterSlow(velocity, shooterSequenceAcceleration),
                 angleController.waitUntilAtPositionSupplier(angle),
                 shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.75),
@@ -85,7 +88,7 @@ public class ShootSequence extends ConditionalCommand {
                 intake.startFeedingCommand(feedVelocity, feedAcceleration),
                 new WaitCommand(1.0),
                 // shooter.waitUntilRingLeft(),
-                new StopShoot(restingAngle)
+                new StopShoot(restingAngle, slapperRestingPosition)
             ),
             new ShakeController(1.0, 1.0),
             () -> !(((Double) angle.getAsDouble()).equals(Double.NaN)) || !(((Double) velocity.getAsDouble()).equals(Double.NaN))

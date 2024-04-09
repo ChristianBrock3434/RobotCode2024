@@ -18,11 +18,13 @@ public class PrepareForShoot extends ParallelCommandGroup {
      * @param angle The angle value supplied by the DoubleSupplier.
      * @param speed The speed value supplied by the DoubleSupplier.
      */
-    public PrepareForShoot(DoubleSupplier angle, DoubleSupplier speed){
+    public PrepareForShoot(DoubleSupplier angle, DoubleSupplier speed, DoubleSupplier slapperAngle){
         super(
             // new AutoTurnToGoal()
             shooter.speedUpShooter(speed, shooterSequenceAcceleration),
-            angleController.setPositionCommandSupplier(angle)
+            angleController.setPositionCommandSupplier(angle),
+            slapper.setPositionCommand(slapperAngle)
+            
         );
     }
 }

@@ -23,9 +23,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class AutoShootSequenceNoStop extends SequentialCommandGroup {
     
-    public AutoShootSequenceNoStop(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {
+    public AutoShootSequenceNoStop(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, DoubleSupplier slapperAngle) {
         addCommands(
             angleController.setPositionCommandSupplier(angle),
+            slapper.setPositionCommand(slapperAngle),
             shooter.speedUpShooter(velocity, shooterSequenceAcceleration),
             angleController.waitUntilAtPositionSupplier(angle),
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),
@@ -40,9 +41,10 @@ public class AutoShootSequenceNoStop extends SequentialCommandGroup {
         );
     }
 
-    public AutoShootSequenceNoStop(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity) {
+    public AutoShootSequenceNoStop(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity, DoubleSupplier slapperAngle) {
         addCommands(
             angleController.setPositionCommandSupplier(angle),
+            slapper.setPositionCommand(slapperAngle),
             shooter.speedUpShooterSlow(velocity, shooterSequenceAcceleration),
             angleController.waitUntilAtPositionSupplier(angle),
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.8),

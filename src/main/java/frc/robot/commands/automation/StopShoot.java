@@ -1,5 +1,6 @@
 package frc.robot.commands.automation;
 
+import static frc.robot.Constants.SlapperConstants.slapperRestingPosition;
 import static frc.robot.Subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,12 +16,13 @@ public class StopShoot extends ParallelCommandGroup{
      * 
      * @param angle the angle to set the shooter to
      */
-    public StopShoot(double angle) {
+    public StopShoot(double angle, double slapperRestingPosition) {
         addCommands(
             new InstantCommand(shooter::stopShooter, shooter),
             new InstantCommand(indexer::stopIndexerMotor, indexer),
             intake.stopIntakeCommand(),
-            angleController.setPositionCommand(angle)
+            angleController.setPositionCommand(angle),
+            slapper.setPositionCommand(slapperRestingPosition)
         );
     }
 }

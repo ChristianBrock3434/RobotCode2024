@@ -14,6 +14,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimelightIntake;
 import frc.robot.subsystems.LimelightShooter;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Slapper;
 
 
 /**
@@ -30,4 +31,5 @@ public final class Subsystems {
   public static final AngleController angleController = new AngleController(); // My angle controller
   public static final LimelightShooter limelightShooter = new LimelightShooter(); // My limelight for the shooter
   public static final LimelightIntake limelightIntake = new LimelightIntake(); // My limelight for the intake
+  public static final Slapper slapper = new Slapper(); // My slapper
 }

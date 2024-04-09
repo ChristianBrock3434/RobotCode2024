@@ -22,9 +22,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class AutoShootSequence extends SequentialCommandGroup {
     
-    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle) {
+    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, DoubleSupplier slapperAngle, double slapperRestingPosition) {
         addCommands(
             angleController.setPositionCommandSupplier(angle),
+            slapper.setPositionCommand(slapperAngle),
             shooter.speedUpShooter(velocity, shooterSequenceAcceleration),
             angleController.waitUntilAtPositionSupplier(angle),
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.75),
@@ -34,13 +35,14 @@ public class AutoShootSequence extends SequentialCommandGroup {
             actuation.waitUntilAtPosition(actuationTuckPosition),
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
             new WaitCommand(0.5).raceWith(shooter.waitUntilRingLeft()),
-            new StopShoot(restingAngle)
+            new StopShoot(restingAngle, slapperRestingPosition)
         );
     }
 
-    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity) {
+    public AutoShootSequence(DoubleSupplier angle, DoubleSupplier velocity, double restingAngle, double indexerVelocity, DoubleSupplier slapperAngle, double slapperRestingPosition) {
         addCommands(
             angleController.setPositionCommandSupplier(angle),
+            slapper.setPositionCommand(slapperAngle),
             shooter.speedUpShooterSlow(velocity, shooterSequenceAcceleration),
             angleController.waitUntilAtPositionSupplier(angle),
             shooter.checkIfAtSpeedSupplier(() -> velocity.getAsDouble() * 0.75),
@@ -51,7 +53,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
             intake.startFeedingCommand(feedVelocity, feedAcceleration),
             new WaitCommand(1.0).raceWith(shooter.waitUntilRingLeft()),
             // shooter.waitUntilRingLeft(),
-            new StopShoot(restingAngle)
+            new StopShoot(restingAngle, slapperRestingPosition)
         );
     }
 }
