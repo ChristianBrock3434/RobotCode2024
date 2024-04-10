@@ -86,7 +86,7 @@ public class Shooter extends SubsystemBase {
     slowVelocityControl = new VelocityVoltage(0, 
                                               0, 
                                               true, 
-                                              1.125, //0.5
+                                              0.5, //0.5
                                               1, 
                                               false, 
                                               false, 
@@ -121,7 +121,7 @@ public class Shooter extends SubsystemBase {
     configs.Slot0.kD = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
 
-    configs.Slot1.kP = 0.45; //0.278 // An error of 1 rotation per second results in 2V output
+    configs.Slot1.kP = 0.278; //0.278 // An error of 1 rotation per second results in 2V output
     configs.Slot1.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
     configs.Slot1.kD = 0.0005; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot1.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second

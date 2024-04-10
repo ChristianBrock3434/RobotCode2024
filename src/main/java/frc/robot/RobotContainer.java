@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
@@ -191,39 +192,39 @@ public class RobotContainer {
    * link shoot commands to pathplanner
    */
   private static void linkShootCommands() {
-    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 40, 20.5, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 21.5, () -> 40, 23.5, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 23.5, () -> 40, 24.5, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 40, 20.5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 21.5, () -> 40, 23.5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 23.5, () -> 40, 24.5, () -> 0.0, slapperRestingPosition));
     NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 24.5, () -> 40, angleRestingPosition, () -> 0.0, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 40, 20, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 21.5, () -> 40, 23.5, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 23.5, () -> 40, 24.5, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 40, 20, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 21.5, () -> 40, 23.5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 23.5, () -> 40, 24.5, () -> 0.0, slapperRestingPosition));
     NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 24.5, () -> 40, angleRestingPosition, () -> 0.0, slapperRestingPosition));
 
     
-    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 50, 35, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 50, 15, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 50, 35, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 50, 15, () -> 0.0, slapperRestingPosition));
     NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 50, 22, () -> 0.0));
     NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 50, 20, () -> 0.0));
     NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition, () -> 0.0, slapperRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 19.5, () -> 40, 5, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 19.5, () -> 40, 5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> 0.0, slapperRestingPosition));
     NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, angleRestingPosition, () -> 0.0, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 40, 5, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 40, 5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> 0.0, slapperRestingPosition));
     NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 31.5, () -> 50, angleRestingPosition, () -> 0.0, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> 0.0, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> 0.0, 15));
-    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> 0.0, 15));
+    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> 0.0, slapperRestingPosition));
   }
 
   /**
@@ -330,7 +331,7 @@ public class RobotContainer {
           new PrepareForShoot(
               () -> chainShotAngle, 
               () -> chainShotSpeed,
-              () -> slapperChainPosition
+              () -> slapperRestingPosition
           ),
           new InShootingRange()
         )
@@ -352,7 +353,7 @@ public class RobotContainer {
             () -> chainShotAngle, 
             () -> chainShotSpeed, 
             angleRestingPosition,
-            () -> slapperChainPosition,
+            () -> slapperRestingPosition,
             slapperRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
@@ -365,7 +366,7 @@ public class RobotContainer {
           new PrepareForShoot(
               () -> championshipShotAngle, 
               () -> championshipShotSpeed,
-              () -> slapperChampionshipPosition
+              () -> slapperRestingPosition
           ),
           new InShootingRange()
         )
@@ -387,7 +388,7 @@ public class RobotContainer {
             () -> championshipShotAngle, 
             () -> championshipShotSpeed, 
             angleRestingPosition,
-            () -> slapperChampionshipPosition,
+            () -> slapperRestingPosition,
             slapperRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
@@ -408,7 +409,7 @@ public class RobotContainer {
           new PrepareForShoot(
               () -> subwooferShotAngle, 
               () -> subwooferShotSpeed,
-              () -> slapperSubwooferPosition
+              () -> slapperRestingPosition
           )
         )
     );
@@ -421,7 +422,7 @@ public class RobotContainer {
             () -> subwooferShotAngle, 
             () -> subwooferShotSpeed, 
             angleRestingPosition,
-            () -> slapperSubwooferPosition,
+            () -> slapperRestingPosition,
             slapperRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
@@ -434,7 +435,7 @@ public class RobotContainer {
           new PrepareForShoot(
               () -> podiumShotAngle, 
               () -> podiumShotSpeed,
-              () -> slapperPodiumPosition
+              () -> slapperRestingPosition
             )
         )
     );
@@ -454,7 +455,7 @@ public class RobotContainer {
             () -> podiumShotAngle, 
             () -> podiumShotSpeed, 
             angleRestingPosition,
-            () -> slapperPodiumPosition,
+            () -> slapperRestingPosition,
             slapperRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
@@ -477,7 +478,8 @@ public class RobotContainer {
             new AutoTurn(90), 
             () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)
           ),
-          angleController.setPositionCommandSupplier(() -> ampAngle)
+          angleController.setPositionCommandSupplier(() -> ampAngle),
+          slapper.setPositionCommand(slapperAmpPosition)
         )
     ).onFalse(driveCommand());
 
@@ -489,8 +491,8 @@ public class RobotContainer {
             () -> ampSpeed, 
             angleRestingPosition,
             () -> slapperAmpPosition,
-            slapperRestingPosition
-          ).andThen(new InstantCommand(this::stopShooting))
+            slapperPostAmpPosition
+          ).andThen(new InstantCommand(this::stopShooting).beforeStarting(new WaitCommand(0.5)))
         )
     );
 
@@ -505,22 +507,22 @@ public class RobotContainer {
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
       .and(() -> currentShootingState.equals(shootingState.PREPARED)).onTrue(
-        new ParallelCommandGroup(
-          new PrepareForShoot(
-            () -> passShotAngle, 
-            () -> passShotSpeed,
-            () -> slapperPassPosition
-          ),
-          new ConditionalCommand(
-            new ConditionalCommand(
-              new AutoTurn(() -> passShotManualRot), 
-              new AutoTurn(() -> -passShotManualRot), 
-              this::isBlueSide
-            ),
-            driveCommand(),
-            () -> isAutoLineUp
-          )
+        // new ParallelCommandGroup(
+        new PrepareForShoot(
+          () -> passShotAngle, 
+          () -> passShotSpeed,
+          () -> slapperRestingPosition
         )
+          // new ConditionalCommand(
+          //   new ConditionalCommand(
+          //     new AutoTurn(() -> passShotManualRot), 
+          //     new AutoTurn(() -> -passShotManualRot), 
+          //     this::isBlueSide
+          //   ),
+          //   driveCommand(),
+          //   () -> isAutoLineUp
+          // )
+        // )
     );
 
     new Trigger(() -> currentShootingType.equals(shootingType.PASS))
@@ -530,7 +532,7 @@ public class RobotContainer {
             () -> passShotAngle, 
             () -> passShotSpeed, 
             angleRestingPosition,
-            () -> slapperPassPosition,
+            () -> slapperRestingPosition,
             slapperRestingPosition
           ).andThen(new InstantCommand(this::stopShooting))
         )
@@ -547,8 +549,8 @@ public class RobotContainer {
     // Change the angle of the recent shot to shoot lower
     controller.a().onTrue(new InstantCommand(() -> changeRecentShotAngle(0.25)));
 
-    // controller.y().whileTrue(actuation.runActuatorPercent(0.5));
-    // controller.a().whileTrue(actuation.runActuatorPercent(-0.5));
+    // controller.y().whileTrue(slapper.setPositionCommand(slapperAmpPosition));
+    // controller.a().whileTrue(slapper.setPositionCommand(slapperRestingPosition));
 
     // Trap Shot
     // controller.leftBumper().whileTrue(

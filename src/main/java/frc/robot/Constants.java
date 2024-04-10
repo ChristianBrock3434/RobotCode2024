@@ -53,7 +53,7 @@ public final class Constants {
     public static final double shooterSequenceAcceleration = 100;
 
     public static final double trapSpeed = 36;
-    public static double ampSpeed = 15;
+    public static double ampSpeed = 12;
 
     public static double subwooferShotSpeed = 27;
     public static double podiumShotSpeed = 44; //55 Half Line Shot 62
@@ -105,14 +105,9 @@ public final class Constants {
     public static final double slapperTicksPerDegree = (1.0 / 360.0) * slapperGearRatio;
 
     public static final double slapperStartingPosition = 0;
-    public static final double slapperRestingPosition = 15;
-    public static final double slapperAmpPosition = 70;
-    public static final double slapperSubwooferPosition = 15;
-    public static final double slapperPodiumPosition = 15;
-    public static final double slapperChainPosition = 15;
-    public static final double slapperChampionshipPosition = 15;
-    public static final double slapperPassPosition = 15;
-    public static final double slapperTrapPosition = 15;
+    public static final double slapperRestingPosition = 225;
+    public static final double slapperAmpPosition = 120;
+    public static final double slapperPostAmpPosition = 100;
   }
 
   public final class FieldConstants {

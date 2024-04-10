@@ -13,6 +13,7 @@ import static frc.robot.Constants.SlapperConstants.*;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -30,7 +31,7 @@ public class Slapper extends SubsystemBase {
 
     motionMagicControl = new MotionMagicVoltage(0, 
                                                 true, 
-                                                -0.25,
+                                                -0.65,
                                                 0,
                                                 false,
                                                 false,
@@ -43,25 +44,27 @@ public class Slapper extends SubsystemBase {
   public void initSlapperMotor() {
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
+    slapperMotor.setPosition(0);
+
     configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     configs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    configs.CurrentLimits.SupplyCurrentLimit = 20;
+    configs.CurrentLimits.SupplyCurrentLimit = 25;
 
-    configs.MotionMagic.MotionMagicCruiseVelocity = 3;
-    configs.MotionMagic.MotionMagicAcceleration = 5;
-    configs.MotionMagic.MotionMagicJerk = 10;
+    configs.MotionMagic.MotionMagicCruiseVelocity = 10;
+    configs.MotionMagic.MotionMagicAcceleration = 35;
+    configs.MotionMagic.MotionMagicJerk = 40;
 
     /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
     configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    configs.Slot0.kP = 5; // An error of 1 rotation per second results in 2V output
+    configs.Slot0.kP = 25; // An error of 1 rotation per second results in 2V output
     configs.Slot0.kI = 0.0; // An error of 1 rotation per second increases output by 0.5V every second
-    configs.Slot0.kD = 0.0; // A change of 1 rotation per second squared results in 0.01 volts output
+    configs.Slot0.kD = 0.3; // A change of 1 rotation per second squared results in 0.01 volts output
     configs.Slot0.kV = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
     // Peak output of 8 volts
-    configs.Voltage.PeakForwardVoltage = 2;
-    configs.Voltage.PeakReverseVoltage = -2;
+    configs.Voltage.PeakForwardVoltage = 8;
+    configs.Voltage.PeakReverseVoltage = -8;
 
     // configs.CurrentLimits.SupplyCurrentLimitEnable = true;
     // configs.CurrentLimits.SupplyCurrentLimit = 11;
@@ -153,4 +156,8 @@ public class Slapper extends SubsystemBase {
     slapperMotor.setControl(stopMode);
   }
     
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Slapper pos", slapperMotor.getPosition().getValueAsDouble() / slapperTicksPerDegree);
+  }
 }

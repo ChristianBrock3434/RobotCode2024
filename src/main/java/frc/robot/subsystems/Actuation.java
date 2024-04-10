@@ -49,7 +49,7 @@ public class Actuation extends SubsystemBase {
 
     motionMagicControl = new MotionMagicVoltage(0, 
                                                 true, 
-                                                -0.25,
+                                                -0.3,
                                                 0,
                                                 false,
                                                 false,
@@ -233,7 +233,7 @@ public class Actuation extends SubsystemBase {
     }
 
     double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-    power = MathUtil.clamp(power, -3, 2.5);
+    power = MathUtil.clamp(power, -3, 2.25);
     if (posPID.atSetpoint()) {
       actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
       // isVoltage = false;

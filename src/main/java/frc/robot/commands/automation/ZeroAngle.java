@@ -1,11 +1,14 @@
 package frc.robot.commands.automation;
 
 import static frc.robot.Constants.AngleControllerConstants.angleRestingPosition;
+import static frc.robot.Constants.SlapperConstants.slapperRestingPosition;
 import static frc.robot.Subsystems.actuation;
 import static frc.robot.Subsystems.angleController;
+import static frc.robot.Subsystems.slapper;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class represents a command group that zeros the angle of the shooter.
@@ -16,6 +19,8 @@ public class ZeroAngle extends SequentialCommandGroup {
     public ZeroAngle() {
         addCommands(
             // new InstantCommand(actuation::stopMotor),
+            slapper.setPositionCommand(slapperRestingPosition),
+            new WaitCommand(0.5),
             new InstantCommand(angleController::runDown),
             angleController.waitUntilPressed().withTimeout(4),
             new InstantCommand(angleController::stopMotor),
@@ -28,6 +33,8 @@ public class ZeroAngle extends SequentialCommandGroup {
     public ZeroAngle(double angleRestingPosition) {
         addCommands(
             // new InstantCommand(actuation::stopMotor),
+            slapper.setPositionCommand(slapperRestingPosition),
+            new WaitCommand(0.5),
             new InstantCommand(angleController::runDown),
             angleController.waitUntilPressed().withTimeout(4),
             new InstantCommand(angleController::stopMotor),
