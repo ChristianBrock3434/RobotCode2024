@@ -285,6 +285,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return (flSpeed > 0.1) || (frSpeed > 0.1) || (blSpeed > 0.1) || (brSpeed > 0.1);
     }
 
+    public double getAngularRate() {
+        System.out.println("X Angular Rate: " + this.m_pigeon2.getAngularVelocityXWorld().getValueAsDouble());
+        System.out.println("Y Angular Rate: " + this.m_pigeon2.getAngularVelocityYWorld().getValueAsDouble());
+        System.out.println("Z Angular Rate: " + this.m_pigeon2.getAngularVelocityZWorld().getValueAsDouble());
+        return this.m_pigeon2.getAngularVelocityZWorld().getValueAsDouble();
+    }
+
     /**
      * print the current acceleration of the robot
      */

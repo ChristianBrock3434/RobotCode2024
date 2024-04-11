@@ -74,7 +74,7 @@ public final class Constants {
     public static final double angleRestingPosition = 15;
 
     public static final double trapAngle = 0;
-    public static double ampAngle = 4;
+    public static double ampAngle = 2;
     
     public static double subwooferShotAngle = 0.0;
     public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75
@@ -106,7 +106,7 @@ public final class Constants {
 
     public static final double slapperStartingPosition = 0;
     public static final double slapperRestingPosition = 225;
-    public static final double slapperAmpPosition = 120;
+    public static final double slapperAmpPosition = 125;
     public static final double slapperPostAmpPosition = 100;
   }
 
