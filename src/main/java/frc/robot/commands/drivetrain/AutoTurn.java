@@ -84,7 +84,7 @@ public class AutoTurn extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        // drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
+        drivetrain.applyRequest(() -> drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)).execute();
         // drivetrain.setCoastMode();
     }
 

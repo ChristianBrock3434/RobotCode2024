@@ -55,7 +55,7 @@ public class AngleController extends SubsystemBase{
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    configs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     // configs.MotorOutput.DutyCycleNeutralDeadband = 0.001;
 

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -13,20 +14,36 @@ import static frc.robot.Constants.SlapperConstants.*;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 /**
  * The Slapper subsystem controls the slapper motor, which is used to keep the note in the amp
  */
 public class Slapper extends SubsystemBase {
   private TalonFX slapperMotor = new TalonFX(20);
+  private DutyCycleEncoder throughboreEncoder = new DutyCycleEncoder(5);
+
+  private boolean isPositionControl = false;
+  private double desiredPos = 0;
+
+  private PIDController posPID = new PIDController(0.05, 0, 0.0025);
+  private double feedForward = -0.3;
 
   MotionMagicVoltage motionMagicControl;
+  VoltageOut voltageControl;
   NeutralOut stopMode;
 
   public Slapper() {
+    throughboreEncoder.setDistancePerRotation(360.0);
+    // throughboreEncoder.reset();
+    System.out.println("Encoder: " + throughboreEncoder.getDistance());
+
     initSlapperMotor();
 
     motionMagicControl = new MotionMagicVoltage(0, 
@@ -37,6 +54,12 @@ public class Slapper extends SubsystemBase {
                                                 false,
                                                 false
                                               );
+
+    voltageControl = new VoltageOut(0, 
+                                    true, 
+                                    false, 
+                                    false, 
+                                    false);
 
     stopMode = new NeutralOut();
   }
@@ -125,9 +148,11 @@ public class Slapper extends SubsystemBase {
    * @param position in degrees
    */
   public void setPosition(double position) {
-    slapperMotor.setControl(motionMagicControl
-                              .withPosition(position  * slapperTicksPerDegree)
-                            );
+    desiredPos = position;
+    isPositionControl = true;
+    // slapperMotor.setControl(motionMagicControl
+    //                           .withPosition(position  * slapperTicksPerDegree)
+    //                         );
   }
 
   /**
@@ -149,15 +174,53 @@ public class Slapper extends SubsystemBase {
     };
   }
 
+  
+  public Command waitUntilAtPosition(double setPosition) {
+    return new WaitUntilCommand(() -> {
+      double currentPosition = getPosition();
+      System.out.println(currentPosition - setPosition);
+      return Math.abs(currentPosition - setPosition) <= 10;
+    });
+  }
+
+  public Command waitUntilAtPosition(DoubleSupplier setPosition) {
+    return new WaitUntilCommand(() -> {
+      double currentPosition = getPosition();
+      return Math.abs(currentPosition - setPosition.getAsDouble()) <= 10;
+    });
+  }
+
+  private void runMotorToPosition() {
+    double power = posPID.calculate(getPosition(), desiredPos) + feedForward;
+    power = MathUtil.clamp(power, -1.5, 2);
+    
+    slapperMotor.setControl(voltageControl.withOutput(power));
+  }
+
   /**
    * Stops the Slapper motor.
    */
   public void stop() {
+    isPositionControl = false;
     slapperMotor.setControl(stopMode);
+  }
+
+  public double getPosition() {
+    // return throughboreEncoder.getDistance() - slapperOffset;
+    return slapperMotor.getPosition().getValueAsDouble() / slapperTicksPerDegree;
+  }
+
+  public void resetPosition() {
+    // slapperMotor.setPosition(getPosition() * slapperTicksPerDegree);
   }
     
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Slapper pos", slapperMotor.getPosition().getValueAsDouble() / slapperTicksPerDegree);
+    if (isPositionControl) {
+      runMotorToPosition();
+    }
+    SmartDashboard.putNumber("Slapper pos", getPosition());
+    SmartDashboard.putNumber("Desired Slapper pos", desiredPos);
+    SmartDashboard.putNumber("Encoder", throughboreEncoder.getDistance());
   }
 }

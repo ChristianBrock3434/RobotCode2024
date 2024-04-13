@@ -286,9 +286,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public double getAngularRate() {
-        System.out.println("X Angular Rate: " + this.m_pigeon2.getAngularVelocityXWorld().getValueAsDouble());
-        System.out.println("Y Angular Rate: " + this.m_pigeon2.getAngularVelocityYWorld().getValueAsDouble());
-        System.out.println("Z Angular Rate: " + this.m_pigeon2.getAngularVelocityZWorld().getValueAsDouble());
+        // System.out.println("X Angular Rate: " + this.m_pigeon2.getAngularVelocityXWorld().getValueAsDouble());
+        // System.out.println("Y Angular Rate: " + this.m_pigeon2.getAngularVelocityYWorld().getValueAsDouble());
+        // System.out.println("Z Angular Rate: " + this.m_pigeon2.getAngularVelocityZWorld().getValueAsDouble());
         return this.m_pigeon2.getAngularVelocityZWorld().getValueAsDouble();
     }
 

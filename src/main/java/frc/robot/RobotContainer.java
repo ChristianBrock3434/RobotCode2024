@@ -491,8 +491,12 @@ public class RobotContainer {
             () -> ampSpeed, 
             angleRestingPosition,
             () -> slapperAmpPosition,
-            slapperPostAmpPosition
-          ).andThen(new InstantCommand(this::stopShooting).beforeStarting(new WaitCommand(0.5)))
+            slapperPushNotePosition
+          ).andThen(new SequentialCommandGroup(
+            slapper.setPositionCommand(slapperPostAmpPosition),
+            new WaitCommand(0.75),
+            new InstantCommand(this::stopShooting)
+          ).beforeStarting(slapper.waitUntilAtPosition(slapperPushNotePosition)))
         )
     );
 

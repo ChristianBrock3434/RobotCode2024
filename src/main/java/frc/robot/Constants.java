@@ -29,7 +29,7 @@ public final class Constants {
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
 
     public static final double actuationStartPosition = -65;
-    public static double actuationPickUpPosition = 98; //100
+    public static double actuationPickUpPosition = 100; //100
     public static final double actuationTuckPosition = -65;
   }
 
@@ -53,13 +53,13 @@ public final class Constants {
     public static final double shooterSequenceAcceleration = 100;
 
     public static final double trapSpeed = 36;
-    public static double ampSpeed = 12;
+    public static double ampSpeed = 8;
 
-    public static double subwooferShotSpeed = 27;
+    public static double subwooferShotSpeed = 40; //27
     public static double podiumShotSpeed = 44; //55 Half Line Shot 62
-    public static double chainShotSpeed = 44;
+    public static double chainShotSpeed = 54; //44
     public static double championshipShotSpeed = 52;
-    public static final double passShotSpeed = 30;
+    public static final double passShotSpeed = 42.5; //30
   }
 
   public final class IndexerConstants {
@@ -74,7 +74,7 @@ public final class Constants {
     public static final double angleRestingPosition = 15;
 
     public static final double trapAngle = 0;
-    public static double ampAngle = 2;
+    public static double ampAngle = 0;
     
     public static double subwooferShotAngle = 0.0;
     public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75
@@ -101,13 +101,16 @@ public final class Constants {
   }
 
   public final class SlapperConstants {
-    public static final double slapperGearRatio = 1.0 / 1.0;
+    public static final double slapperOffset = 0;
+
+    public static final double slapperGearRatio = 2.25;
     public static final double slapperTicksPerDegree = (1.0 / 360.0) * slapperGearRatio;
 
     public static final double slapperStartingPosition = 0;
     public static final double slapperRestingPosition = 225;
-    public static final double slapperAmpPosition = 125;
-    public static final double slapperPostAmpPosition = 100;
+    public static final double slapperAmpPosition = 127.5;
+    public static final double slapperPushNotePosition = 150;
+    public static final double slapperPostAmpPosition = 120;
   }
 
   public final class FieldConstants {

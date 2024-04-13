@@ -4,6 +4,7 @@ import static frc.robot.Constants.AngleControllerConstants.angleRestingPosition;
 import static frc.robot.Constants.SlapperConstants.slapperRestingPosition;
 import static frc.robot.Subsystems.actuation;
 import static frc.robot.Subsystems.angleController;
+import static frc.robot.Subsystems.shooter;
 import static frc.robot.Subsystems.slapper;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +20,7 @@ public class ZeroAngle extends SequentialCommandGroup {
     public ZeroAngle() {
         addCommands(
             // new InstantCommand(actuation::stopMotor),
+            new InstantCommand(shooter::stopMotors),
             slapper.setPositionCommand(slapperRestingPosition),
             new WaitCommand(0.5),
             new InstantCommand(angleController::runDown),
@@ -26,21 +28,24 @@ public class ZeroAngle extends SequentialCommandGroup {
             new InstantCommand(angleController::stopMotor),
             new InstantCommand(angleController::zeroOnSensor),
             // actuation.resetEncoderCommand(),
-            angleController.setPositionCommand(angleRestingPosition)
+            angleController.setPositionCommand(angleRestingPosition),
+            new InstantCommand(shooter::sitMode)
         );
     }
 
     public ZeroAngle(double angleRestingPosition) {
         addCommands(
             // new InstantCommand(actuation::stopMotor),
+            new InstantCommand(shooter::stopMotors),
             slapper.setPositionCommand(slapperRestingPosition),
-            new WaitCommand(0.5),
+            new WaitCommand(0.25),
             new InstantCommand(angleController::runDown),
             angleController.waitUntilPressed().withTimeout(4),
             new InstantCommand(angleController::stopMotor),
             new InstantCommand(angleController::zeroOnSensor),
             // actuation.resetEncoderCommand(),
-            angleController.setPositionCommand(angleRestingPosition)  
+            angleController.setPositionCommand(angleRestingPosition),
+            new InstantCommand(shooter::sitMode)
         );
     }
 }

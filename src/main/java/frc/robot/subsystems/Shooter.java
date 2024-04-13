@@ -100,7 +100,7 @@ public class Shooter extends SubsystemBase {
 
     stopMode = new NeutralOut();
 
-    stopShooter();
+    sitMode();
   }
 
   /**
@@ -174,7 +174,7 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public void end(boolean interrupted) {
-        stopShooter();
+        sitMode();
       }
     };
   }
@@ -199,7 +199,7 @@ public class Shooter extends SubsystemBase {
 
       @Override
       public void end(boolean interrupted) {
-        stopShooter();
+        sitMode();
       }
     };
   }
@@ -237,7 +237,7 @@ public class Shooter extends SubsystemBase {
       public void initialize() {
         addRequirements(Shooter.this);
         if (((Double) velocity.getAsDouble()).equals(Double.NaN)) {
-          stopShooter();
+          sitMode();
         } else {
           runShooter(velocity.getAsDouble(), acceleration);
         }
@@ -262,7 +262,7 @@ public class Shooter extends SubsystemBase {
       public void initialize() {
         addRequirements(Shooter.this);
         if (((Double) velocity.getAsDouble()).equals(Double.NaN)) {
-          stopShooter();
+          sitMode();
         } else {
           runShooterSlow(velocity.getAsDouble(), acceleration);
         }
@@ -339,7 +339,14 @@ public class Shooter extends SubsystemBase {
   /**
    * Stop the shooter motors
    */
-  public void stopShooter() {
+  public void sitMode() {
+    leftShooterMotor.setControl(sitControl.withOutput(1.5));
+    rightShooterMotor.setControl(sitControl.withOutput(1.5));
+    // leftShooterMotor.setControl(stopMode);
+    // rightShooterMotor.setControl(stopMode);
+  }
+
+  public void stopMotors() {
     leftShooterMotor.setControl(stopMode);
     rightShooterMotor.setControl(stopMode);
   }
