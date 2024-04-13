@@ -184,6 +184,8 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Auto Aim Champion", new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.25));
 
+    NamedCommands.registerCommand("prepareSlapper", slapper.setPositionCommand(slapperRestingPosition));
+
     linkShootCommands();
     linkLineUpCommands();
   }

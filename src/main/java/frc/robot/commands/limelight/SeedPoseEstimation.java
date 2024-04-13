@@ -34,7 +34,8 @@ public class SeedPoseEstimation extends Command {
 
         boolean rejectFrontLLUpdate = false;
 
-        LimelightHelpers.SetRobotOrientation(limelightShooter.LIMELIGHT, rot.getDegrees(), drivetrain.getAngularRate(), 0, 0, 0, 0);
+        // LimelightHelpers.SetRobotOrientation(limelightShooter.LIMELIGHT, rot.getDegrees(), drivetrain.getAngularRate(), 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(limelightShooter.LIMELIGHT, rot.getDegrees(), 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate poseEstimate_FrontLL = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightShooter.LIMELIGHT);
 
         if(Math.abs(drivetrain.getAngularRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates

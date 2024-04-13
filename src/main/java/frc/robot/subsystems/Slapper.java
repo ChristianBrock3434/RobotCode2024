@@ -17,6 +17,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 public class Slapper extends SubsystemBase {
   private TalonFX slapperMotor = new TalonFX(20);
   private DutyCycleEncoder throughboreEncoder = new DutyCycleEncoder(5);
+  // private Encoder quadrutureEncoder = new Encoder(6, 5);
 
   private boolean isPositionControl = false;
   private double desiredPos = 0;
@@ -40,9 +42,12 @@ public class Slapper extends SubsystemBase {
   NeutralOut stopMode;
 
   public Slapper() {
-    throughboreEncoder.setDistancePerRotation(360.0);
+    // throughboreEncoder.setDistancePerRotation(360.0);
     // throughboreEncoder.reset();
-    System.out.println("Encoder: " + throughboreEncoder.getDistance());
+    // System.out.println("Encoder: " + throughboreEncoder.getDistance());
+
+    // quadrutureEncoder.setDistancePerPulse(360.0 / 2058);
+    // quadrutureEncoder.reset();
 
     initSlapperMotor();
 
@@ -207,11 +212,12 @@ public class Slapper extends SubsystemBase {
 
   public double getPosition() {
     // return throughboreEncoder.getDistance() - slapperOffset;
-    return slapperMotor.getPosition().getValueAsDouble() / slapperTicksPerDegree;
+    // return slapperMotor.getPosition().getValueAsDouble() / slapperTicksPerDegree;
+    return throughboreEncoder.getAbsolutePosition() / slapperTicksPerDegree - slapperOffset;
   }
 
   public void resetPosition() {
-    // slapperMotor.setPosition(getPosition() * slapperTicksPerDegree);
+    slapperMotor.setPosition(getPosition() * slapperTicksPerDegree);
   }
     
   @Override
@@ -221,6 +227,6 @@ public class Slapper extends SubsystemBase {
     }
     SmartDashboard.putNumber("Slapper pos", getPosition());
     SmartDashboard.putNumber("Desired Slapper pos", desiredPos);
-    SmartDashboard.putNumber("Encoder", throughboreEncoder.getDistance());
+    SmartDashboard.putNumber("Encoder", throughboreEncoder.getAbsolutePosition());
   }
 }

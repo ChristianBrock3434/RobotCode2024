@@ -18,6 +18,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "prepareSlapper"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "prepareForNote"
                 }
               },

@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,14 +30,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Actuation extends SubsystemBase {
   private TalonFX actuationMotor = new TalonFX(14);
 
-  MotionMagicVoltage motionMagicControl;
-  VoltageOut voltageOut;
-  NeutralOut stopMode;
+  private DutyCycleEncoder throughboreEncoder = new DutyCycleEncoder(6);
+
+  private MotionMagicVoltage motionMagicControl;
+  private VoltageOut voltageOut;
+  private NeutralOut stopMode;
 
   private boolean isPositionControl;
   private double desiredPos;
-  private double prevDesiredPos;
-  private boolean isVoltage;
 
   private PIDController posPID = new PIDController(1.5, 0, 0.01);
   // private PIDController paddingPID = new PIDController(1.5, 0, 0.0);
@@ -76,7 +77,7 @@ public class Actuation extends SubsystemBase {
   public void initActuationMotor() {
     // actuationMotor.setNeutralMode(NeutralModeValue.Brake);
 
-    resetEncoder();
+    resetPosition();
 
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
@@ -141,10 +142,15 @@ public class Actuation extends SubsystemBase {
   public Command setPositionStableCommand(double position) {
     return new Command() {
       @Override
+      public void initialize() {
+        resetPosition();
+      }
+
+      @Override
       public void execute() {
         isPositionControl = false;
         actuationMotor.setControl(motionMagicControl
-                              .withPosition(position * actuationTicksPerDegree)
+                              .withPosition(position * actuationInternalTicksPerDegree)
                             );
       }
 
@@ -163,12 +169,9 @@ public class Actuation extends SubsystemBase {
     // System.out.println("Actuator Up");
 
     isPositionControl = true;
-    isVoltage = true;
-    // posPID.setGoal(position);
-    desiredPos = position * actuationTicksPerDegree;
-    // actuationMotor.setControl(motionMagicControl
-    //                           .withPosition(position * actuationTicksPerDegree)
-    //                         );
+    desiredPos = position;
+    
+    resetPosition();
   }
 
   /**
@@ -194,11 +197,11 @@ public class Actuation extends SubsystemBase {
    * Reset the encoder to it's starting position
    * @return a command that will reset the encoder
    */
-  public Command resetEncoderCommand() {
+  public Command resetPositionCommand() {
     return new Command() {
       @Override
       public void execute() {
-        resetEncoder();
+        resetPosition();
       }
 
       @Override
@@ -217,8 +220,8 @@ public class Actuation extends SubsystemBase {
     return new Command() {
       @Override
       public boolean isFinished() {
-        double currentPosition = actuationMotor.getPosition().getValueAsDouble();
-        return Math.abs(currentPosition - setPosition * actuationTicksPerDegree) <= 0.5;
+        double currentPosition = getAngle();
+        return Math.abs(currentPosition * actuationTicksPerDegree - setPosition * actuationTicksPerDegree) <= 0.5;
       }
     };
   }
@@ -232,46 +235,21 @@ public class Actuation extends SubsystemBase {
       // paddingPID.setTolerance(1.0);
     }
 
-    double power = posPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-    power = MathUtil.clamp(power, -3, 2.25);
+    double power = posPID.calculate(getAngle() * actuationInternalTicksPerDegree, desiredPos * actuationInternalTicksPerDegree);
+    power = MathUtil.clamp(power, -3, 2.5);
     if (posPID.atSetpoint()) {
-      actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
-      // isVoltage = false;
-      // power = -1 / paddingPID.calculate(actuationMotor.getPosition().getValueAsDouble(), desiredPos);
-      // power = MathUtil.clamp(power, -1.25, 0.25);
-
-      // if (Math.copySign(1, actuationMotor.getVelocity().getValueAsDouble()) != Math.copySign(1, desiredPos - actuationMotor.getPosition().getValueAsDouble())) {
-      //   isVoltage = false;
-      // }
-
-      // if (Math.abs(actuationMotor.getVelocity().getValueAsDouble()) < 0.75) {
-      //   isVoltage = false;
-      // }
-
-      // isVoltage = !paddingPID.atSetpoint() && isVoltage;
-      // power = 0;
+      actuationMotor.setControl(motionMagicControl.withPosition(desiredPos * actuationInternalTicksPerDegree));
     } else {
       actuationMotor.setControl(voltageOut.withOutput(power));
     }
-
-    // System.out.println("Power" + actuationMotor.getMotorVoltage().getValueAsDouble());
-    // SmartDashboard.putNumber("Power", actuationMotor.getMotorVoltage().getValueAsDouble());
-    // SmartDashboard.putNumber("Desired Pos", desiredPos);
-    // SmartDashboard.putNumber("Velocity", actuationMotor.getVelocity().getValueAsDouble());
-    
-    // if (isVoltage) {
-    //   actuationMotor.setControl(voltageOut.withOutput(power));
-    // } else {
-    //   actuationMotor.setControl(motionMagicControl.withPosition(desiredPos));
-    // }
-    // prevDesiredPos = desiredPos;
   } 
 
   /**
    * Reset the actuation motor encoder to it's starting position
    */
-  public void resetEncoder() {
-    actuationMotor.setPosition(actuationStartPosition * actuationTicksPerDegree);
+  public void resetPosition() {
+    // actuationMotor.setPosition(actuationStartPosition * actuationTicksPerDegree);
+    actuationMotor.setPosition(getAngle() * actuationInternalTicksPerDegree);
   }
 
   /**
@@ -279,7 +257,8 @@ public class Actuation extends SubsystemBase {
    * @return the actuation motor's current position in degrees
    */
   public double getAngle() {
-    return actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree;
+    return throughboreEncoder.getAbsolutePosition() / actuationTicksPerDegree - actuationOffset;
+    // return actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree;
   }
 
   public void stopMotor() {
@@ -295,11 +274,12 @@ public class Actuation extends SubsystemBase {
       runMotorToPosition();
     }
 
+    SmartDashboard.putNumber("actuation pos", getAngle());
     // System.out.println(getLimitSwitch());
     // System.out.println(actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
     // System.out.println(actuationMotor.getMotorVoltage());
 
-    // SmartDashboard.putNumber("Actuation Angle", actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
+    SmartDashboard.putNumber("Actuation Angle", actuationMotor.getPosition().getValueAsDouble() / actuationInternalTicksPerDegree);
   }
 
   @Override

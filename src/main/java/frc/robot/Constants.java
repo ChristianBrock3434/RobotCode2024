@@ -23,14 +23,18 @@ public final class Constants {
   public static double farShotDistance = 4.4; // meters
 
   public final class ActuationConstants {
-    public static final double actuationGearRatio = 8;
+    public static final double actuationInternalGearRatio = 8;
+    public static final double actuationGearRatio = 2;
 
     // 360 degrees per rotation, 8:1 gear ratio
     public static final double actuationTicksPerDegree = 1.0 / 360.0 * actuationGearRatio;
+    public static final double actuationInternalTicksPerDegree = 1.0 / 360.0 * actuationInternalGearRatio;
 
     public static final double actuationStartPosition = -65;
     public static double actuationPickUpPosition = 100; //100
     public static final double actuationTuckPosition = -65;
+
+    public static final double actuationOffset = 2.5 - actuationStartPosition;
   }
 
   public final class IntakeConstants {
@@ -101,10 +105,10 @@ public final class Constants {
   }
 
   public final class SlapperConstants {
-    public static final double slapperOffset = 0;
+    public static final double slapperOffset = 100;
 
     public static final double slapperGearRatio = 2.25;
-    public static final double slapperTicksPerDegree = (1.0 / 360.0) * slapperGearRatio;
+    public static final double slapperTicksPerDegree = (1.0 / 360.0);
 
     public static final double slapperStartingPosition = 0;
     public static final double slapperRestingPosition = 225;
