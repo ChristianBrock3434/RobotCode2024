@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.27,
+      "x": 15.23,
       "y": 5.35
     },
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot1CloseBlue"
+            "name": "shoot1CloseRed"
           }
         },
         {
@@ -62,7 +62,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "pick up ring 1 close blue"
+                              "pathName": "pick up ring 1 close red"
                             }
                           }
                         ]
@@ -71,7 +71,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote1CloseBlue"
+                        "name": "lineUpToNote1CloseRed"
                       }
                     }
                   ]
@@ -89,7 +89,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot2CloseBlue"
+            "name": "shoot2CloseRed"
           }
         },
         {
@@ -132,7 +132,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "pick up ring 2 close blue"
+                              "pathName": "pick up ring 2 close red"
                             }
                           }
                         ]
@@ -141,7 +141,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote2CloseBlue"
+                        "name": "lineUpToNote2CloseRed"
                       }
                     }
                   ]
@@ -159,13 +159,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "shoot ring 2 close blue"
+            "pathName": "shoot ring 2 close red"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot3CloseBlue"
+            "name": "shoot3CloseRed"
           }
         },
         {
@@ -201,7 +201,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "pick up ring 3 close blue"
+                              "pathName": "pick up ring 3 close red"
                             }
                           }
                         ]
@@ -210,7 +210,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lineUpToNote3CloseBlue"
+                        "name": "lineUpToNote3CloseRed"
                       }
                     }
                   ]
@@ -228,18 +228,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "shoot ring 3 close blue"
+            "pathName": "shoot ring 3 close red"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shoot4CloseBlue"
+            "name": "shoot4CloseRed"
           }
         }
       ]
     }
   },
-  "folder": "Blue",
+  "folder": "New Red",
   "choreoAuto": false
 }

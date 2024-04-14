@@ -18,12 +18,12 @@ public class PickUpPieceAuto extends SequentialCommandGroup {
      */
     public PickUpPieceAuto(double voltage) {
         addCommands(
-            actuation.setPositionStableCommand(actuationPickUpPosition),
+            actuation.setPositionCommand(actuationPickUpPosition),
             actuation.waitUntilAtPosition(actuationPickUpPosition),
             intake.runVoltageCommand(voltage),
             intake.waitUntilTripped(),
             intake.stopIntakeCommand(),
-            actuation.setPositionStableCommand(actuationTuckPosition)
+            actuation.setPositionCommand(actuationTuckPosition)
         );
     }
 }

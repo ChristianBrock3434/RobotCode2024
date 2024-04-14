@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.19
+        "x": 2.6099999999999994,
+        "y": 4.12
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.535181113678366,
-        "y": 4.492314119387373
+        "x": 2.6351811136783674,
+        "y": 4.422314119387373
       },
       "isLocked": false,
       "linkedName": "ring1CloseBlue4"

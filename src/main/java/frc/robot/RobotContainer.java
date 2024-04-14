@@ -126,7 +126,7 @@ public class RobotContainer {
 
     // autoChooser.addOption("8-7 Red", "new 3 ring far red");
     // autoChooser.addOption("8-7 Park Red", "new 3 ring far red park");
-    // autoChooser.addOption("1-2-3 Red", "new 4 ring close red");
+    // autoChooser.addOption("1-2-3 Red", "4 ring close red");
     // autoChooser.addOption("8-6 Red", "new 3 ring far red mid");
 
     // autoChooser.addOption("Do Nothing", "Do Nothing");
@@ -143,7 +143,7 @@ public class RobotContainer {
 
     autoChooser.addOption("8-7 Red", drivetrain.getAutoPath("new 3 ring far red"));
     autoChooser.addOption("8-7 Park Red", drivetrain.getAutoPath("new 3 ring far red park"));
-    autoChooser.addOption("1-2-3 Red", drivetrain.getAutoPath("new 4 ring close red"));
+    autoChooser.addOption("1-2-3 Red", drivetrain.getAutoPath("4 ring close red"));
     // autoChooser.addOption("8-6 Red", drivetrain.getAutoPath("new 3 ring far red mid"));
     autoChooser.addOption("7-8-6 Red", drivetrain.getAutoPath("7-8-6 far red"));
 
@@ -154,7 +154,7 @@ public class RobotContainer {
    * link commands to pathplanner for autos
    */
   public void linkAutoCommands() {
-    NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed, angleRestingPosition, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot", new AutoShootSequence(this::getAngle, this::getSpeed, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
     NamedCommands.registerCommand("intake", new PickUpPieceAuto(autoIntakeVoltage));
     // NamedCommands.registerCommand("intake", new PrintCommand("Intake"));
 
@@ -194,39 +194,39 @@ public class RobotContainer {
    * link shoot commands to pathplanner
    */
   private static void linkShootCommands() {
-    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 40, 20.5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 21.5, () -> 40, 23.5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 23.5, () -> 40, 24.5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 24.5, () -> 40, angleRestingPosition, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 4, () -> 45, 22.0, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 22.0, () -> 40, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22.5, () -> 40, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 22.5, () -> 40, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 40, 20, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 21.5, () -> 40, 23.5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 23.5, () -> 40, 24.5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 24.5, () -> 40, angleRestingPosition, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 30, 22.0, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 22.0, () -> 30, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22.5, () -> 30, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 22.5, () -> 30, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
     
-    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 50, 35, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 50, 15, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 50, 22, () -> 0.0));
-    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 50, 20, () -> 0.0));
-    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseBlue5", new AutoShootSequence(() -> 15, () -> 50, 35, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseBlue5", new AutoShootSequence(() -> 35, () -> 50, 15, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3CloseBlue5", new AutoShootSequenceNoStop(() -> 15, () -> 50, 22, () -> slapperRestingPosition));
+    NamedCommands.registerCommand("shoot4CloseBlue5", new AutoShootSequenceNoStop(() -> 22, () -> 50, 20, () -> slapperRestingPosition));
+    NamedCommands.registerCommand("shoot5CloseBlue5", new AutoShootSequence(() -> 20, () -> 50, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
 
-    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 19.5, () -> 40, 5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, angleRestingPosition, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1FarBlue", new AutoShootSequence(() -> 19.5, () -> 40, 5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3FarBlue", new AutoShootSequence(() -> 31.75, () -> 50, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 40, 5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 31.5, () -> 50, angleRestingPosition, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1FarRed", new AutoShootSequence(() -> 20, () -> 40, 5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2FarRed", new AutoShootSequence(() -> 31.75, () -> 50, 5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3FarRed", new AutoShootSequence(() -> 31.5, () -> 50, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot0blue", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot7blue", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot8blue", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> slapperRestingPosition, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> 0.0, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> 0.0, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot0red", new AutoShootSequence(() -> 18.5, () -> 40, 33, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot7red", new AutoShootSequence(() -> 33.5, () -> 50, 33, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot8red", new AutoShootSequence(() -> 33.5, () -> 50, 5, () -> slapperRestingPosition, slapperRestingPosition));
   }
 
   /**
@@ -237,9 +237,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("lineUpToNote2CloseBlue", new LineUpWithNotePath("4 ring close blue", 1, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
     NamedCommands.registerCommand("lineUpToNote3CloseBlue", new LineUpWithNotePath("4 ring close blue", 3, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
 
-    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("new 4 ring close red", 0, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("new 4 ring close red", 1, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
-    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("new 4 ring close red", 3, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote1CloseRed", new LineUpWithNotePath("4 ring close red", 0, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote2CloseRed", new LineUpWithNotePath("4 ring close red", 1, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
+    NamedCommands.registerCommand("lineUpToNote3CloseRed", new LineUpWithNotePath("4 ring close red", 3, new PIDConstants(2.0), 4, new PIDConstants(0.01)));
 
 
     NamedCommands.registerCommand("lineUpToNote1CloseBlue5", new LineUpWithNotePath("5 ring close blue", 0, new PIDConstants(4.0), 4, new PIDConstants(0.01)));

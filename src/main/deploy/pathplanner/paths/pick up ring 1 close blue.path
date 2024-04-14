@@ -3,37 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.244993259217289,
-        "y": 5.180144975674567
+        "x": 1.27,
+        "y": 5.35
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7087395713252982,
-        "y": 4.7953342060530275
+        "x": 1.7337463121080092,
+        "y": 4.96518923037846
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.51,
-        "y": 4.19
+        "x": 1.852718113424813,
+        "y": 4.520382906671662
       },
       "prevControl": {
-        "x": 2.0462536878919906,
-        "y": 4.57481076962154
+        "x": 1.7683395842831398,
+        "y": 4.575513765779534
+      },
+      "nextControl": {
+        "x": 1.9370966425664862,
+        "y": 4.46525204756379
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6099999999999994,
+        "y": 4.12
+      },
+      "prevControl": {
+        "x": 2.461681613805453,
+        "y": 4.19247948338978
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "ring1CloseBlue4"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 160.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "path",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 1.1,
       "command": {
         "type": "sequential",
         "data": {
@@ -74,13 +96,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 150.2551187030577,
-    "rotateFast": true
+    "rotation": 160.0,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "4 Ring Close Blue",
   "previewStartingState": {
-    "rotation": 141.63251461513835,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": false
