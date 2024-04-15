@@ -102,6 +102,7 @@ public class ShuffleboardHandler {
     private static GenericEntry SubwooferSpeed;
     private static GenericEntry PodiumSpeed;
     private static GenericEntry championshipSpeed;
+    private static GenericEntry passSpeed;
 
     private static GenericEntry IntakeAngle;
 
@@ -173,18 +174,18 @@ public class ShuffleboardHandler {
                         .withProperties(Map.of("min", chainShotSpeed-10, "max", chainShotSpeed+10))
                         .getEntry();
 
-        SubwooferSpeed = driverTab.add("Subwoofer Shot Speed", subwooferShotSpeed)
-                        .withPosition(0, 2)
-                        .withSize(2, 1)
-                        .withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", subwooferShotSpeed-10, "max", subwooferShotSpeed+10))
-                        .getEntry();
-
         PodiumSpeed = driverTab.add("Podium Shot Speed", podiumShotSpeed)
                         .withPosition(2, 2)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", podiumShotSpeed-10, "max", podiumShotSpeed+10))
+                        .getEntry();
+
+        passSpeed = driverTab.add("pass Shot Speed", passShotSpeed)
+                        .withPosition(0, 2)
+                        .withSize(2, 1)
+                        .withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", passShotSpeed-10, "max", passShotSpeed+10))
                         .getEntry();
 
         driverTab.addBoolean("Manual Shot", manualMode)
@@ -210,8 +211,8 @@ public class ShuffleboardHandler {
 
         ampSpeed = ampShotSpeed.getDouble(ampSpeed);
         chainShotSpeed = FarShotSpeed.getDouble(chainShotSpeed);
-        subwooferShotSpeed = SubwooferSpeed.getDouble(subwooferShotSpeed);
         podiumShotSpeed = PodiumSpeed.getDouble(podiumShotSpeed);
+        passShotSpeed = passSpeed.getDouble(passShotSpeed);
         championshipShotSpeed = championshipSpeed.getDouble(championshipShotSpeed); 
     }
 
@@ -251,12 +252,12 @@ public class ShuffleboardHandler {
                         .withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", podiumShotOffset-10, "max", podiumShotOffset+10))
                         .getEntry();
-            
-        PassShotOffset = tuningTab.add("Pass Shot Offset", passShotOffset)
+
+        SubwooferSpeed = tuningTab.add("Subwoofer Shot Speed", subwooferShotSpeed)
                         .withPosition(0, 3)
                         .withSize(2, 1)
                         .withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", passShotOffset-10, "max", passShotOffset+10))
+                        .withProperties(Map.of("min", subwooferShotSpeed-10, "max", subwooferShotSpeed+10))
                         .getEntry();
 
         ChamiponShotManualShot = tuningTab.add("Champion Shot Manual Rotation", championshipShotManualRot)
@@ -279,13 +280,6 @@ public class ShuffleboardHandler {
                         .withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", podiumShotManualRot-10, "max", podiumShotManualRot+10))
                         .getEntry();
-
-        PassShotManualShot = tuningTab.add("Pass Shot Manual", passShotManualRot)
-                        .withPosition(2, 3)
-                        .withSize(2, 1)
-                        .withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", passShotManualRot-10, "max", passShotManualRot+10))
-                        .getEntry();
     }
 
     /**
@@ -295,11 +289,12 @@ public class ShuffleboardHandler {
         championshipShotOffset = ChamiponShotOffset.getDouble(championshipShotOffset);
         chainShotOffset = ChainShotOffset.getDouble(chainShotOffset);
         podiumShotOffset = PodiumShotOffset.getDouble(podiumShotOffset);
-        passShotOffset = PassShotOffset.getDouble(passShotOffset);
+        subwooferShotSpeed = SubwooferSpeed.getDouble(subwooferShotSpeed);
+        // passShotOffset = PassShotOffset.getDouble(passShotOffset);
 
         championshipShotManualRot = ChamiponShotManualShot.getDouble(championshipShotManualRot);
         chainShotManualRot = ChainShotManualShot.getDouble(chainShotManualRot);
         podiumShotManualRot = PodiumShotManualShot.getDouble(podiumShotManualRot);
-        passShotManualRot = PassShotManualShot.getDouble(passShotManualRot);
+        // passShotManualRot = PassShotManualShot.getDouble(passShotManualRot);
     }
 }

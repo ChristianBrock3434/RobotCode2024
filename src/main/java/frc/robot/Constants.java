@@ -63,7 +63,7 @@ public final class Constants {
     public static double podiumShotSpeed = 44; //55 Half Line Shot 62
     public static double chainShotSpeed = 54; //44
     public static double championshipShotSpeed = 52;
-    public static final double passShotSpeed = 42.5; //30
+    public static double passShotSpeed = 42.5; //30
   }
 
   public final class IndexerConstants {
