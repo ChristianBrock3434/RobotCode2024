@@ -143,7 +143,7 @@ public class Actuation extends SubsystemBase {
     return new Command() {
       @Override
       public void initialize() {
-        resetPosition();
+        // resetPosition();
       }
 
       @Override
@@ -171,7 +171,7 @@ public class Actuation extends SubsystemBase {
     isPositionControl = true;
     desiredPos = position;
     
-    resetPosition();
+    // resetPosition();
   }
 
   /**
@@ -221,7 +221,7 @@ public class Actuation extends SubsystemBase {
       @Override
       public boolean isFinished() {
         double currentPosition = getAngle();
-        return Math.abs(currentPosition * actuationTicksPerDegree - setPosition * actuationTicksPerDegree) <= 0.5;
+        return Math.abs(currentPosition * actuationInternalTicksPerDegree - setPosition * actuationInternalTicksPerDegree) <= 0.5;
       }
     };
   }
@@ -249,7 +249,8 @@ public class Actuation extends SubsystemBase {
    */
   public void resetPosition() {
     // actuationMotor.setPosition(actuationStartPosition * actuationTicksPerDegree);
-    actuationMotor.setPosition(getAngle() * actuationInternalTicksPerDegree);
+    double angle = throughboreEncoder.getAbsolutePosition() / actuationTicksPerDegree - actuationOffset;
+    actuationMotor.setPosition(angle * actuationInternalTicksPerDegree);
   }
 
   /**
@@ -257,7 +258,8 @@ public class Actuation extends SubsystemBase {
    * @return the actuation motor's current position in degrees
    */
   public double getAngle() {
-    return throughboreEncoder.getAbsolutePosition() / actuationTicksPerDegree - actuationOffset;
+    // return throughboreEncoder.getAbsolutePosition() / actuationTicksPerDegree - actuationOffset;
+    return actuationMotor.getPosition().getValueAsDouble() / actuationInternalTicksPerDegree;
     // return actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree;
   }
 
@@ -274,7 +276,7 @@ public class Actuation extends SubsystemBase {
       runMotorToPosition();
     }
 
-    SmartDashboard.putNumber("actuation pos", getAngle());
+    SmartDashboard.putNumber("actuation pos", (throughboreEncoder.getAbsolutePosition() / actuationTicksPerDegree) - actuationOffset);
     // System.out.println(getLimitSwitch());
     // System.out.println(actuationMotor.getPosition().getValueAsDouble() / actuationTicksPerDegree);
     // System.out.println(actuationMotor.getMotorVoltage());

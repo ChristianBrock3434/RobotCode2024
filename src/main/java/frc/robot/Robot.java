@@ -36,6 +36,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    actuation.resetPosition();
+    slapper.resetPosition();
     m_robotContainer = new RobotContainer();
   }
 
@@ -68,6 +70,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    actuation.resetPosition();
+    slapper.resetPosition();
     drivetrain.removeCurrentLimiting();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 

@@ -194,14 +194,14 @@ public class RobotContainer {
    * link shoot commands to pathplanner
    */
   private static void linkShootCommands() {
-    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 4, () -> 45, 22.0, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseBlue", new AutoShootSequence(() -> 3, () -> 35, 22.0, () -> slapperRestingPosition, slapperRestingPosition));
     NamedCommands.registerCommand("shoot2CloseBlue", new AutoShootSequence(() -> 22.0, () -> 40, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
     NamedCommands.registerCommand("shoot3CloseBlue", new AutoShootSequence(() -> 22.5, () -> 40, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
     NamedCommands.registerCommand("shoot4CloseBlue", new AutoShootSequence(() -> 22.5, () -> 40, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
-    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 30, 22.0, () -> slapperRestingPosition, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 22.0, () -> 30, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
-    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22.5, () -> 30, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot1CloseRed", new AutoShootSequence(() -> 3, () -> 35, 22.0, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot2CloseRed", new AutoShootSequence(() -> 22.0, () -> 40, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
+    NamedCommands.registerCommand("shoot3CloseRed", new AutoShootSequence(() -> 22.5, () -> 40, 22.5, () -> slapperRestingPosition, slapperRestingPosition));
     NamedCommands.registerCommand("shoot4CloseRed", new AutoShootSequence(() -> 22.5, () -> 30, angleRestingPosition, () -> slapperRestingPosition, slapperRestingPosition));
 
     
@@ -304,13 +304,13 @@ public class RobotContainer {
     // Intake
     controller.rightBumper().whileTrue(new PickUpPiece(intakeVoltage)).onFalse(new StopIntake());
     controller.b().whileTrue(new ParallelCommandGroup(
-      intake.feedCommand(outtakeVelocity, outtakeAcceleration),
+      intake.runVoltageCommand(-4),
       indexer.runIndexerCommand(-indexerVelocity, indexerAcceleration)
-    ));
+    )).onFalse(intake.stopIntakeCommand());
     controller.x().whileTrue(new ParallelCommandGroup(
-      intake.feedCommand(intakeVelocity, intakeAcceleration),
+      intake.runVoltageCommand(4),
       indexer.runIndexerCommand(indexerVelocity, indexerAcceleration)
-    ));
+    )).onFalse(intake.stopIntakeCommand());
 
     // On Stop Shooting
     new Trigger(() -> currentShootingState.equals(shootingState.IDLE)).onTrue(
@@ -344,7 +344,7 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> chainShotOffset).withTimeout(0.5), 
+            new AutoTurnToGoal(() -> chainShotOffset).withTimeout(0.75), 
             new ConditionalCommand(
               new AutoTurn(() -> chainShotManualRot).withTimeout(0.5), 
               new AutoTurn(() -> -chainShotManualRot).withTimeout(0.5), 
@@ -379,7 +379,7 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.5), 
+            new AutoTurnToGoal(() -> championshipShotOffset).withTimeout(0.75), 
             new ConditionalCommand(
               new AutoTurn(() -> championshipShotManualRot).withTimeout(0.5), 
               new AutoTurn(() -> -championshipShotManualRot).withTimeout(0.5), 
@@ -446,7 +446,7 @@ public class RobotContainer {
       .and(() -> currentShootingState.equals(shootingState.SHOOTING)).onTrue(
         new SequentialCommandGroup(
           new ConditionalCommand(
-            new AutoTurnToGoal(() -> podiumShotOffset).withTimeout(0.5), 
+            new AutoTurnToGoal(() -> podiumShotOffset).withTimeout(0.75), 
             new ConditionalCommand(
               new AutoTurn(() -> podiumShotManualRot).withTimeout(0.5), 
               new AutoTurn(() -> -podiumShotManualRot).withTimeout(0.5), 
