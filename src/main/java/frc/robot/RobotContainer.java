@@ -18,13 +18,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.fasterxml.jackson.core.sym.Name;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -39,9 +37,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.automation.PickUpPiece;
 import frc.robot.commands.automation.PickUpPieceAuto;
 import frc.robot.commands.automation.PrepareForShoot;
-import frc.robot.commands.automation.ShootSequence;
 import frc.robot.commands.automation.StopIntake;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.ShakeController;
 import frc.robot.commands.automation.AutoShootSequence;
 import frc.robot.commands.automation.AutoShootSequenceNoStop;

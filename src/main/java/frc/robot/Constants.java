@@ -82,8 +82,8 @@ public final class Constants {
     
     public static double subwooferShotAngle = 0.0;
     public static double podiumShotAngle = 23.0; //23 Half Line Shot 34.75
-    public static double chainShotAngle = 33.25;
-    public static double championshipShotAngle = 33;
+    public static double chainShotAngle = 32.5;
+    public static double championshipShotAngle = 32.5;
     public static double passShotAngle = 15;
   }
 
